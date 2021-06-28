@@ -74,7 +74,7 @@ class StatsController < ApplicationController
   end
 
   def unique_enrollments(term_id)
-    prep_enrollment_hash.merge Enrollment.active_or_pending.joins(:course).where("courses.workflow_state != 'deleted' AND enrollments.root_account_id = ? AND enrollments.course_id = courses.id AND courses.enrollment_term_id = ? AND courses.sis_source_id IS NOT NULL", Account.default.id, term_id).group('enrollments.type').count('DISTINCT enrollments.user_id')
+    prep_enrollment_hash.merge Enrollment.active_or_pending.joins(:course).where("courses.workflow_state != 'deleted' AND enrollments.root_account_id = ? AND enrollments.course_id = courses.id AND courses.enrollment_term_id = ? AND courses.sis_source_id IS NOT NULL", Account.default.id, term_id).group('enrollments.type').count('distinct enrollments.user_id')
   end
 
   def total_enrollments(term_id)
@@ -84,7 +84,7 @@ class StatsController < ApplicationController
     types = ['StudentEnrollment', 'TeacherEnrollment', 'TaEnrollment', 'DesignerEnrollment', 'ObserverEnrollment', 'StudentViewEnrollment']
     total_enrollments = prep_enrollment_hash
     courses.each do |c|
-      enrollments = c.enrollments.active_or_pending.group('enrollments.type').count('DISTINCT enrollments.user_id')
+      enrollments = c.enrollments.active_or_pending.group('enrollments.type').count('distinct enrollments.user_id')
       enrollments.each do |type, num|
         total_enrollments[type] = (total_enrollments[type] + num)
       end
