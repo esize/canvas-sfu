@@ -144,7 +144,7 @@ class RoleOverridesController < ApplicationController
 
       roles = Api.paginate(roles, self, route)
       ActiveRecord::Associations::Preloader.new.preload(roles, :account)
-      render :json => roles.collect{|role| role_json(@context, role, @current_user, session)}
+      render :json => roles.map { |role| role_json(@context, role, @current_user, session, preloaded_overrides: RoleOverride.preload_overrides(@context, roles)) }
     end
   end
 
@@ -152,13 +152,15 @@ class RoleOverridesController < ApplicationController
     if authorized_action(@context, @current_user, :manage_role_overrides)
 
       account_role_data = []
+      preloaded_overrides = RoleOverride.preload_overrides(@context, @context.available_account_roles)
       @context.available_account_roles.each do |role|
-        account_role_data << role_json(@context, role, @current_user, session)
+        account_role_data << role_json(@context, role, @current_user, session, preloaded_overrides: preloaded_overrides)
       end
 
       course_role_data = []
+      preloaded_overrides = RoleOverride.preload_overrides(@context, @context.available_course_roles)
       @context.available_course_roles.each do |role|
-        course_role_data << role_json(@context, role, @current_user, session)
+        course_role_data << role_json(@context, role, @current_user, session, preloaded_overrides: preloaded_overrides)
       end
 
       js_env({
@@ -239,7 +241,7 @@ class RoleOverridesController < ApplicationController
   #     Manage Courses granular permissions
   #         manage_courses_admin         -- Manage Courses - manage / update
   #     manage_developer_keys            -- Developer keys - manage
-  #     manage_feature_flags             -- Feature Options - enable / disable
+  #     manage_feature_flags             -- Feature Previews - enable / disable
   #     manage_master_courses            -- Blueprint Courses - add / edit / associate / delete
   #     manage_role_overrides            -- Permissions - manage
   #     manage_storage_quotas            -- Storage Quotas - manage
@@ -250,7 +252,7 @@ class RoleOverridesController < ApplicationController
   #     read_course_content              -- Course Content - view
   #     read_course_list                 -- Courses - view list
   #     view_course_changes              -- Courses - view change logs
-  #     view_feature_flags               -- Feature Options - view
+  #     view_feature_flags               -- Feature Previews - view
   #     view_grade_changes               -- Grades - view change logs
   #     view_notifications               -- Notifications - view
   #     view_quiz_answer_audits          -- Quizzes - view submission log

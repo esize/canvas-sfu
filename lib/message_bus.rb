@@ -51,9 +51,34 @@ module MessageBus
   # and will respond to the "send" method accepting a payload to
   # transmit.
   #
+  # "namespace" should be an underscore delimited string.  Don't
+  # use slashes, it will be confusing for constructing the entire
+  # topic url.  A good example of a valid namespace might be "asset_user_access_log".
+  # You don't need tons of these, and they should have been created in pulsar
+  # already as part of your pulsar state management. Namespaces are NOT created lazily
+  # so if you try to send a namespace that doesn't exist yet, it will error.
+  #
+  # "topic_name" is also a string without slashes.  Conventionally you'll want some kind of
+  # prefix for the TYPE of topic this is, and some kind of partition key as the suffix.
+  # An example might be "#{PULSAR_TOPIC_PREFIX}-#{root_account.uuid}" from the AUA subsystem
+  # which evaluates to something like "view-increments-2yQwasdfm3dcNeoasdf4PYy9sgsasdf3qzasdf".
+  # by using a partition key, you can make sure messages are being bucketed according to
+  # how they're going to be processed which means one topic doesn't have to handle all messages
+  # of a given type.  Topics are lazily created on pulsar, you don't have to do any
+  # other work to make sure they're instantiated ahead of time.
+  # Don't worry about prepending an environment like "production-" if you've seen that
+  # before, that's taken care of internally in this library by reading the environment state.
+  #
   # "force_fresh:", if you pass true, will make sure we authenticate
   # and build a new producer rather than using a process-cached one,
   # even if such a producer is available.
+  #
+  # WARNING: If you're using a long-lived producer directly, be aware
+  # of the timeout issue that's being handled in the "send_one_message"
+  # method below.  Rarely, operational changes on the pulsar side can put
+  # producers into a state where they repeatedly timeout.  You may need to
+  # catch that error and rebuild your producer from a fresh client if/when
+  # that happens.
   def self.producer_for(namespace, topic_name, force_fresh: false)
     ns = MessageBus::Namespace.build(namespace)
     check_conn_pool(["producers", ns.to_s, topic_name], force_fresh: force_fresh) do
@@ -61,6 +86,50 @@ module MessageBus
       ::MessageBus::CaCert.ensure_presence!(self.config)
       topic = self.topic_url(ns, topic_name)
       self.client.create_producer(topic)
+    end
+  end
+
+  ##
+  # send_one_message is a convenience method for when you aren't trying
+  # to standup a client and stream many messages through, but just
+  # need to dispatch ONE THING.
+  #
+  # "namespace" and "topic_name" are exactly like their counterparts
+  # documented in the ".producer_for" method, and are passed through
+  # to that method.
+  #
+  # "message" should be a string object, often serialized json
+  # will be the preferred structure.  This method performs no transformation on the
+  # message for you, so if you have a hash and want to send it as json,
+  # transform it to json before passing it as the message to this
+  # method.
+  def self.send_one_message(namespace, topic_name, message)
+    retries = 0
+    Bundler.require(:pulsar)
+    rescuable_pulsar_errors = [
+      ::Pulsar::Error::AlreadyClosed,
+      ::Pulsar::Error::ConnectError,
+      ::Pulsar::Error::ServiceUnitNotReady,
+      ::Pulsar::Error::Timeout
+    ]
+    begin
+      producer = producer_for(namespace, topic_name)
+      producer.send(message)
+    rescue *rescuable_pulsar_errors => ex
+      # We'll retry this exactly one time.  Sometimes
+      # when a pulsar broker restarts, we have connections
+      # that already knew about that broker get into a state where
+      # they just timeout or fail instead of reconfiguring.  Often this can
+      # be cleared by just rebooting the process, but that's overkill.
+      # If we hit a timeout, we will try one time to dump all the client
+      # context and reconnect.  If we get a timeout again, that is NOT
+      # the problem, and we should let the error raise.
+      retries += 1
+      raise ex if retries > 1
+      Rails.logger.info "[AUA] Pulsar failure during message send, retrying..."
+      CanvasErrors.capture_exception(:aua_log_compaction, ex, :warn)
+      self.reset!
+      retry
     end
   end
 
@@ -160,7 +229,7 @@ module MessageBus
         # connections as politely as possible
         begin
           cached_object.close()
-        rescue Pulsar::Error::AlreadyClosed
+        rescue ::Pulsar::Error::AlreadyClosed
           Rails.logger.warn("evicting an already-closed pulsar topic client for #{path}")
         end
       end
@@ -183,6 +252,7 @@ module MessageBus
   def self.client
     return @client if @client
 
+    Bundler.require(:pulsar)
     conf_hash = self.config
     token_vault_path = conf_hash['PULSAR_TOKEN_VAULT_PATH']
     if token_vault_path.present?
@@ -226,7 +296,13 @@ module MessageBus
   def self.reset!
     close_and_reset_cached_connections!
     connection_mutex.synchronize do
-      @client&.close()
+      begin
+        @client&.close()
+      rescue ::Pulsar::Error::AlreadyClosed
+        # we need to make sure the client actually gets cleared out if the close fails,
+        # otherwise we'll keep trying to use it
+        Rails.logger.warn("while resetting, closing client was found to already be closed")
+      end
       @client = nil
     end
     @config_cache = nil
