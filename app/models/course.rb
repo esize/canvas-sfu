@@ -1401,6 +1401,11 @@ class Course < ActiveRecord::Base
     workflow_state
   end
 
+  def reload(*)
+    @account_chain = @account_chain_with_site_admin = nil
+    super
+  end
+
   alias destroy_permanently! destroy
   def destroy
     return false if template?
@@ -1770,9 +1775,7 @@ class Course < ActiveRecord::Base
     active_enrollments = fetch_on_enrollments("active_enrollments_for_permissions2", user, is_unpublished) do
       scope = self.enrollments.for_user(user).active_or_pending_by_date.select("enrollments.*, enrollment_states.state AS date_based_state_in_db")
       scope = scope.where(:type => ['TeacherEnrollment', 'TaEnrollment', 'DesignerEnrollment', 'StudentViewEnrollment']) if is_unpublished
-      ens = scope.to_a
-      ens.each{|e| e.instance_variable_set(:@association_cache, {})}
-      ens
+      scope.to_a.each(&:clear_association_cache)
     end
     active_enrollments.each{|e| e.course = self} # set association so we don't requery
     active_enrollments.any? {|e| (allow_future || e.date_based_state_in_db == 'active') && e.has_permission_to?(permission) }
@@ -1825,10 +1828,11 @@ class Course < ActiveRecord::Base
   end
 
   def account_chain(include_site_admin: false)
-    @account_chain ||= Account.account_chain(account_id)
-    result = @account_chain.dup
-    Account.add_site_admin_to_chain!(result) if include_site_admin
-    result
+    @account_chain ||= Account.account_chain(account_id).freeze
+    if include_site_admin
+      return @account_chain_with_site_admin ||= Account.add_site_admin_to_chain!(@account_chain.dup).freeze
+    end
+    @account_chain
   end
 
   def account_chain_ids
@@ -1858,9 +1862,7 @@ class Course < ActiveRecord::Base
     @account_users[user.global_id] ||= begin
       key = ['account_users_for_course_and_user', user.cache_key(:account_users), Account.cache_key_for_id(account_id, :account_chain)].cache_key
       Rails.cache.fetch_with_batched_keys(key, batch_object: self, batched_keys: :account_associations, skip_cache_if_disabled: true) do
-        aus = account_users_for(user)
-        aus.each{|au| au.instance_variable_set(:@association_cache, {})}
-        aus
+        account_users_for(user).each(&:clear_association_cache)
       end
     end
   end
@@ -2920,7 +2922,7 @@ class Course < ActiveRecord::Base
       :href => :course_context_modules_path
     }, {
       :id => TAB_CONFERENCES,
-      :label => t('#tabs.conferences', "Conferences"),
+      :label => WebConference.conference_tab_name,
       :css_class => 'conferences',
       :href => :course_conferences_path
     }, {
@@ -3135,14 +3137,9 @@ class Course < ActiveRecord::Base
         delete_unless.call([TAB_SETTINGS], :read_as_admin)
         delete_unless.call([TAB_ANNOUNCEMENTS], :read_announcements)
         delete_unless.call([TAB_RUBRICS], :read_rubrics, :manage_rubrics)
+        delete_unless.call([TAB_FILES], :read, *RoleOverride::GRANULAR_FILE_PERMISSIONS)
 
         tabs -= [item_banks_tab] if item_banks_tab && !check_for_permission.call(:manage_content, :manage_assignments)
-
-        if self.root_account.feature_enabled?(:granular_permissions_course_files)
-          delete_unless.call([TAB_FILES], :read, *RoleOverride::GRANULAR_FILE_PERMISSIONS)
-        else
-          delete_unless.call([TAB_FILES], :read, :manage_files)
-        end
 
         # remove outcomes tab for logged-out users or non-students
         outcome_tab = tabs.detect { |t| t[:id] == TAB_OUTCOMES }
@@ -3155,13 +3152,9 @@ class Course < ActiveRecord::Base
           TAB_QUIZZES => [:manage_content, :manage_assignments],
           TAB_GRADES => [:view_all_grades, :manage_grades],
           TAB_PEOPLE => [:manage_students, :manage_admin_users],
-          TAB_FILES => [:manage_files],
+          TAB_FILES => RoleOverride::GRANULAR_FILE_PERMISSIONS,
           TAB_DISCUSSIONS => [:moderate_forum]
         }
-
-        if self.root_account.feature_enabled?(:granular_permissions_course_files)
-          additional_checks[TAB_FILES] = RoleOverride::GRANULAR_FILE_PERMISSIONS
-        end
 
         if self.root_account.feature_enabled?(:granular_permissions_manage_users)
           additional_checks[TAB_PEOPLE] = RoleOverride::GRANULAR_MANAGE_USER_PERMISSIONS

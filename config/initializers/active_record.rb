@@ -1687,7 +1687,9 @@ end
 
 if CANVAS_RAILS6_0
   module UnscopeCallbacks
-    def run_callbacks(*args)
+    def run_callbacks(kind)
+      return super if __callbacks[kind].empty?
+
       # in rails 6.1, we can get rid of this entire monkeypatch
       scope = self.class.current_scope&.clone || self.class.default_scoped
       scope = scope.klass.unscoped
@@ -1990,6 +1992,8 @@ module MaxRuntimeConnectionPool
   end
 end
 ActiveRecord::ConnectionAdapters::ConnectionPool.prepend(MaxRuntimeConnectionPool)
+
+ActiveRecord::Associations.send(:public, :clear_association_cache)
 
 Rails.application.config.after_initialize do
   ActiveSupport.on_load(:active_record) do
