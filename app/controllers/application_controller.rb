@@ -246,7 +246,7 @@ class ApplicationController < ActionController::Base
   ].freeze
   JS_ENV_ROOT_ACCOUNT_FEATURES = [
     :responsive_awareness, :responsive_misc, :product_tours, :module_dnd, :files_dnd, :unpublished_courses,
-    :usage_rights_discussion_topics, :inline_math_everywhere, :granular_permissions_manage_users
+    :usage_rights_discussion_topics, :inline_math_everywhere, :granular_permissions_manage_users, :rce_limit_init_render_on_page
   ].freeze
   JS_ENV_BRAND_ACCOUNT_FEATURES = [
     :embedded_release_notes
@@ -289,7 +289,7 @@ class ApplicationController < ActionController::Base
   helper_method :render_js_env
 
   # add keys to JS environment necessary for the RCE at the given risk level
-  def rce_js_env(domain: request.env['HTTP_HOST'])
+  def rce_js_env(domain: request.host_with_port)
     rce_env_hash = Services::RichContent.env_for(
         user: @current_user,
         domain: domain,
@@ -2794,7 +2794,7 @@ class ApplicationController < ActionController::Base
       false
     else
       return value_to_boolean(params[:force_stream]) if params.key?(:force_stream)
-      ::Canvas::DynamicSettings.find(tree: :private)["enable_template_streaming"] &&
+      ::Canvas::DynamicSettings.find(tree: :private)["enable_template_streaming", failsafe: false] &&
         Setting.get("disable_template_streaming_for_#{controller_name}/#{action_name}", "false") != "true"
     end
   end

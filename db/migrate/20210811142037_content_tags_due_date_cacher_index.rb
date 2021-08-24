@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-#encoding:ASCII-8BIT
 #
-# Copyright (C) 2012 - present Instructure, Inc.
+# Copyright (C) 2021 - present Instructure, Inc.
 #
 # This file is part of Canvas.
 #
@@ -18,18 +17,16 @@
 # You should have received a copy of the GNU Affero General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
-Rack::Utils.key_space_limit = 128.kilobytes # default is 64KB
-Rack::Utils.multipart_part_limit = 256 # default is 128
+class ContentTagsDueDateCacherIndex < ActiveRecord::Migration[6.0]
+  disable_ddl_transaction!
+  tag :postdeploy
 
-module EnableRackChunking
-  def chunkable_version?(*)
-    if defined?(PactConfig)
-      false
-    elsif ::Rails.env.test? || ::Canvas::DynamicSettings.find(tree: :private)["enable_rack_chunking", failsafe: true]
-      super
-    else
-      false
-    end
+  def change
+    add_index :content_tags,
+              [:content_type, :context_type, :context_id],
+              where: "workflow_state<>'deleted'",
+              name: 'index_content_tags_for_due_date_cacher',
+              algorithm: :concurrently,
+              if_not_exists: true
   end
 end
-Rack::Chunked.prepend(EnableRackChunking)
