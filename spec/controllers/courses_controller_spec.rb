@@ -1673,7 +1673,7 @@ describe CoursesController do
         user_session(@teacher)
 
         get 'show', params: {:id => @course.id}
-        expect(assigns[:js_env][:PERMISSIONS]).to eq({manage: true})
+        expect(assigns[:js_env][:PERMISSIONS]).to eq({manage: true, read_as_admin: true})
       end
 
       it "sets COURSE.color appropriately in js_env" do
@@ -3489,6 +3489,41 @@ describe CoursesController do
       group.users << student2
       group.group_memberships.first.update!(workflow_state: 'deleted')
       group.reload
+    end
+
+    it "should not set pagination total_pages/last page link" do
+      user_session(teacher)
+      # need two pages or the first page will also be the last_page
+      student1
+      student2
+
+      get 'users', params: {
+        course_id: course.id,
+        format: 'json',
+        enrollment_role: 'StudentEnrollment',
+        per_page: 1
+      }
+      expect(response).to be_successful
+      expect(response.headers.to_a.find { |a| a.first == "Link" }.last).to_not include("last")
+    end
+
+    it "should set pagination total_pages/last page link if account setting enabled" do
+      user_session(teacher)
+      # need two pages or the first page will also be the last_page
+      student1
+      student2
+      account = course.root_account
+      account.settings[:allow_last_page_on_course_users] = true
+      account.save!
+
+      get 'users', params: {
+        course_id: course.id,
+        format: 'json',
+        enrollment_role: 'StudentEnrollment',
+        per_page: 1
+      }
+      expect(response).to be_successful
+      expect(response.headers.to_a.find { |a| a.first == "Link" }.last).to include("last")
     end
 
     it 'only returns group_ids for active group memberships when requested' do

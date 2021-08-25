@@ -3459,7 +3459,6 @@ describe CoursesController, type: :request do
         expect(link_header[0]).to match /page=1&per_page=5/ # current page
         expect(link_header[1]).to match /page=2&per_page=5/ # next page
         expect(link_header[2]).to match /page=1&per_page=5/ # first page
-        expect(link_header[3]).to match /page=2&per_page=5/ # last page
       end
 
       it "should allow jumping to a user's page based on id" do
@@ -3899,6 +3898,9 @@ describe CoursesController, type: :request do
           'allow_student_discussion_topics' => true,
           'allow_student_forum_attachments' => true,
           'allow_student_discussion_editing' => true,
+          'banner_image' => nil,
+          'banner_image_id' => nil,
+          'banner_image_url' => nil,
           'course_color' => nil,
           'filter_speed_grader_by_student_group' => false,
           'grading_standard_enabled' => false,
@@ -3958,6 +3960,9 @@ describe CoursesController, type: :request do
           'allow_student_discussion_topics' => false,
           'allow_student_forum_attachments' => true,
           'allow_student_discussion_editing' => false,
+          'banner_image' => nil,
+          'banner_image_id' => nil,
+          'banner_image_url' => nil,
           'course_color' => '#AABBCC',
           'filter_speed_grader_by_student_group' => true,
           'grading_standard_enabled' => false,
@@ -4015,6 +4020,9 @@ describe CoursesController, type: :request do
           'allow_student_discussion_topics' => true,
           'allow_student_forum_attachments' => true,
           'allow_student_discussion_editing' => true,
+          'banner_image' => nil,
+          'banner_image_id' => nil,
+          'banner_image_url' => nil,
           'course_color' => nil,
           'filter_speed_grader_by_student_group' => false,
           'grading_standard_enabled' => false,
