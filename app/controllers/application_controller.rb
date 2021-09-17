@@ -1384,11 +1384,7 @@ class ApplicationController < ActionController::Base
   # If asset is an AR model, then its asset_string will be used. If it's an array,
   # it should look like [ "subtype", context ], like [ "pages", course ].
   def log_asset_access(asset, asset_category, asset_group=nil, level=nil, membership_type=nil, overwrite:true, context: nil)
-    # ideally this could just be `user = file_access_user` now, but that causes
-    # problems with some integration specs where getting @files_domain set
-    # reliably is... difficult
-    user = @current_user
-    user ||= User.where(id: session['file_access_user_id']).first if session['file_access_user_id'].present?
+    user = file_access_user
     return unless user && @context && asset
     return if asset.respond_to?(:new_record?) && asset.new_record?
 
@@ -2587,11 +2583,14 @@ class ApplicationController < ActionController::Base
     rights = [*RoleOverride::GRANULAR_MANAGE_ASSIGNMENT_PERMISSIONS, :manage_grades, :read_grades, :manage]
     permissions = @context.rights_status(@current_user, *rights)
     permissions[:manage_course] = permissions[:manage]
-    unless @context.root_account.feature_enabled?(:granular_permissions_manage_assignments)
+    if @context.root_account.feature_enabled?(:granular_permissions_manage_assignments)
+      permissions[:manage_assignments] = permissions[:manage_assignments_edit]
+      permissions[:manage] = permissions[:manage_assignments_edit]
+    else
       permissions[:manage_assignments_add] = permissions[:manage_assignments]
       permissions[:manage_assignments_delete] = permissions[:manage_assignments]
+      permissions[:manage] = permissions[:manage_assignments]
     end
-    permissions[:manage] = permissions[:manage_assignments]
     permissions[:by_assignment_id] = @context.assignments.map do |assignment|
       [assignment.id, {
         update: assignment.user_can_update?(@current_user, session),
