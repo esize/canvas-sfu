@@ -325,6 +325,13 @@ class GroupsController < ApplicationController
           @available_groups = (all_groups - @user_groups).select do |group|
             group.grants_right?(@current_user, :join)
           end
+
+          # SFU MOD: add ENV.permissions to groups index page - for sfu/canvas-lms-#267
+          js_env permissions: {
+            read_sis: @context.grants_any_right?(@current_user, session, :read_sis, :manage_sis)
+          }
+          # END SFU MOD
+          
           render :context_groups
         end
       end
