@@ -34,14 +34,16 @@ import {
   SUBSCRIBE_TO_DISCUSSION_TOPIC,
   UPDATE_DISCUSSION_READ_STATE
 } from '../../../graphql/Mutations'
+import {LockedDiscussion} from '../../components/LockedDiscussion/LockedDiscussion'
+import {PodcastFeed} from '../../components/PodcastFeed/PodcastFeed'
 import {PostToolbar} from '../../components/PostToolbar/PostToolbar'
 import PropTypes from 'prop-types'
 import React, {useContext, useState} from 'react'
 import {SearchContext} from '../../utils/constants'
 import {useMutation, useApolloClient} from 'react-apollo'
 
-import {Alert} from '@instructure/ui-alerts'
 import {AlertManagerContext} from '@canvas/alerts/react/AlertManager'
+import {DiscussionTopicAlertManager} from '../../components/DiscussionTopicAlertManager/DiscussionTopicAlertManager'
 import {Button} from '@instructure/ui-buttons'
 import {Flex} from '@instructure/ui-flex'
 import {IconEditLine} from '@instructure/ui-icons'
@@ -52,6 +54,8 @@ import {Responsive} from '@instructure/ui-responsive/lib/Responsive'
 import rubricTriggers from '../../../../discussion_topic/jquery/assignmentRubricDialog'
 import rubricEditing from '../../../../../shared/rubrics/jquery/edit_rubric'
 import {AssignmentAvailabilityWindow} from '../../components/AssignmentAvailabilityWindow/AssignmentAvailabilityWindow'
+
+import('@canvas/rubrics/jquery/rubricEditBinding')
 
 export const DiscussionTopicContainer = ({createDiscussionEntry, ...props}) => {
   const {setOnFailure, setOnSuccess} = useContext(AlertManagerContext)
@@ -67,11 +71,6 @@ export const DiscussionTopicContainer = ({createDiscussionEntry, ...props}) => {
   if (ENV.DISCUSSION?.GRADED_RUBRICS_URL) {
     rubricTriggers.initDialog()
   }
-
-  const isAnnouncementDelayed =
-    props.discussionTopic.isAnnouncement &&
-    props.discussionTopic.delayedPostAt &&
-    Date.parse(props.discussionTopic.delayedPostAt) > Date.now()
 
   const [deleteDiscussionTopic] = useMutation(DELETE_DISCUSSION_TOPIC, {
     onCompleted: () => {
@@ -218,6 +217,8 @@ export const DiscussionTopicContainer = ({createDiscussionEntry, ...props}) => {
     return rootEntryDraftMessage
   }
 
+  const podcast_url = document.querySelector("link[title='Discussion Podcast Feed']")
+
   return (
     <Responsive
       match="media"
@@ -239,6 +240,11 @@ export const DiscussionTopicContainer = ({createDiscussionEntry, ...props}) => {
           },
           replyButton: {
             display: 'block'
+          },
+          podcastButton: {
+            display: 'block',
+            padding: 'small none none',
+            textSize: 'small'
           },
           RCE: {
             paddingClosed: 'none',
@@ -262,6 +268,11 @@ export const DiscussionTopicContainer = ({createDiscussionEntry, ...props}) => {
           replyButton: {
             display: 'inline-block'
           },
+          podcastButton: {
+            display: 'inline-block',
+            padding: 'small none none small',
+            textSize: 'medium'
+          },
           RCE: {
             paddingClosed: 'none medium none xx-large',
             paddingOpen: 'none medium medium xx-large'
@@ -270,35 +281,7 @@ export const DiscussionTopicContainer = ({createDiscussionEntry, ...props}) => {
       }}
       render={responsiveProps => (
         <>
-          {props.discussionTopic.initialPostRequiredForCurrentUser && (
-            <Alert renderCloseButtonLabel="Close" margin="0 0 x-small">
-              <Text size={responsiveProps.alert.textSize}>
-                {I18n.t('You must post before seeing replies.')}
-              </Text>
-            </Alert>
-          )}
-          {props.discussionTopic.permissions?.readAsAdmin &&
-            props.discussionTopic.groupSet &&
-            props.discussionTopic.assignment?.onlyVisibleToOverrides && (
-              <Alert renderCloseButtonLabel="Close" margin="0 0 x-small">
-                <Text size={responsiveProps.alert.textSize}>
-                  {I18n.t(
-                    'Note: for differentiated group topics, some threads may not have any students assigned.'
-                  )}
-                </Text>
-              </Alert>
-            )}
-          {isAnnouncementDelayed && (
-            <Alert renderCloseButtonLabel="Close" margin="0 0 x-small">
-              <Text size={responsiveProps.alert.textSize}>
-                {I18n.t('This announcement will not be visible until %{delayedPostAt}.', {
-                  delayedPostAt: DateHelper.formatDatetimeForDiscussions(
-                    props.discussionTopic.delayedPostAt
-                  )
-                })}
-              </Text>
-            </Alert>
-          )}
+          <DiscussionTopicAlertManager discussionTopic={props.discussionTopic} />
           {!isSearch && filter !== 'drafts' && (
             <Highlight isHighlighted={props.isHighlighted} data-testid="highlight-container">
               <Flex as="div" direction="column" data-testid="discussion-topic-container">
@@ -311,205 +294,233 @@ export const DiscussionTopicContainer = ({createDiscussionEntry, ...props}) => {
                     borderColor="primary"
                     padding="xx-small 0 small"
                   >
-                    <Flex direction="column" padding={responsiveProps.container.padding}>
-                      {isGraded(props.discussionTopic.assignment) ? (
+                    {!props.discussionTopic.availableForUser ? (
+                      <LockedDiscussion title={props.discussionTopic.title} />
+                    ) : (
+                      <Flex direction="column" padding={responsiveProps.container.padding}>
+                        {isGraded(props.discussionTopic.assignment) ? (
+                          <Flex.Item
+                            shouldShrink
+                            shouldGrow
+                            margin={responsiveProps.assignmentDetails.margin}
+                          >
+                            <AssignmentDetails
+                              pointsPossible={props.discussionTopic.assignment.pointsPossible || 0}
+                              assignment={props.discussionTopic.assignment}
+                              isAdmin={props.discussionTopic.permissions.readAsAdmin}
+                            />
+                            {props.discussionTopic.assignment?.assessmentRequestsForCurrentUser?.map(
+                              assessmentRequest => (
+                                <PeerReview
+                                  key={assessmentRequest._id}
+                                  dueAtDisplayText={
+                                    props.discussionTopic.assignment.peerReviews?.dueAt
+                                  }
+                                  revieweeName={assessmentRequest.user.displayName}
+                                  reviewLinkUrl={getReviewLinkUrl(
+                                    ENV.course_id,
+                                    props.discussionTopic.assignment._id,
+                                    assessmentRequest.user._id
+                                  )}
+                                  workflowState={assessmentRequest.workflowState}
+                                />
+                              )
+                            )}
+                          </Flex.Item>
+                        ) : (
+                          <AssignmentAvailabilityWindow
+                            availableDate={props.discussionTopic.delayedPostAt}
+                            untilDate={props.discussionTopic.lockAt}
+                            showOnMobile
+                            showDateWithTime
+                          />
+                        )}
+                        <Flex.Item shouldShrink shouldGrow>
+                          <DiscussionEntryContainer
+                            isTopic
+                            postUtilities={
+                              <PostToolbar
+                                onReadAll={
+                                  !props.discussionTopic.initialPostRequiredForCurrentUser
+                                    ? onMarkAllAsRead
+                                    : null
+                                }
+                                onUnreadAll={
+                                  !props.discussionTopic.initialPostRequiredForCurrentUser
+                                    ? onMarkAllAsUnread
+                                    : null
+                                }
+                                onDelete={
+                                  props.discussionTopic.permissions.delete ? onDelete : null
+                                }
+                                repliesCount={props.discussionTopic.entryCounts?.repliesCount}
+                                unreadCount={props.discussionTopic.entryCounts?.unreadCount}
+                                updateDraftCache={props.updateDraftCache}
+                                onSend={
+                                  props.discussionTopic.permissions?.copyAndSendTo
+                                    ? () => setSendToOpen(true)
+                                    : null
+                                }
+                                onCopy={
+                                  props.discussionTopic.permissions?.copyAndSendTo
+                                    ? () => setCopyToOpen(true)
+                                    : null
+                                }
+                                onEdit={
+                                  props.discussionTopic.permissions?.update
+                                    ? () => window.location.assign(ENV.EDIT_URL)
+                                    : null
+                                }
+                                onTogglePublish={
+                                  props.discussionTopic.permissions?.moderateForum
+                                    ? onPublish
+                                    : null
+                                }
+                                onToggleSubscription={onSubscribe}
+                                onOpenSpeedgrader={
+                                  props.discussionTopic.permissions?.speedGrader
+                                    ? () => window.open(getSpeedGraderUrl(), '_blank')
+                                    : null
+                                }
+                                onPeerReviews={
+                                  props.discussionTopic.permissions?.peerReview
+                                    ? () => window.location.assign(ENV.PEER_REVIEWS_URL)
+                                    : null
+                                }
+                                showRubric={props.discussionTopic.permissions?.showRubric}
+                                addRubric={props.discussionTopic.permissions?.addRubric}
+                                onDisplayRubric={
+                                  props.discussionTopic.permissions?.showRubric ||
+                                  props.discussionTopic.permissions?.addRubric
+                                    ? () => {
+                                        rubricTriggers.openDialog()
+                                        rubricEditing.init()
+
+                                        const event = document.createEvent('Event')
+                                        event.initEvent('rubricEditDataReady', true, true)
+                                        document.dispatchEvent(event)
+                                      }
+                                    : null
+                                }
+                                isPublished={props.discussionTopic.published}
+                                canUnpublish={props.discussionTopic.canUnpublish}
+                                isSubscribed={props.discussionTopic.subscribed}
+                                onOpenForComments={
+                                  props.discussionTopic.permissions?.openForComments
+                                    ? () => onToggleLocked(false)
+                                    : null
+                                }
+                                onCloseForComments={
+                                  props.discussionTopic.permissions?.closeForComments &&
+                                  !props.discussionTopic.rootTopic
+                                    ? () => onToggleLocked(true)
+                                    : null
+                                }
+                                canManageContent={props.discussionTopic.permissions?.manageContent}
+                                discussionTopicId={props.discussionTopic._id}
+                              />
+                            }
+                            author={props.discussionTopic.author}
+                            anonymousAuthor={props.discussionTopic.anonymousAuthor}
+                            title={props.discussionTopic.title}
+                            message={props.discussionTopic.message}
+                            isIsolatedView={false}
+                            editor={props.discussionTopic.editor}
+                            timingDisplay={DateHelper.formatDatetimeForDiscussions(
+                              props.discussionTopic.postedAt
+                            )}
+                            editedTimingDisplay={DateHelper.formatDatetimeForDiscussions(
+                              props.discussionTopic.updatedAt
+                            )}
+                            isTopicAuthor
+                            attachment={props.discussionTopic.attachment}
+                          >
+                            {props.discussionTopic.permissions?.reply && !expandedReply && (
+                              <>
+                                <View
+                                  as="div"
+                                  padding="small none none"
+                                  display={responsiveProps.replyButton.display}
+                                >
+                                  <Button
+                                    display={responsiveProps.replyButton.display}
+                                    color="primary"
+                                    onClick={() => {
+                                      setExpandedReply(!expandedReply)
+                                    }}
+                                    data-testid="discussion-topic-reply"
+                                  >
+                                    {findRootEntryDraftMessage() ? (
+                                      <Text weight="bold" size={responsiveProps.textSize}>
+                                        <View as="span" margin="0 small 0 0">
+                                          <IconEditLine size="x-small" />
+                                        </View>
+                                        {I18n.t('Continue draft')}
+                                      </Text>
+                                    ) : (
+                                      <Text weight="bold" size={responsiveProps.textSize}>
+                                        {I18n.t('Reply')}
+                                      </Text>
+                                    )}
+                                  </Button>
+                                </View>
+                                {podcast_url?.href && (
+                                  <View
+                                    as="div"
+                                    padding={responsiveProps.podcastButton.padding}
+                                    display={responsiveProps.podcastButton.display}
+                                  >
+                                    <PodcastFeed
+                                      linkUrl={podcast_url.href}
+                                      responsiveProps={responsiveProps.podcastButton}
+                                    />
+                                  </View>
+                                )}
+                              </>
+                            )}
+                          </DiscussionEntryContainer>
+                        </Flex.Item>
                         <Flex.Item
                           shouldShrink
                           shouldGrow
-                          margin={responsiveProps.assignmentDetails.margin}
+                          padding={
+                            expandedReply
+                              ? responsiveProps.RCE.paddingOpen
+                              : responsiveProps.RCE.paddingClosed
+                          }
+                          overflowX="hidden"
+                          overflowY="hidden"
                         >
-                          <AssignmentDetails
-                            pointsPossible={props.discussionTopic.assignment.pointsPossible || 0}
-                            assignment={props.discussionTopic.assignment}
-                            isAdmin={props.discussionTopic.permissions.readAsAdmin}
-                          />
-                          {props.discussionTopic.assignment?.assessmentRequestsForCurrentUser?.map(
-                            assessmentRequest => (
-                              <PeerReview
-                                key={assessmentRequest._id}
-                                dueAtDisplayText={
-                                  props.discussionTopic.assignment.peerReviews?.dueAt
+                          {expandedReply && (
+                            <DiscussionEdit
+                              discussionAnonymousState={props.discussionTopic.anonymousState}
+                              show={expandedReply}
+                              onSubmit={text => {
+                                if (createDiscussionEntry) {
+                                  createDiscussionEntry(text)
+                                  setExpandedReply(false)
                                 }
-                                revieweeName={assessmentRequest.user.displayName}
-                                reviewLinkUrl={getReviewLinkUrl(
-                                  ENV.course_id,
-                                  props.discussionTopic.assignment._id,
-                                  assessmentRequest.user._id
-                                )}
-                                workflowState={assessmentRequest.workflowState}
-                              />
-                            )
+                              }}
+                              onCancel={() => {
+                                setExpandedReply(false)
+                              }}
+                              value={findRootEntryDraftMessage()}
+                              onSetDraftSaved={setDraftSaved}
+                              draftSaved={draftSaved}
+                              updateDraft={newDraftMessage => {
+                                createDiscussionEntryDraft({
+                                  variables: {
+                                    discussionTopicId: props.discussionTopic._id,
+                                    message: newDraftMessage,
+                                    parentId: null
+                                  }
+                                })
+                              }}
+                            />
                           )}
                         </Flex.Item>
-                      ) : (
-                        <AssignmentAvailabilityWindow
-                          availableDate={props.discussionTopic.delayedPostAt}
-                          untilDate={props.discussionTopic.lockAt}
-                          showOnMobile
-                          showDateWithTime
-                        />
-                      )}
-                      <Flex.Item shouldShrink shouldGrow>
-                        <DiscussionEntryContainer
-                          isTopic
-                          postUtilities={
-                            <PostToolbar
-                              onReadAll={
-                                !props.discussionTopic.initialPostRequiredForCurrentUser
-                                  ? onMarkAllAsRead
-                                  : null
-                              }
-                              onUnreadAll={
-                                !props.discussionTopic.initialPostRequiredForCurrentUser
-                                  ? onMarkAllAsUnread
-                                  : null
-                              }
-                              onDelete={props.discussionTopic.permissions.delete ? onDelete : null}
-                              repliesCount={props.discussionTopic.entryCounts?.repliesCount}
-                              unreadCount={props.discussionTopic.entryCounts?.unreadCount}
-                              updateDraftCache={props.updateDraftCache}
-                              onSend={
-                                props.discussionTopic.permissions?.copyAndSendTo
-                                  ? () => setSendToOpen(true)
-                                  : null
-                              }
-                              onCopy={
-                                props.discussionTopic.permissions?.copyAndSendTo
-                                  ? () => setCopyToOpen(true)
-                                  : null
-                              }
-                              onEdit={
-                                props.discussionTopic.permissions?.update
-                                  ? () => window.location.assign(ENV.EDIT_URL)
-                                  : null
-                              }
-                              onTogglePublish={
-                                props.discussionTopic.permissions?.moderateForum ? onPublish : null
-                              }
-                              onToggleSubscription={onSubscribe}
-                              onOpenSpeedgrader={
-                                props.discussionTopic.permissions?.speedGrader
-                                  ? () => window.open(getSpeedGraderUrl(), '_blank')
-                                  : null
-                              }
-                              onPeerReviews={
-                                props.discussionTopic.permissions?.peerReview
-                                  ? () => window.location.assign(ENV.PEER_REVIEWS_URL)
-                                  : null
-                              }
-                              showRubric={props.discussionTopic.permissions?.showRubric}
-                              addRubric={props.discussionTopic.permissions?.addRubric}
-                              onDisplayRubric={
-                                props.discussionTopic.permissions?.showRubric ||
-                                props.discussionTopic.permissions?.addRubric
-                                  ? () => {
-                                      rubricTriggers.openDialog()
-                                      rubricEditing.init()
-                                    }
-                                  : null
-                              }
-                              isPublished={props.discussionTopic.published}
-                              canUnpublish={props.discussionTopic.canUnpublish}
-                              isSubscribed={props.discussionTopic.subscribed}
-                              onOpenForComments={
-                                props.discussionTopic.permissions?.openForComments
-                                  ? () => onToggleLocked(false)
-                                  : null
-                              }
-                              onCloseForComments={
-                                props.discussionTopic.permissions?.closeForComments &&
-                                !props.discussionTopic.rootTopic
-                                  ? () => onToggleLocked(true)
-                                  : null
-                              }
-                              canManageContent={props.discussionTopic.permissions?.manageContent}
-                              discussionTopicId={props.discussionTopic._id}
-                            />
-                          }
-                          author={props.discussionTopic.author}
-                          title={props.discussionTopic.title}
-                          message={
-                            props.discussionTopic?.permissions?.read
-                              ? props.discussionTopic.message
-                              : ''
-                          }
-                          isIsolatedView={false}
-                          editor={props.discussionTopic.editor}
-                          timingDisplay={DateHelper.formatDatetimeForDiscussions(
-                            props.discussionTopic.postedAt
-                          )}
-                          editedTimingDisplay={DateHelper.formatDatetimeForDiscussions(
-                            props.discussionTopic.updatedAt
-                          )}
-                          isTopicAuthor
-                          attachment={props.discussionTopic.attachment}
-                        >
-                          {props.discussionTopic.permissions?.reply && !expandedReply && (
-                            <View as="div" padding="small none none">
-                              <Button
-                                display={responsiveProps.replyButton.display}
-                                color="primary"
-                                onClick={() => {
-                                  setExpandedReply(!expandedReply)
-                                }}
-                                data-testid="discussion-topic-reply"
-                              >
-                                {findRootEntryDraftMessage() ? (
-                                  <Text weight="bold" size={responsiveProps.textSize}>
-                                    <View as="span" margin="0 small 0 0">
-                                      <IconEditLine size="x-small" />
-                                    </View>
-                                    {I18n.t('Continue draft')}
-                                  </Text>
-                                ) : (
-                                  <Text weight="bold" size={responsiveProps.textSize}>
-                                    {I18n.t('Reply')}
-                                  </Text>
-                                )}
-                              </Button>
-                            </View>
-                          )}
-                        </DiscussionEntryContainer>
-                      </Flex.Item>
-                      <Flex.Item
-                        shouldShrink
-                        shouldGrow
-                        padding={
-                          expandedReply
-                            ? responsiveProps.RCE.paddingOpen
-                            : responsiveProps.RCE.paddingClosed
-                        }
-                        overflowX="hidden"
-                        overflowY="hidden"
-                      >
-                        {expandedReply && (
-                          <DiscussionEdit
-                            show={expandedReply}
-                            onSubmit={text => {
-                              if (createDiscussionEntry) {
-                                createDiscussionEntry(text)
-                                setExpandedReply(false)
-                              }
-                            }}
-                            onCancel={() => {
-                              setExpandedReply(false)
-                            }}
-                            value={findRootEntryDraftMessage()}
-                            onSetDraftSaved={setDraftSaved}
-                            draftSaved={draftSaved}
-                            updateDraft={newDraftMessage => {
-                              createDiscussionEntryDraft({
-                                variables: {
-                                  discussionTopicId: props.discussionTopic._id,
-                                  message: newDraftMessage,
-                                  parentId: null
-                                }
-                              })
-                            }}
-                          />
-                        )}
-                      </Flex.Item>
-                    </Flex>
+                      </Flex>
+                    )}
                   </View>
                 </Flex.Item>
               </Flex>
@@ -532,7 +543,7 @@ export const DiscussionTopicContainer = ({createDiscussionEntry, ...props}) => {
             }}
           />
           {props.discussionTopic.permissions?.addRubric && (
-            /* 
+            /*
               HACK! this is here because edit_rubric.js expects there to be a #add_rubric_url on the page and sets it's <form action="..."> to it
             */
             // eslint-disable-next-line jsx-a11y/control-has-associated-label, jsx-a11y/anchor-has-content

@@ -17,7 +17,7 @@
  */
 
 import formatMessage from '../../format-message'
-import '../tinymce/ru_RU'
+import '../tinymce/ru'
 
 const locale = {
   "access_the_pretty_html_editor_37168efe": {
@@ -49,6 +49,9 @@ const locale = {
   "announcement_list_da155734": { "message": "Список объявлений" },
   "announcements_a4b8ed4a": { "message": "Объявления" },
   "apply_781a2546": { "message": "Применить" },
+  "apply_changes_to_all_instances_of_this_button_and__3a3bea34": {
+    "message": "Применить изменения ко всем экземплярам этой кнопки и пиктограммы в курсе"
+  },
   "apps_54d24a47": { "message": "Приложения" },
   "aspect_ratio_will_be_preserved_cb5fdfb8": {
     "message": "Соотношение сторон будет сохранено"
@@ -58,12 +61,13 @@ const locale = {
   "audio_and_video_recording_not_supported_please_use_5ce3f0d7": {
     "message": "Аудио- и видеозапись не поддерживается; воспользуйтесь другим браузером."
   },
+  "audio_options_feb58e2c": { "message": "Параметры звука" },
+  "audio_options_tray_33a90711": {
+    "message": "Панель настройки параметров звука"
+  },
   "audio_player_for_title_20cc70d": { "message": "Аудиоплеер для { title }" },
   "auto_saved_content_exists_would_you_like_to_load_t_fee528f2": {
     "message": "Существует сохраненное в автоматическом режиме содержимое. Вы хотите загрузить сохраненное в автоматическом режиме содержимое?"
-  },
-  "automatically_open_an_in_line_preview_preview_disp_ed784ffe": {
-    "message": "Автоматически открывать встроенный предварительный просмотр. (Предварительный просмотр отображается только после сохранения)"
   },
   "available_folders_694d0436": { "message": "Доступные папки" },
   "below_81d4dceb": { "message": "Ниже" },
@@ -110,6 +114,9 @@ const locale = {
     "message": "Закройте меню или диалог. Также возвращает вас в область редактора"
   },
   "close_d634289d": { "message": "Закрыть" },
+  "closed_caption_file_must_be_less_than_maxkb_kb_5880f752": {
+    "message": "Размер закрытого файла субтитров должен быть меньше { maxKb } Кб"
+  },
   "closed_captions_subtitles_e6aaa016": {
     "message": "Закрытые надписи/субтитры"
   },
@@ -145,6 +152,8 @@ const locale = {
   "creative_commons_license_725584ae": {
     "message": "Лицензионное соглашение Creative Commons:"
   },
+  "crop_image_807ebb08": { "message": "Обрезать изображение" },
+  "current_image_f16c249c": { "message": "Текущее изображение" },
   "custom_6979cd81": { "message": "Пользовательская" },
   "date_added_ed5ad465": { "message": "Дата добавления" },
   "decorative_image_3c28aa7d": { "message": "Декоративное изображение" },
@@ -158,11 +167,10 @@ const locale = {
   "describe_the_image_e65d2e32": { "message": "(Опишите изображение)" },
   "describe_the_video_2fe8f46a": { "message": "(опишите видео)" },
   "details_98a31b68": { "message": "Подробные сведения" },
+  "diamond_b8dfe7ae": { "message": "Ромб" },
+  "dimension_type_55c83e4e": { "message": "Тип измерения" },
   "dimensions_45ddb7b7": { "message": "Размеры" },
   "directionality_26ae9e08": { "message": "Направленность" },
-  "disable_in_line_preview_2a675175": {
-    "message": "Отключить встроенный предварительный просмотр."
-  },
   "discussions_a5f96392": { "message": "Обсуждения" },
   "discussions_index_6c36ced": { "message": "Индекс обсуждений" },
   "display_options_315aba85": { "message": "Опции отображения" },
@@ -298,17 +306,21 @@ const locale = {
   "loading_please_wait_d276220a": {
     "message": "Выполняется загрузка, подождите..."
   },
+  "loading_preview_9f077aa1": { "message": "Загрузка предпросмотра" },
   "locked_762f138b": { "message": "Заблокировано" },
   "media_af190855": { "message": "Мультимедиа" },
   "medium_5a8e9ead": { "message": "Средний" },
   "middle_27dc1d5": { "message": "Середина" },
   "miscellaneous_e9818229": { "message": "Разное" },
   "modules_c4325335": { "message": "Модули" },
+  "multi_color_image_63d7372f": { "message": "Многоцветное изображение" },
+  "must_be_at_least_percentage_22e373b6": {
+    "message": "Должен быть как минимум { percentage }%"
+  },
   "must_be_at_least_width_x_height_px_41dc825e": {
     "message": "Должно быть как минимум { width } x { height }пикселов"
   },
   "my_files_2f621040": { "message": "Мои файлы" },
-  "my_images_427f9b0c": { "message": "Мои изображения" },
   "name_1aed4a1b": { "message": "Имя" },
   "navigate_through_the_menu_or_toolbar_415a4e50": {
     "message": "Навигация в меню или панели инструментов"
@@ -327,6 +339,7 @@ const locale = {
     "message": "Не найдены результаты для { term }."
   },
   "none_3b5e34d2": { "message": "Нет" },
+  "none_selected_b93d56d2": { "message": "Нет выбранных элементов" },
   "octagon_e48be9f": { "message": "Восьмиугольник" },
   "open_this_keyboard_shortcuts_dialog_9658b83a": {
     "message": "Открыть этот диалог комбинаций клавиш"
@@ -346,7 +359,13 @@ const locale = {
   },
   "pages_e5414c2c": { "message": "Страницы" },
   "paragraph_5e5ad8eb": { "message": "Параграф" },
+  "pentagon_17d82ea3": { "message": "Пятиугольник" },
   "people_b4ebb13c": { "message": "Люди" },
+  "percentage_34ab7c2c": { "message": "Процент" },
+  "percentage_must_be_a_number_8033c341": {
+    "message": "Процентное значение должно быть указано в виде числа"
+  },
+  "pixels_52ece7d1": { "message": "Пиксели" },
   "posted_when_a578f5ab": { "message": "Размещено: { when }" },
   "preformatted_d0670862": { "message": "Предварительно форматированный" },
   "pretty_html_editor_28748756": { "message": "Редактор Pretty HTML" },
@@ -385,18 +404,21 @@ const locale = {
   },
   "search_280d00bd": { "message": "Поиск" },
   "search_term_b2d2235": { "message": "критерий поиска" },
+  "select_crop_shape_d441feeb": { "message": "Выберите обрезку формы" },
   "select_language_7c93a900": { "message": "Выбрать язык" },
   "selected_274ce24f": { "message": "Выбрано" },
   "shift_o_to_open_the_pretty_html_editor_55ff5a31": {
     "message": "Нажать Shift-O, чтобы открыть редактор Pretty HTML."
   },
+  "show_audio_options_b489926b": { "message": "Показать параметры звука" },
   "show_embed_options_ef8d7ef": { "message": "Показать параметры вставки" },
   "show_image_options_1e2ecc6b": { "message": "Показать варианты изображения" },
   "show_link_options_545338fd": { "message": "Показать параметры ссылки" },
   "show_video_options_6ed3721a": { "message": "Показать параметры видео" },
+  "single_color_image_4e5d4dbc": { "message": "Одноцветное изображение" },
   "size_b30e1077": { "message": "Размер" },
-  "size_of_file_is_greater_than_the_maximum_max_mb_al_6eb3fa9a": {
-    "message": "Размер { file } больше допустимого максимального размера файла в { max } Мб."
+  "size_of_caption_file_is_greater_than_the_maximum_m_bff5f86e": {
+    "message": "Размер файла субтитров больше допустимого максимального размера в { max } Кб."
   },
   "small_b070434a": { "message": "Маленький" },
   "something_went_wrong_89195131": { "message": "Возникла проблема." },

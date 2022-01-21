@@ -17,10 +17,10 @@
  */
 
 // SFU MOD - Temporarily increase maximum asset size
-const config = require('./frontend_build/baseWebpackConfig')
+const config = require('./ui-build/webpack')
 config.performance.maxAssetSize = 2000000
 module.exports = config
 
 // Uncomment following line and remove all others to restore to default.
-// module.exports = require('./frontend_build/baseWebpackConfig')
+// module.exports = require('./ui-build/webpack')
 // END SFU MOD

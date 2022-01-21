@@ -66,6 +66,7 @@ export const handlers = [
           }),
           conversation: Conversation.mock({
             _id: '195',
+            id: 'Q29udmVyc2F0aW9uLTE5NQ==',
             subject: 'h1'
           })
         }
@@ -99,6 +100,7 @@ export const handlers = [
           ...ConversationParticipant.mock({_id: '123', id: 'Q29udmVyc2F0aW9uUGFydGljaXBhbnQtMTA='}),
           conversation: Conversation.mock({
             _id: '10',
+            id: 'Q29udmVyc2F0aW9uLTEw',
             subject: 'This is a course scoped conversation'
           })
         }
@@ -112,7 +114,11 @@ export const handlers = [
             {_id: '256', id: 'Q29udmVyc2F0aW9uUGFydGljaXBhbnQtMjU2', workflowState: 'unread'},
             {_id: '257', id: 'Q29udmVyc2F0aW9uUGFydGljaXBhbnQtMjU4', workflowState: 'unread'}
           ),
-          conversation: Conversation.mock({_id: '197', subject: 'This is an inbox conversation'})
+          conversation: Conversation.mock({
+            _id: '197',
+            id: 'Q29udmVyc2F0aW9uLTE5Nw==',
+            subject: 'This is an inbox conversation'
+          })
         }
       ]
       data.legacyNode.conversationsConnection.nodes[0].conversation.conversationMessagesConnection.nodes =
@@ -167,6 +173,10 @@ export const handlers = [
     return res(ctx.data(data))
   }),
 
+  graphql.query('GetConversationMessagesQuery', (req, res, ctx) => {
+    return res(ctx.data({legacyNode: Conversation.mock()}))
+  }),
+
   graphql.query('GetUserCourses', (req, res, ctx) => {
     const data = {
       legacyNode: {
@@ -207,6 +217,92 @@ export const handlers = [
         __typename: 'User'
       }
     }
+    return res(ctx.data(data))
+  }),
+
+  graphql.query('GetAddressBookRecipients', (req, res, ctx) => {
+    const data = {
+      legacyNode: {
+        id: 'VXNlci0x',
+        __typename: 'User'
+      }
+    }
+
+    if (req.variables.context) {
+      const recipients = {
+        contextsConnection: {
+          nodes: [],
+          __typename: 'MessageableContextConnection'
+        },
+        usersConnection: {
+          nodes: [
+            {
+              id: 'TWVzc2FnZWFibGVVc2VyLTQx',
+              name: 'Frederick Dukes',
+              __typename: 'MessageableUser'
+            }
+          ],
+          __typename: 'MessageableUserConnection'
+        },
+        __typename: 'Recipients'
+      }
+      data.legacyNode.recipients = recipients
+    } else if (req.variables.search === 'Fred') {
+      const recipients = {
+        contextsConnection: {
+          nodes: [],
+          __typename: 'MessageableContextConnection'
+        },
+        usersConnection: {
+          nodes: [
+            {
+              id: 'TWVzc2FnZWFibGVVc2VyLTQx',
+              name: 'Frederick Dukes',
+              __typename: 'MessageableUser'
+            }
+          ],
+          __typename: 'MessageableUserConnection'
+        },
+        __typename: 'Recipients'
+      }
+      data.legacyNode.recipients = recipients
+    } else {
+      const recipients = {
+        contextsConnection: {
+          nodes: [
+            {
+              id: 'course_FnZW',
+              name: 'Testing 101',
+              __typename: 'MessageableUser'
+            }
+          ],
+          __typename: 'MessageableContextConnection'
+        },
+        usersConnection: {
+          nodes: [
+            {
+              id: 'TWVzc2FnZWFibGVVc2VyLTQx',
+              name: 'Frederick Dukes',
+              __typename: 'MessageableUser'
+            },
+            {
+              id: 'TWVzc2FnZWFibGVVc2VyLTY1',
+              name: 'Trevor Fitzroy',
+              __typename: 'MessageableUser'
+            },
+            {
+              id: 'TWVzc2FnZWFibGVVc2VyLTMy',
+              name: 'Null Forge',
+              __typename: 'MessageableUser'
+            }
+          ],
+          __typename: 'MessageableUserConnection'
+        },
+        __typename: 'Recipients'
+      }
+      data.legacyNode.recipients = recipients
+    }
+
     return res(ctx.data(data))
   }),
 

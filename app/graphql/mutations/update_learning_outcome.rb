@@ -18,23 +18,19 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-class Mutations::UpdateLearningOutcome < Mutations::BaseMutation
-  graphql_name 'UpdateLearningOutcome'
+class Mutations::UpdateLearningOutcome < Mutations::BaseLearningOutcomeMutation
+  graphql_name "UpdateLearningOutcome"
 
-  argument :id, ID, required: true, prepare: GraphQLHelpers.relay_or_legacy_id_prepare_func('LearningOutcome')
-  argument :title, String, required: true
-  argument :display_name, String, required: false
-  argument :description, String, required: false
-  argument :vendor_guid, String, required: false
-
-  field :learning_outcome, Types::LearningOutcomeType, null: true
+  argument :id, ID, required: true, prepare: GraphQLHelpers.relay_or_legacy_id_prepare_func("LearningOutcome")
 
   def resolve(input:)
     record = LearningOutcome.active.find_by(id: input[:id])
 
     validate!(record, input[:id])
 
-    if record.update(attributes(input))
+    outcome_input = attrs(input, record.context)
+
+    if record.update(outcome_input)
       { learning_outcome: record }
     else
       errors_for(record, { short_description: :title })
@@ -47,10 +43,6 @@ class Mutations::UpdateLearningOutcome < Mutations::BaseMutation
     raise GraphQL::ExecutionError, I18n.t("unable to find LearningOutcome for id %{id}", id: outcome_id) unless outcome
 
     raise GraphQL::ExecutionError, I18n.t("insufficient permissions") unless check_permission(outcome)
-  end
-
-  def attributes(input)
-    input.to_h.slice(:title, :display_name, :description, :vendor_guid)
   end
 
   def check_permission(outcome)

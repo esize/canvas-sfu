@@ -58,8 +58,10 @@ td {
 a {
   // Canvas High-Contrast link color
   color: darken(#0770A3, 10%);
+  text-decoration: underline;
   &:focus, &:hover {
     color: darken(#0770A3, 20%);
+    text-decoration: underline;
   }
 }
 
@@ -141,7 +143,7 @@ iframe[data-media-id] {
 
 /* the svg and keyframe styles are lifted from instui spinner */
 span[data-placeholder-for] {
-  border: solid 1px #8b969e;
+  border: solid 1px #6B7780;
   background-color: #ccc;
   display: inline-block;
   max-width: 100%;

@@ -16,9 +16,11 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {CURRENT_USER} from './constants'
 import {DISCUSSION_SUBENTRIES_QUERY} from '../../graphql/Queries'
 import {Discussion} from '../../graphql/Discussion'
 import {DiscussionEntry} from '../../graphql/DiscussionEntry'
+import I18n from 'i18n!discussion_topics_post'
 
 export const isGraded = (assignment = null) => {
   return assignment !== null
@@ -69,12 +71,30 @@ export const updateDiscussionTopicEntryCounts = (
   }
 }
 
+export const updateDiscussionEntryRootEntryCounts = (cache, result, unreadCountChange) => {
+  const discussionEntryOptions = {
+    id: btoa(
+      'DiscussionEntry-' + result.data.updateDiscussionEntryParticipant.discussionEntry.rootEntryId
+    ),
+    fragment: DiscussionEntry.fragment,
+    fragmentName: 'DiscussionEntry'
+  }
+
+  const data = JSON.parse(JSON.stringify(cache.readFragment(discussionEntryOptions)))
+  data.rootEntryParticipantCounts.unreadCount += unreadCountChange
+
+  cache.writeFragment({
+    ...discussionEntryOptions,
+    data
+  })
+}
+
 export const addReplyToDiscussionEntry = (cache, variables, newDiscussionEntry) => {
   try {
     // Creates an object containing the data that needs to be updated
     // Writes that new data to the cache using the id of the object
     const discussionEntryOptions = {
-      id: variables.discussionEntryID,
+      id: btoa('DiscussionEntry-' + variables.discussionEntryID),
       fragment: DiscussionEntry.fragment,
       fragmentName: 'DiscussionEntry'
     }
@@ -127,6 +147,10 @@ export const resolveAuthorRoles = (isAuthor, discussionRoles) => {
   if (isAuthor && discussionRoles) {
     return discussionRoles.concat('Author')
   }
+
+  if (isAuthor && !discussionRoles) {
+    return ['Author']
+  }
   return discussionRoles
 }
 
@@ -152,8 +176,26 @@ export const getOptimisticResponse = (
   message,
   parentId = 'PLACEHOLDER',
   rootEntryId = null,
-  isolatedEntryId = null
+  isolatedEntryId = null,
+  quotedEntry = null,
+  isAnonymous = false
 ) => {
+  if (quotedEntry && Object.keys(quotedEntry).length !== 0) {
+    quotedEntry = {
+      createdAt: quotedEntry.createdAt,
+      previewMessage: quotedEntry.previewMessage,
+      author: {
+        shortName: quotedEntry.author.shortName,
+        __typename: 'User'
+      },
+      anonymousAuthor: null,
+      editor: null,
+      deleted: false,
+      __typename: 'DiscussionEntry'
+    }
+  } else {
+    quotedEntry = null
+  }
   return {
     createDiscussionEntry: {
       discussionEntry: {
@@ -165,24 +207,37 @@ export const getOptimisticResponse = (
         message,
         ratingCount: null,
         ratingSum: null,
-        rating: false,
-        read: true,
-        replyPreview: '',
-        forcedReadState: false,
         subentriesCount: null,
+        entryParticipant: {
+          rating: false,
+          read: true,
+          forcedReadState: false,
+          reportType: null,
+          __typename: 'EntryParticipant'
+        },
         rootEntryParticipantCounts: {
           unreadCount: 0,
           repliesCount: 0,
           __typename: 'DiscussionEntryCounts'
         },
-        author: {
-          id: 'USER_PLACEHOLDER',
-          _id: ENV.current_user.id,
-          avatarUrl: ENV.current_user.avatar_image_url,
-          displayName: ENV.current_user.display_name,
-          courseRoles: [],
-          __typename: 'User'
-        },
+        author: !isAnonymous
+          ? {
+              id: 'USER_PLACEHOLDER',
+              _id: ENV.current_user.id,
+              avatarUrl: ENV.current_user.avatar_image_url,
+              displayName: ENV.current_user.display_name,
+              courseRoles: [],
+              __typename: 'User'
+            }
+          : null,
+        anonymousAuthor: isAnonymous
+          ? {
+              id: CURRENT_USER,
+              avatarUrl: null,
+              shortName: CURRENT_USER,
+              __typename: 'AnonymousUser'
+            }
+          : null,
         editor: null,
         lastReply: null,
         permissions: {
@@ -199,7 +254,7 @@ export const getOptimisticResponse = (
         parentId,
         rootEntryId,
         isolatedEntryId,
-        quotedEntry: null,
+        quotedEntry,
         attachment: null,
         __typename: 'DiscussionEntry'
       },
@@ -207,4 +262,18 @@ export const getOptimisticResponse = (
       __typename: 'CreateDiscussionEntryPayload'
     }
   }
+}
+
+export const isAnonymous = discussionEntry =>
+  ENV.discussion_anonymity_enabled &&
+  discussionEntry.anonymousAuthor !== null &&
+  discussionEntry.author === null
+
+export const getDisplayName = discussionEntry => {
+  if (isAnonymous(discussionEntry)) {
+    return discussionEntry.anonymousAuthor.shortName === CURRENT_USER
+      ? I18n.t('Anonymous %{id} (You)', {id: discussionEntry.anonymousAuthor.id})
+      : I18n.t('Anonymous %{id}', {id: discussionEntry.anonymousAuthor.id})
+  }
+  return discussionEntry.author?.displayName || discussionEntry.author?.shortName
 }

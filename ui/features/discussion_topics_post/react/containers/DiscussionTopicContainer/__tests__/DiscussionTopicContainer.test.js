@@ -17,20 +17,24 @@
  */
 
 import {AlertManagerContext} from '@canvas/alerts/react/AlertManager'
-import {ApolloProvider} from 'react-apollo'
 import {Assignment} from '../../../../graphql/Assignment'
+import {
+  deleteDiscussionTopicMock,
+  updateDiscussionReadStateMock,
+  updateDiscussionTopicMock
+} from '../../../../graphql/Mocks'
 import {Discussion} from '../../../../graphql/Discussion'
 import {DiscussionPermissions} from '../../../../graphql/DiscussionPermissions'
 import {DiscussionTopicContainer} from '../DiscussionTopicContainer'
 import {fireEvent, render} from '@testing-library/react'
 import {getSpeedGraderUrl, responsiveQuerySizes} from '../../../utils'
-import {handlers} from '../../../../graphql/mswHandlers'
-import {mswClient} from '../../../../../../shared/msw/mswClient'
-import {mswServer} from '../../../../../../shared/msw/mswServer'
+import {MockedProvider} from '@apollo/react-testing'
 import {PeerReviews} from '../../../../graphql/PeerReviews'
 import React from 'react'
+import useManagedCourseSearchApi from '../../../../../../shared/direct-sharing/react/effects/useManagedCourseSearchApi'
 import {waitFor} from '@testing-library/dom'
 
+jest.mock('../../../../../../shared/direct-sharing/react/effects/useManagedCourseSearchApi')
 jest.mock('@canvas/rce/RichContentEditor')
 jest.mock('../../../utils', () => ({
   ...jest.requireActual('../../../utils'),
@@ -38,7 +42,6 @@ jest.mock('../../../utils', () => ({
 }))
 
 describe('DiscussionTopicContainer', () => {
-  const server = mswServer(handlers)
   const setOnFailure = jest.fn()
   const setOnSuccess = jest.fn()
   const assignMock = jest.fn()
@@ -84,26 +87,13 @@ describe('DiscussionTopicContainer', () => {
     window.INST = {
       editorButtons: []
     }
-
-    // eslint-disable-next-line no-undef
-    fetchMock.dontMock()
-    server.listen()
-
-    window.matchMedia = jest.fn().mockImplementation(() => {
-      return {
-        matches: true,
-        media: '',
-        onchange: null,
-        addListener: jest.fn(),
-        removeListener: jest.fn()
-      }
-    })
   })
 
   beforeEach(() => {
     responsiveQuerySizes.mockImplementation(() => ({
       desktop: {maxWidth: '1000px'}
     }))
+    useManagedCourseSearchApi.mockImplementation(() => {})
   })
 
   afterEach(() => {
@@ -111,26 +101,21 @@ describe('DiscussionTopicContainer', () => {
     setOnSuccess.mockClear()
     assignMock.mockClear()
     openMock.mockClear()
-    server.resetHandlers()
   })
 
   afterAll(() => {
     if (liveRegion) {
       liveRegion.remove()
     }
-
-    server.close()
-    // eslint-disable-next-line no-undef
-    fetchMock.enableMocks()
   })
 
-  const setup = props => {
+  const setup = (props, mocks) => {
     return render(
-      <ApolloProvider client={mswClient}>
+      <MockedProvider mocks={mocks}>
         <AlertManagerContext.Provider value={{setOnFailure, setOnSuccess}}>
           <DiscussionTopicContainer {...props} />
         </AlertManagerContext.Provider>
-      </ApolloProvider>
+      </MockedProvider>
     )
   }
   it('publish button is readonly if canUnpublish is false', async () => {
@@ -222,7 +207,10 @@ describe('DiscussionTopicContainer', () => {
 
   it('Should be able to delete topic', async () => {
     window.confirm = jest.fn(() => true)
-    const {getByTestId, getByText} = setup({discussionTopic: Discussion.mock()})
+    const {getByTestId, getByText} = setup(
+      {discussionTopic: Discussion.mock()},
+      deleteDiscussionTopicMock()
+    )
     fireEvent.click(getByTestId('discussion-post-menu-trigger'))
     fireEvent.click(getByText('Delete'))
 
@@ -258,8 +246,8 @@ describe('DiscussionTopicContainer', () => {
         permissions: DiscussionPermissions.mock({readAsAdmin: false})
       })
     })
-    expect(await container.findByText('Due Mar 31 5:59am')).toBeTruthy()
-    expect(await container.findByText('Available from Mar 24 until Apr 4')).toBeTruthy()
+    expect(await container.findByText('Due Mar 31, 2021 5:59am')).toBeTruthy()
+    expect(await container.findByText('Available from Mar 24, 2021 until Apr 4, 2021')).toBeTruthy()
   })
 
   it('Should not be able to see post menu if no permissions and initialPostRequiredForCurrentUser', () => {
@@ -302,9 +290,10 @@ describe('DiscussionTopicContainer', () => {
   })
 
   it('Should be able to click Mark All as Read and call mutation', async () => {
-    const {getByTestId, getByText} = setup({
-      discussionTopic: Discussion.mock({initialPostRequiredForCurrentUser: false})
-    })
+    const {getByTestId, getByText} = setup(
+      {discussionTopic: Discussion.mock({initialPostRequiredForCurrentUser: false})},
+      updateDiscussionReadStateMock()
+    )
     fireEvent.click(getByTestId('discussion-post-menu-trigger'))
     fireEvent.click(getByText('Mark All as Read'))
 
@@ -314,9 +303,10 @@ describe('DiscussionTopicContainer', () => {
   })
 
   it('Should be able to click Mark All as Unread and call mutation', async () => {
-    const {getByTestId, getByText} = setup({
-      discussionTopic: Discussion.mock({initialPostRequiredForCurrentUser: false})
-    })
+    const {getByTestId, getByText} = setup(
+      {discussionTopic: Discussion.mock({initialPostRequiredForCurrentUser: false})},
+      updateDiscussionReadStateMock({read: false})
+    )
     fireEvent.click(getByTestId('discussion-post-menu-trigger'))
     fireEvent.click(getByText('Mark All as Unread'))
 
@@ -367,17 +357,17 @@ describe('DiscussionTopicContainer', () => {
 
     const sendToButton = await container.findByText('Send To...')
     fireEvent.click(sendToButton)
-    expect(await container.findByText('Send to:')).toBeTruthy()
+    expect(await container.findByText('Send to:')).toBeInTheDocument()
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  it.skip('renders a modal to copy content', async () => {
+  it('renders a modal to copy content', async () => {
     const container = setup({discussionTopic: Discussion.mock()})
     const kebob = await container.findByTestId('discussion-post-menu-trigger')
     fireEvent.click(kebob)
+
     const copyToButton = await container.findByText('Copy To...')
     fireEvent.click(copyToButton)
-    expect(await container.findByText('Select a Course')).toBeTruthy()
+    expect(await container.findByText('Select a Course')).toBeInTheDocument()
   })
 
   it('can send users to Commons if they can manageContent', async () => {
@@ -420,12 +410,15 @@ describe('DiscussionTopicContainer', () => {
   })
 
   it('Should be able to close for comments', async () => {
-    const {getByText, getByTestId} = setup({
-      discussionTopic: Discussion.mock({
-        rootTopic: null,
-        permissions: DiscussionPermissions.mock({closeForComments: true})
-      })
-    })
+    const {getByText, getByTestId} = setup(
+      {
+        discussionTopic: Discussion.mock({
+          rootTopic: null,
+          permissions: DiscussionPermissions.mock({closeForComments: true})
+        })
+      },
+      updateDiscussionTopicMock({locked: true})
+    )
     fireEvent.click(getByTestId('discussion-post-menu-trigger'))
     fireEvent.click(getByText('Close for Comments'))
 
@@ -437,7 +430,10 @@ describe('DiscussionTopicContainer', () => {
   })
 
   it('Should be able to open for comments', async () => {
-    const {getByText, getByTestId} = setup({discussionTopic: Discussion.mock()})
+    const {getByText, getByTestId} = setup(
+      {discussionTopic: Discussion.mock()},
+      updateDiscussionTopicMock({locked: false})
+    )
     fireEvent.click(getByTestId('discussion-post-menu-trigger'))
     fireEvent.click(getByText('Open for Comments'))
 
@@ -453,8 +449,8 @@ describe('DiscussionTopicContainer', () => {
       discussionTopic: Discussion.mock({assignment: Assignment.mock({assignmentOverrides: null})})
     })
     expect(await container.findByText('Everyone')).toBeTruthy()
-    expect(await container.findByText('Due Mar 31 5:59am')).toBeTruthy()
-    expect(await container.findByText('Available from Mar 24 until Apr 4')).toBeTruthy()
+    expect(await container.findByText('Due Mar 31, 2021 5:59am')).toBeTruthy()
+    expect(await container.findByText('Available from Mar 24, 2021 until Apr 4, 2021')).toBeTruthy()
   })
 
   it('Should find "Show Due Dates" link button', async () => {
@@ -482,8 +478,8 @@ describe('DiscussionTopicContainer', () => {
     props.discussionTopic.assignment.lockAt = null
     const container = setup(props)
     expect(await container.findByText('assignment override 3')).toBeTruthy()
-    expect(await container.findByText('Due Apr 5 1:40pm')).toBeTruthy()
-    expect(await container.findByText('Available from Mar 21 until Sep 4')).toBeTruthy()
+    expect(await container.findByText('Due Apr 5, 2021 1:40pm')).toBeTruthy()
+    expect(await container.findByText('Available from Mar 21, 2021 until Sep 4, 2021')).toBeTruthy()
   })
 
   it('Should find no due date text for "assignment override 3"', async () => {
@@ -507,7 +503,7 @@ describe('DiscussionTopicContainer', () => {
 
     expect(container.getByText('assignment override 3')).toBeTruthy()
     expect(container.getByText('No Due Date')).toBeTruthy()
-    expect(container.getByText('Available from Mar 21 until Sep 4')).toBeTruthy()
+    expect(container.getByText('Available from Mar 21, 2021 until Sep 4, 2021')).toBeTruthy()
   })
 
   it('Should find no available date text for "assignment override 3"', async () => {
@@ -530,8 +526,8 @@ describe('DiscussionTopicContainer', () => {
     const container = setup(props)
 
     expect(container.getByText('assignment override 3')).toBeTruthy()
-    expect(container.getByText('Due Apr 5 1:40pm')).toBeTruthy()
-    expect(container.getByText('Available until Sep 4')).toBeTruthy()
+    expect(container.getByText('Due Apr 5, 2021 1:40pm')).toBeTruthy()
+    expect(container.getByText('Available until Sep 4, 2021')).toBeTruthy()
   })
 
   it('Should find no until date text for "assignment override 3"', async () => {
@@ -554,8 +550,8 @@ describe('DiscussionTopicContainer', () => {
     const container = setup(props)
 
     expect(container.getByText('assignment override 3')).toBeTruthy()
-    expect(container.getByText('Due Apr 5 1:40pm')).toBeTruthy()
-    expect(container.getByText('Available from Mar 21')).toBeTruthy()
+    expect(container.getByText('Due Apr 5, 2021 1:40pm')).toBeTruthy()
+    expect(container.getByText('Available from Mar 21, 2021')).toBeTruthy()
   })
 
   it('Should find no text after due date text for "assignment override 3"', async () => {
@@ -578,7 +574,7 @@ describe('DiscussionTopicContainer', () => {
     const container = setup(props)
 
     expect(container.getByText('assignment override 3')).toBeTruthy()
-    expect(container.getByText('Due Apr 5 1:40pm')).toBeTruthy()
+    expect(container.getByText('Due Apr 5, 2021 1:40pm')).toBeTruthy()
   })
 
   it('should show availability window for ungraded discussions', () => {
@@ -590,29 +586,9 @@ describe('DiscussionTopicContainer', () => {
       })
     })
 
-    expect(container.getByText('Available from Mar 21 6am until Sep 4 5:59am')).toBeTruthy()
-  })
-
-  it('should not show discussion topic description when read permission is false', () => {
-    const props = {
-      discussionTopic: Discussion.mock({
-        permissions: DiscussionPermissions.mock({read: false}),
-        message: 'This should not show until discussion is available'
-      })
-    }
-    const container = setup(props)
-
-    expect(container.queryByText('This should not show until discussion is available')).toBeNull()
-  })
-
-  it('should show discussion topic description when read permission is true', () => {
-    const container = setup({
-      discussionTopic: Discussion.mock({
-        message: 'This should not show until discussion is available'
-      })
-    })
-
-    expect(container.getByText('This should not show until discussion is available')).toBeTruthy()
+    expect(
+      container.getByText('Available from Mar 21, 2021 6am until Sep 4, 2021 5:59am')
+    ).toBeTruthy()
   })
 
   it('Renders an alert if initialPostRequiredForCurrentUser is true', () => {
@@ -655,7 +631,7 @@ describe('DiscussionTopicContainer', () => {
       })
     }
     const container = setup(props)
-    expect(container.getByText(`Edited by Eddy Tor Apr 22 6:41pm`)).toBeInTheDocument()
+    expect(container.getByText(`Edited by Eddy Tor Apr 22, 2021 6:41pm`)).toBeInTheDocument()
     expect(container.queryByTestId('created-tooltip')).toBeFalsy()
   })
 
@@ -671,7 +647,7 @@ describe('DiscussionTopicContainer', () => {
       })
     }
     const container = setup(props)
-    expect(container.getByText(`Edited Apr 22 6:41pm`)).toBeInTheDocument()
+    expect(container.getByText(`Edited Apr 22, 2021 6:41pm`)).toBeInTheDocument()
     expect(container.queryByTestId('created-tooltip')).toBeFalsy()
   })
 
@@ -686,12 +662,38 @@ describe('DiscussionTopicContainer', () => {
     expect(container.queryByTestId('created-tooltip')).toBeFalsy()
   })
 
+  describe('AvailableForUser', () => {
+    it('topic is unavailable', () => {
+      const props = {
+        discussionTopic: Discussion.mock({
+          availableForUser: false,
+          title: 'This topic is unavailable'
+        })
+      }
+      const container = setup(props)
+      expect(container.queryByText('This topic is unavailable')).toBeInTheDocument()
+      expect(container.getByTestId('locked-discussion')).toBeInTheDocument()
+    })
+
+    it('topic is available', () => {
+      const props = {
+        discussionTopic: Discussion.mock({
+          availableForUser: true,
+          title: 'This topic is available'
+        })
+      }
+      const container = setup(props)
+      expect(container.queryByText('This topic is available')).toBeInTheDocument()
+      expect(container.queryByTestId('locked-discussion')).toBeNull()
+    })
+  })
+
   describe('Peer Reviews', () => {
     it('renders with a due date', () => {
       const props = {discussionTopic: Discussion.mock()}
       const {getByText} = setup(props)
 
-      expect(getByText('Peer review for Morty Smith Due: Mar 31 5:59am')).toBeTruthy()
+      expect(getByText('Peer review for Morty Smith Due: Mar 31, 2021 5:59am')).toBeTruthy()
     })
 
     it('renders with out a due date', () => {
@@ -716,7 +718,7 @@ describe('DiscussionTopicContainer', () => {
       }
       const {queryByText} = setup(props)
 
-      expect(queryByText('eer review for Morty Smith Due: Mar 31 5:59am')).toBeNull()
+      expect(queryByText('eer review for Morty Smith Due: Mar 31, 2021 5:59am')).toBeNull()
     })
 
     describe('PodcastFeed Button', () => {

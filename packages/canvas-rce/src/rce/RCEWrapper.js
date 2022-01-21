@@ -34,7 +34,8 @@ import * as contentInsertion from './contentInsertion'
 import indicatorRegion from './indicatorRegion'
 import editorLanguage from './editorLanguage'
 import normalizeLocale from './normalizeLocale'
-import {sanitizePlugins} from './sanitizeEditorOptions'
+import {sanitizePlugins} from './sanitizePlugins'
+import {getCanvasUrl} from './getCanvasUrl'
 
 import indicate from '../common/indicate'
 import bridge from '../bridge'
@@ -273,8 +274,6 @@ class RCEWrapper extends React.Component {
     instRecordDisabled: PropTypes.bool,
     highContrastCSS: PropTypes.arrayOf(PropTypes.string),
     maxInitRenderedRCEs: PropTypes.number,
-    // feature flag related props
-    use_rce_pretty_html_editor: PropTypes.bool,
     use_rce_buttons_and_icons: PropTypes.bool,
     use_rce_a11y_checker_notifications: PropTypes.bool
   }
@@ -325,7 +324,8 @@ class RCEWrapper extends React.Component {
       path: [],
       wordCount: 0,
       editorView: props.editorView || WYSIWYG_VIEW,
-      shouldShowOnFocusButton: (props.renderKBShortcutModal === undefined ? true : props.renderKBShortcutModal),
+      shouldShowOnFocusButton:
+        props.renderKBShortcutModal === undefined ? true : props.renderKBShortcutModal,
       KBShortcutModalOpen: false,
       messages: [],
       announcement: null,
@@ -367,6 +367,8 @@ class RCEWrapper extends React.Component {
         // eslint-disable-next-line no-console
         console.error('Failed initializing a11y checker', err)
       })
+
+    this.canvasUrl = getCanvasUrl(this.props.trayProps);
   }
 
   // getCode and setCode naming comes from tinyMCE
@@ -595,6 +597,12 @@ class RCEWrapper extends React.Component {
     this.contentInserted(element)
   }
 
+  insertMathEquation(tex) {
+    const editor = this.mceInstance()
+    return this.canvasUrl.then(domain =>
+      contentInsertion.insertEquation(editor, tex, domain));
+  }
+
   removePlaceholders(name) {
     const placeholder = this.mceInstance().dom.doc.querySelector(
       `[data-placeholder-for="${encodeURIComponent(name)}"]`
@@ -681,11 +689,7 @@ class RCEWrapper extends React.Component {
     let newState
     switch (this.state.editorView) {
       case WYSIWYG_VIEW:
-        if (this.props.use_rce_pretty_html_editor) {
-          newState = {editorView: newView || PRETTY_HTML_EDITOR_VIEW}
-        } else {
-          newState = {editorView: RAW_HTML_EDITOR_VIEW}
-        }
+        newState = {editorView: newView || PRETTY_HTML_EDITOR_VIEW}
         break
       case PRETTY_HTML_EDITOR_VIEW:
         newState = {editorView: newView || WYSIWYG_VIEW}
@@ -1708,8 +1712,6 @@ class RCEWrapper extends React.Component {
   }
 
   renderHtmlEditor() {
-    if (!this.props.use_rce_pretty_html_editor) return null
-
     // the div keeps the editor from collapsing while the code editor is downloaded
     return (
       <Suspense
@@ -1811,7 +1813,6 @@ class RCEWrapper extends React.Component {
           onKBShortcutModalOpen={this.openKBShortcutModal}
           onA11yChecker={this.onA11yChecker}
           onFullscreen={this.handleClickFullscreen}
-          use_rce_pretty_html_editor={this.props.use_rce_pretty_html_editor}
           use_rce_a11y_checker_notifications={this.props.use_rce_a11y_checker_notifications}
           a11yBadgeColor={this.theme.canvasBadgeBackgroundColor}
           a11yErrorsCount={this.state.a11yErrorsCount}

@@ -21,6 +21,7 @@
   provide :page_title, t(:page_title, "Account Settings")
 
   js_env(
+    :PRODUCTION => Rails.env.production?,
     :ACCOUNT => {
       'id' => @context.id,
       'site_admin' => @account.site_admin?,
@@ -83,7 +84,7 @@
       <li><a href="#tab-alerts" id="tab-alerts-link"><%= t(:tab_alerts, "Alerts") %></a></li>
     <% end %>
     <% if can_do(@context, @current_user, :view_feature_flags) %>
-      <li><a href="#tab-features" id="tab-features-link"><%= t("Feature Previews") %></a></li>
+      <li><a href="#tab-features" id="tab-features-link"><%= t("Feature Options") %></a></li>
     <% end %>
     <% if @account.root_account.feature_enabled?(:javascript_csp) && can_do(@context, @current_user, :manage_account_settings) && !@account.site_admin? %>
       <li><a href="#tab-security" id="tab-security-link"><%= t("Security") %></a></li>
@@ -183,7 +184,7 @@
                     <tr>
                       <td><%= settings.blabel :default_dashboard_view, t("Default View for Dashboard") %></td>
                       <td>
-                        <%= settings.select :default_dashboard_view, options_for_select(dashboard_view_options(@account), @account.default_dashboard_view) %>
+                        <%= settings.select :default_dashboard_view, options_for_select(dashboard_view_options, @account.default_dashboard_view) %>
                         <p style="font-size: 0.9em;"><%= settings.check_box :force_default_dashboard_view, :checked => false %>  <%= settings.label :force_default_dashboard_view, t("Overwrite all users' existing default dashboard preferences") %></p>
                       </td>
                     </tr>
@@ -321,17 +322,24 @@
                   <% end %>
                 <% end %>
 
-                <% if @account.feature_allowed?(:rce_enhancements) %>
-                  <%= settings.fields_for :disable_rce_media_uploads do |r| %>
-                    <% hash = @account.disable_rce_media_uploads %>
-                    <% disabled = hash[:locked] && hash[:inherited] %>
-                    <tr>
-                      <td colspan="2">
-                        <%= r.check_box :value, checked: hash[:value], disabled: disabled %>
-                        <%= r.label :value, t("Disable uploads to Canvas Media from the enhanced rich content editor") %>
-                      </td>
-                    </tr>
-                  <% end %>
+                <%= settings.fields_for :disable_rce_media_uploads do |r| %>
+                  <% hash = @account.disable_rce_media_uploads %>
+                  <% disabled = hash[:locked] && hash[:inherited] %>
+                  <tr>
+                    <td colspan="2">
+                      <%= r.check_box :value, checked: hash[:value], disabled: disabled %>
+                      <%= r.label :value, t("Disable uploads to Canvas Media from the enhanced rich content editor") %>
+                    </td>
+                  </tr>
+                <% end %>
+
+                <% if Account.site_admin.feature_enabled?(:gradebook_show_first_last_names) %>
+                  <tr>
+                    <td colspan="2">
+                      <%= settings.check_box :allow_gradebook_show_first_last_names, checked: @account.allow_gradebook_show_first_last_names? %>
+                      <%= settings.label :allow_gradebook_show_first_last_names, t("Allow gradebook users to view and export student first and last names in separate columns") %>
+                    </td>
+                  </tr>
                 <% end %>
               <% end %>
             <% end %>
@@ -761,7 +769,7 @@
               <!-- put all of the helpful dialogs describing what each service does in here
                    the magic is in giving it an id of "<name_of_service>_help_dialog" and class="service_help_dialog" -->
               <div class="service_help_dialog" title="<%= t(:about_google_docs_tooltip, "About Google Docs Previews") %>" id="google_docs_previews_help_dialog">
-                <%= mt(:about_google_docs, <<-TEXT, :terms_url => "https://docs.google.com/viewer/TOS")
+                <%= mt(:about_google_docs, <<~TEXT, :terms_url => "https://docs.google.com/viewer/TOS")
 Google Docs Previews allow users to view documents from
 within Canvas, rather than having to download them and
 open the corresponding program (e.g. Word or Excel).
@@ -823,20 +831,24 @@ acknowledge that you have read and agreed to the
           <fieldset>
             <h2 class="screenreader-only"><%= t('Who Can Create New Courses') %></h2>
             <legend><%= t(:create_courses_title, "Who Can Create New Courses") %></legend>
-            <div style="font-size: 0.8em;"><%= t(:create_courses_description, "(Account Administrators can always create courses)") %></div>
-            <%= f.fields_for :settings do |settings| %>
-              <div>
-                <%= settings.check_box :teachers_can_create_courses, :checked => @account.teachers_can_create_courses? %>
-                <%= settings.label :teachers_can_create_courses, :en => "Teachers" %>
-              </div>
-              <div>
-                <%= settings.check_box :students_can_create_courses, :checked => @account.students_can_create_courses? %>
-                <%= settings.label :students_can_create_courses, :en => "Students" %>
-              </div>
-              <div>
-                <%= settings.check_box :no_enrollments_can_create_courses, :checked => @account.no_enrollments_can_create_courses? %>
-                <%= settings.label :no_enrollments_can_create_courses, :en => "Users with no enrollments" %>
-              </div>
+            <% if @account.feature_enabled?(:create_course_subaccount_picker) %>
+              <div id="course_creation_settings"></div>
+            <% else %>
+              <div style="font-size: 0.8em;"><%= t(:create_courses_description, "(Account Administrators can always create courses)") %></div>
+              <%= f.fields_for :settings do |settings| %>
+                <div>
+                  <%= settings.check_box :teachers_can_create_courses, :checked => @account.teachers_can_create_courses? %>
+                  <%= settings.label :teachers_can_create_courses, :en => "Teachers" %>
+                </div>
+                <div>
+                  <%= settings.check_box :students_can_create_courses, :checked => @account.students_can_create_courses? %>
+                  <%= settings.label :students_can_create_courses, :en => "Students" %>
+                </div>
+                <div>
+                  <%= settings.check_box :no_enrollments_can_create_courses, :checked => @account.no_enrollments_can_create_courses? %>
+                  <%= settings.label :no_enrollments_can_create_courses, :en => "Users with no enrollments" %>
+                </div>
+              <% end %>
             <% end %>
           </fieldset>
         <% end %>

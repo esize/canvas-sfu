@@ -34,7 +34,7 @@ module AuthenticationMethods
     # not a valid one (expired or bad signature) and processing should only
     # continue on the assumption that this is an invalid request.
     def self.parse(token_string)
-      return false unless InstAccess::Token.is_token?(token_string)
+      return false unless InstAccess::Token.token?(token_string)
 
       begin
         InstAccess::Token.from_token_string(token_string)
@@ -64,10 +64,12 @@ module AuthenticationMethods
         real_current_pseudonym: nil
       }
       auth_context[:current_user] = find_user_by_uuid_prefer_local(token.user_uuid)
+      return auth_context unless auth_context[:current_user]
+
       auth_context[:current_pseudonym] = SisPseudonym.for(
         auth_context[:current_user], domain_root_account, type: :implicit, require_sis: false
       )
-      return auth_context unless auth_context[:current_user] && auth_context[:current_pseudonym]
+      return auth_context unless auth_context[:current_pseudonym]
 
       if token.masquerading_user_uuid && token.masquerading_user_shard_id
         Shard.lookup(token.masquerading_user_shard_id).activate do

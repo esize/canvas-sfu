@@ -66,8 +66,9 @@ class DashboardHeader extends React.Component {
 
   constructor(...args) {
     super(...args)
-    if (ENV.STUDENT_PLANNER_ENABLED) {
-      initializePlanner({
+    this.planner_init_promise = undefined
+    if (this.props.planner_enabled) {
+      this.planner_init_promise = initializePlanner({
         changeDashboardView: this.changeDashboard,
         getActiveApp: this.getActiveApp,
         flashError: message => showFlashAlert({message, type: 'error'}),
@@ -98,6 +99,14 @@ class DashboardHeader extends React.Component {
     this.showDashboard(this.state.currentDashboard)
   }
 
+  ready = () => {
+    if (this.props.planner_enabled) {
+      return this.planner_init_promise
+    } else {
+      return Promise.resolve()
+    }
+  }
+
   getActiveApp = () => this.state.currentDashboard
 
   resetClasses(newDashboard) {
@@ -114,7 +123,12 @@ class DashboardHeader extends React.Component {
 
   loadCardDashboard() {
     // I put this in so I can spy on the imported function in a spec :'(
-    loadCardDashboard()
+    const observerMode =
+      ENV.FEATURES?.observer_picker && ENV.current_user_roles?.includes('observer')
+    if (!observerMode) {
+      loadCardDashboard()
+    }
+    // if in observer mode, ObserverOptions will handle loading the cards for the right user
   }
 
   loadStreamItemDashboard() {
@@ -139,7 +153,13 @@ class DashboardHeader extends React.Component {
     if (this.state.loadedViews.includes(newView)) return
 
     if (newView === 'planner' && this.props.planner_enabled) {
-      this.loadPlannerComponent()
+      this.planner_init_promise
+        .then(() => {
+          this.loadPlannerComponent()
+        })
+        .catch(() =>
+          showFlashAlert({message: I18n.t('Failed initializing dashboard'), type: 'error'})
+        )
     } else if (newView === 'cards') {
       this.loadCardDashboard()
     } else if (newView === 'activity') {
@@ -183,6 +203,7 @@ class DashboardHeader extends React.Component {
       this.saveDashboardView(newView)
       this.switchDashboard(newView)
     }
+    return this.ready()
   }
 
   switchDashboard = newView => {
@@ -270,18 +291,7 @@ function showTodoList() {
 
           const startButton = document.getElementById('start_new_course')
           const modalContainer = document.getElementById('create_course_modal_container')
-          let role
-          if (ENV.current_user_roles.includes('admin')) {
-            role = 'admin'
-          } else if (ENV.current_user_roles.includes('teacher')) {
-            role = 'teacher'
-          }
-          if (
-            startButton &&
-            modalContainer &&
-            role &&
-            ENV.FEATURES?.create_course_subaccount_picker
-          ) {
+          if (startButton && modalContainer && ENV.FEATURES?.create_course_subaccount_picker) {
             startButton.addEventListener('click', () => {
               ReactDOM.render(
                 <CreateCourseModal
@@ -289,7 +299,8 @@ function showTodoList() {
                   setModalOpen={isOpen => {
                     if (!isOpen) ReactDOM.unmountComponentAtNode(modalContainer)
                   }}
-                  permissions={role}
+                  permissions={ENV.CREATE_COURSES_PERMISSIONS.PERMISSION}
+                  restrictToMCCAccount={ENV.CREATE_COURSES_PERMISSIONS.RESTRICT_TO_MCC_ACCOUNT}
                   isK5User={false} // can't be k5 user if classic dashboard is showing
                 />,
                 modalContainer
