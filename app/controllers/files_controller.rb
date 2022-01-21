@@ -130,7 +130,9 @@ class FilesController < ApplicationController
   # brand-config-uploaded JS to work
   # verify_authenticity_token is manually-invoked where @context is not
   # an Account in show_relative
+  # SFU MOD - Allow JS files to be accessed (iSpring, etc.)
   protect_from_forgery except: [:api_capture, :show_relative, :show], with: :exception
+  # END SFU MOD
 
   before_action :require_user, only: :create_pending
   before_action :require_context, except: %i[
@@ -515,10 +517,12 @@ class FilesController < ApplicationController
       # attachment.
       # this implicit context magic happens in ApplicationController#get_context
 
+      # SFU MOD - Allow JS files to be accessed (iSpring, etc.)
       #
       # Skip forgery detection if downloading file from a course or account
       #
       verify_authenticity_token unless (@context.is_a?(Account) || @context.is_a?(Course))
+      # END SFU MOD
 
       if @context.nil? || @current_user.nil? || @context == @current_user
         @attachment = Attachment.find(params[:id])
@@ -670,9 +674,11 @@ class FilesController < ApplicationController
     file_id = params[:file_id]
     file_id = nil unless Api::ID_REGEX.match?(file_id.to_s)
 
+    # SFU MOD - Allow JS files to be accessed (iSpring, etc.)
     # Manually-invoke verify_authenticity_token for non-Account and non-Course contexts
     # This is to allow Account-level and Course-level file downloads to skip request forgery protection
     verify_authenticity_token unless (@context.is_a?(Account) || @context.is_a?(Course))
+    # END SFU MOD
 
     # if the relative path matches the given file id use that file
     if file_id && (@attachment = @context.attachments.where(id: file_id).first) &&
