@@ -2731,7 +2731,7 @@ EG = {
         })
       )
     } else if ($.isPreviewable(attachment.content_type, 'google')) {
-      $no_annotation_warning.show()
+      // $no_annotation_warning.show() // SFU MOD - Disable warning (CANVAS-274)
 
       const currentStudentIDAsOfAjaxCall = this.currentStudent[anonymizableId]
       previewOptions = $.extend(previewOptions, {
