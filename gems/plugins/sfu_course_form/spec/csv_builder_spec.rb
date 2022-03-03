@@ -61,7 +61,7 @@ describe 'A courses request' do
             '1141:::mse:::494:::d300:::Special Internship III'
         ]
         SFU::CourseForm::CSVBuilder.build('kipling', courses, 2, 'kipling', '55599068', nil, nil, true)
-      end.should raise_error
+      end.should raise_error(RuntimeError, 'The resulting course SIS ID is too long.')
     end
   end
 
@@ -70,22 +70,22 @@ describe 'A courses request' do
     it 'should fail with error for a calendar course' do
       lambda do
         SFU::CourseForm::CSVBuilder.build('kipling', ["1141:::long:::999:::d100:::#{long_name}"], 2, 'kipling', '55599068', nil, nil, false)
-      end.should raise_error
+      end.should raise_error(RuntimeError, 'The course name is too long.')
     end
     it 'should fail with error for a cross-listed course' do
       lambda do
         SFU::CourseForm::CSVBuilder.build('kipling', ["1141:::long:::999:::d100:::#{long_name}", '1141:::shrt:::001:::d100:::Short Course'], 2, 'kipling', '55599068', nil, nil, true)
-      end.should raise_error
+      end.should raise_error(RuntimeError, 'The course name is too long.')
     end
     it 'should fail with error for a non-calendar course' do
       lambda do
         SFU::CourseForm::CSVBuilder.build('kipling', ["ncc-kipling-71113273-1141-#{long_name}"], 2, 'kipling', '55599068', nil, nil, false)
-      end.should raise_error
+      end.should raise_error(RuntimeError, 'The course name is too long.')
     end
     it 'should fail with error for an ad hoc space' do
       lambda do
         SFU::CourseForm::CSVBuilder.build('kipling', ["adhoc-kipling-71113273-#{long_name}"], 2, 'kipling', '55599068', nil, nil, false)
-      end.should raise_error
+      end.should raise_error(RuntimeError, 'The course name is too long.')
     end
   end
 
@@ -93,12 +93,12 @@ describe 'A courses request' do
     it 'should fail with error for a non-calendar course' do
       lambda do
         SFU::CourseForm::CSVBuilder.build('kipling', ["ncc-kipling-71113273-1141-"], 2, 'kipling', '55599068', nil, nil, false)
-      end.should raise_error
+      end.should raise_error(RuntimeError, 'The course name is empty.')
     end
     it 'should fail with error for an ad hoc space' do
       lambda do
         SFU::CourseForm::CSVBuilder.build('kipling', ["adhoc-kipling-71113273-"], 2, 'kipling', '55599068', nil, nil, false)
-      end.should raise_error
+      end.should raise_error(RuntimeError, 'The course name is empty.')
     end
   end
 
@@ -113,27 +113,27 @@ describe 'A courses request' do
     it 'should fail with error for a calendar course' do
       lambda do
         SFU::CourseForm::CSVBuilder.build('kipling', ['1141:::easy:::240:::d100:::Real Time and Embedded Systems'], 2, 'idontexist', nil, nil, nil, false)
-      end.should raise_error
+      end.should raise_error(RuntimeError, 'The main teacher was not found.')
     end
     it 'should fail with error for a cross-listed course' do
       lambda do
         SFU::CourseForm::CSVBuilder.build('kipling', ['1141:::easy:::240:::d100:::Real Time and Embedded Systems', '1141:::hard:::840:::d100:::Real Time and Embedded Systems'], 2, 'idontexist', nil, nil, nil, true)
-      end.should raise_error
+      end.should raise_error(RuntimeError, 'The main teacher was not found.')
     end
     it 'should fail with error for a non-calendar course' do
       lambda do
         SFU::CourseForm::CSVBuilder.build('kipling', ['ncc-kipling-71113273-1141-My special course'], 2, 'idontexist', nil, nil, nil, false)
-      end.should raise_error
+      end.should raise_error(RuntimeError, 'The main teacher was not found.')
     end
     it 'should fail with error for a sandbox' do
       lambda do
         SFU::CourseForm::CSVBuilder.build('kipling', ['sandbox-kipling-71113273'], 2, 'idontexist', nil, nil, nil, false)
-      end.should raise_error
+      end.should raise_error(RuntimeError, 'The main teacher was not found.')
     end
     it 'should fail with error for an ad hoc space' do
       lambda do
         SFU::CourseForm::CSVBuilder.build('kipling', ['adhoc-kipling-71113273-My special space'], 2, 'idontexist', nil, nil, nil, false)
-      end.should raise_error
+      end.should raise_error(RuntimeError, 'The main teacher was not found.')
     end
   end
 
@@ -163,15 +163,12 @@ describe 'A multiple calendar courses request' do
   end
 
   def verify_courses(expected_course_ids)
-    term = SFU::CourseForm::CSVBuilder.term('1141')
     @courses.count.should == 2
     @courses.each_with_index do |course, index|
       course['course_id'].should == expected_course_ids[index]
       course['account_id'].should == '2'
       course['term_id'].should == '1141'
       course['status'].should == 'active'
-      course['start_date'].should == term.start_at.to_s
-      course['end_date'].should == term.end_at.to_s
     end
   end
 
@@ -307,14 +304,11 @@ describe 'A cross-list course request' do
   end
 
   def verify_courses(expected_course_id)
-    term = SFU::CourseForm::CSVBuilder.term('1141')
     @courses.count.should == 1
     @courses[0]['course_id'].should == expected_course_id
     @courses[0]['account_id'].should == '2'
     @courses[0]['term_id'].should == '1141'
     @courses[0]['status'].should == 'active'
-    @courses[0]['start_date'].should == term.start_at.to_s
-    @courses[0]['end_date'].should == term.end_at.to_s
   end
 
   def verify_sections(expected_count, expected_section_ids, expected_names, expected_course_id)
@@ -476,7 +470,6 @@ describe 'A non-calendar course request' do
   context 'for a specific term' do
     let(:selected_courses) { ['ncc-kipling-71113273-1141-My special course'] }
     it 'should create one course' do
-      term = SFU::CourseForm::CSVBuilder.term('1141')
       @courses.count.should == 1
       @courses[0]['course_id'].should == 'ncc-kipling-71113273'
       @courses[0]['short_name'].should == 'My special course'
@@ -484,8 +477,6 @@ describe 'A non-calendar course request' do
       @courses[0]['account_id'].should == 'sfu:::ncc'
       @courses[0]['term_id'].should == '1141'
       @courses[0]['status'].should == 'active'
-      @courses[0]['start_date'].should == term.start_at.to_s
-      @courses[0]['end_date'].should == term.end_at.to_s
     end
     it 'should not create any sections' do
       @sections.count.should == 0
@@ -502,8 +493,6 @@ describe 'A non-calendar course request' do
       @courses[0]['account_id'].should == 'sfu:::ncc'
       @courses[0]['term_id'].should == ''
       @courses[0]['status'].should == 'active'
-      @courses[0]['start_date'].should == ''
-      @courses[0]['end_date'].should == ''
     end
     it 'should not create any sections' do
       @sections.count.should == 0
