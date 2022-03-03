@@ -1,9 +1,4 @@
-require "rest-client"
-require "httpclient"
-require Pathname(File.dirname(__FILE__)) + "rest"
-
 module SFU
-
   class Course
     class << self
       def terms(sfuid)
@@ -141,42 +136,6 @@ module SFU
         title
       end
 
-    end
-  end
-
-  class User
-    class << self
-      def roles(sfuid)
-        account = REST.json REST.account_url, "&username=#{sfuid}"
-        if account == 500
-          roles = 500
-        elsif account == 404 || account.nil?
-          roles = 404
-        else
-          roles = account["roles"]
-        end
-        roles
-      end
-
-      def info(sfuid)
-        REST.json(REST.account_url, "&username=#{sfuid}")
-      end
-
-      def belongs_to_maillist?(username, maillist)
-        membership = REST.text(REST.maillist_membership_url, "&address=#{username}&listname=#{maillist}")
-        !(membership == '""')
-      end
-
-    end
-  end
-
-  class Canvas
-    class << self
-      def sis_import(csv_data)
-        auth_header = "Bearer #{REST.canvas_oauth_token}"
-        client = HTTPClient.new
-        client.post REST.canvas_sis_import_url, csv_data, { 'Authorization' => auth_header, 'Content-Type' => 'text/csv'}
-      end
     end
   end
 end
