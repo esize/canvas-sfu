@@ -1,5 +1,7 @@
 # Exclude from Zeitwerk autoloader because files don't follow naming convention
-Rails.autoloaders.main.ignore(Rails.root.join('lib', 'aaa_sfu_misc'))
+if defined?(CANVAS_ZEITWERK) && CANVAS_ZEITWERK
+  Rails.autoloaders.main.ignore(Rails.root.join('lib', 'aaa_sfu_misc'))
+end
 
 Rails.configuration.to_prepare do
   require_dependency 'aaa_sfu_misc/test_cluster'
