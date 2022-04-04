@@ -24,6 +24,7 @@ import {Enrollment} from './Enrollment'
 import {graphql} from 'msw'
 import {Group} from './Group'
 import {User} from './User'
+import {PageInfo} from './PageInfo'
 
 // helper function that filters out undefined values in objects before assigning
 const mswAssign = (target, ...objects) => {
@@ -232,6 +233,7 @@ export const handlers = [
       const recipients = {
         contextsConnection: {
           nodes: [],
+          pageInfo: PageInfo.mock({hasNextPage: false}),
           __typename: 'MessageableContextConnection'
         },
         usersConnection: {
@@ -240,9 +242,28 @@ export const handlers = [
               _id: '1',
               id: 'TWVzc2FnZWFibGVVc2VyLTQx',
               name: 'Frederick Dukes',
-              __typename: 'MessageableUser'
+              __typename: 'MessageableUser',
+              commonCoursesConnection: {
+                nodes: [
+                  {
+                    _id: '11',
+                    id: 'RW5yb2xsbWVudC0xMQ==',
+                    state: 'active',
+                    type: 'StudentEnrollment',
+                    course: {
+                      name: 'Test course',
+                      id: 'Q291cnNlLTE=',
+                      _id: '196',
+                      __typename: 'Course'
+                    },
+                    __typename: 'Enrollment'
+                  }
+                ],
+                __typename: 'EnrollmentConnection'
+              }
             }
           ],
+          pageInfo: PageInfo.mock({hasNextPage: false}),
           __typename: 'MessageableUserConnection'
         },
         __typename: 'Recipients'
@@ -252,6 +273,7 @@ export const handlers = [
       const recipients = {
         contextsConnection: {
           nodes: [],
+          pageInfo: PageInfo.mock({hasNextPage: false}),
           __typename: 'MessageableContextConnection'
         },
         usersConnection: {
@@ -260,9 +282,28 @@ export const handlers = [
               _id: '1',
               id: 'TWVzc2FnZWFibGVVc2VyLTQx',
               name: 'Frederick Dukes',
-              __typename: 'MessageableUser'
+              __typename: 'MessageableUser',
+              commonCoursesConnection: {
+                nodes: [
+                  {
+                    _id: '11',
+                    id: 'RW5yb2xsbWVudC0xMQ==',
+                    state: 'active',
+                    type: 'StudentEnrollment',
+                    course: {
+                      name: 'Test course',
+                      id: 'Q291cnNlLTE=',
+                      _id: '196',
+                      __typename: 'Course'
+                    },
+                    __typename: 'Enrollment'
+                  }
+                ],
+                __typename: 'EnrollmentConnection'
+              }
             }
           ],
+          pageInfo: PageInfo.mock({hasNextPage: false}),
           __typename: 'MessageableUserConnection'
         },
         __typename: 'Recipients'
@@ -278,6 +319,7 @@ export const handlers = [
               __typename: 'MessageableUser'
             }
           ],
+          pageInfo: PageInfo.mock({hasNextPage: false}),
           __typename: 'MessageableContextConnection'
         },
         usersConnection: {
@@ -286,28 +328,82 @@ export const handlers = [
               _id: '1',
               id: 'TWVzc2FnZWFibGVVc2VyLTQx',
               name: 'Frederick Dukes',
-              __typename: 'MessageableUser'
+              __typename: 'MessageableUser',
+              commonCoursesConnection: {
+                nodes: [
+                  {
+                    _id: '11',
+                    id: 'RW5yb2xsbWVudC0xMQ==',
+                    state: 'active',
+                    type: 'StudentEnrollment',
+                    course: {
+                      name: 'Test course',
+                      id: 'Q291cnNlLTE=',
+                      _id: '196',
+                      __typename: 'Course'
+                    },
+                    __typename: 'Enrollment'
+                  }
+                ],
+                __typename: 'EnrollmentConnection'
+              }
             },
             {
               _id: '2',
               id: 'TWVzc2FnZWFibGVVc2VyLTY1',
               name: 'Trevor Fitzroy',
-              __typename: 'MessageableUser'
+              __typename: 'MessageableUser',
+              commonCoursesConnection: {
+                nodes: [
+                  {
+                    _id: '11',
+                    id: 'RW5yb2xsbWVudC0xMQ==',
+                    state: 'active',
+                    type: 'StudentEnrollment',
+                    course: {
+                      name: 'Test course',
+                      id: 'Q291cnNlLTE=',
+                      _id: '196',
+                      __typename: 'Course'
+                    },
+                    __typename: 'Enrollment'
+                  }
+                ],
+                __typename: 'EnrollmentConnection'
+              }
             },
             {
               _id: '3',
               id: 'TWVzc2FnZWFibGVVc2VyLTMy',
               name: 'Null Forge',
-              __typename: 'MessageableUser'
+              __typename: 'MessageableUser',
+              commonCoursesConnection: {
+                nodes: [
+                  {
+                    _id: '11',
+                    id: 'RW5yb2xsbWVudC0xMQ==',
+                    state: 'active',
+                    type: 'StudentEnrollment',
+                    course: {
+                      name: 'Test course',
+                      id: 'Q291cnNlLTE=',
+                      _id: '196',
+                      __typename: 'Course'
+                    },
+                    __typename: 'Enrollment'
+                  }
+                ],
+                __typename: 'EnrollmentConnection'
+              }
             }
           ],
+          pageInfo: PageInfo.mock({hasNextPage: false}),
           __typename: 'MessageableUserConnection'
         },
         __typename: 'Recipients'
       }
       data.legacyNode.recipients = recipients
     }
-
     return res(ctx.data(data))
   }),
 

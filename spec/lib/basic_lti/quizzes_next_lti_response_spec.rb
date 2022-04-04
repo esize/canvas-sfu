@@ -53,8 +53,10 @@ describe BasicLTI::QuizzesNextLtiResponse do
 
   let(:text) { "" }
 
+  let(:grade) { "0.12" }
+
   let(:xml) do
-    request_xml(source_id, launch_url, "0.12")
+    request_xml(source_id, launch_url, grade)
   end
 
   def gen_source_id(t: tool, c: @course, a: assignment, u: @user)
@@ -111,6 +113,45 @@ describe BasicLTI::QuizzesNextLtiResponse do
       expect(submission.grade).to eq((assignment.points_possible * 0.12).to_s)
     end
 
+    context "when the assignment is set to displays grade as complete/incomplete" do
+      let(:assignment) do
+        @course.assignments.create!(
+          {
+            title: "value for title",
+            description: "value for description",
+            due_at: Time.zone.now,
+            points_possible: "1.5",
+            submission_types: "external_tool",
+            grading_type: "pass_fail",
+            external_tool_tag_attributes: { url: tool.url }
+          }
+        )
+      end
+
+      it "shows complete when it receives a grade > 0" do
+        request = BasicLTI::BasicOutcomes.process_request(tool, xml)
+
+        expect(request.code_major).to eq "success"
+        expect(request.body).to eq "<replaceResultResponse />"
+        expect(request.handle_request(tool)).to be_truthy
+        submission = assignment.submissions.where(user_id: @user.id).first
+        expect(submission.grade).to eq "complete"
+      end
+
+      it "shows incomplete when it receives a grade = 0" do
+        grade = 0
+        xml = request_xml(source_id, launch_url, grade)
+
+        request = BasicLTI::BasicOutcomes.process_request(tool, xml)
+
+        expect(request.code_major).to eq "success"
+        expect(request.body).to eq "<replaceResultResponse />"
+        expect(request.handle_request(tool)).to be_truthy
+        submission = assignment.submissions.where(user_id: @user.id).first
+        expect(submission.grade).to eq "incomplete"
+      end
+    end
+
     it "rejects a grade for an assignment with no points possible" do
       xml.css("resultData").remove
       assignment.points_possible = nil
@@ -155,6 +196,73 @@ describe BasicLTI::QuizzesNextLtiResponse do
       BasicLTI::BasicOutcomes.process_request(tool, xml)
       submission = assignment.submissions.where(user_id: @user.id).first
       expect(submission.submitted_at).to eq timestamp
+    end
+
+    context "when submission is deleted" do
+      let(:submission) { Submission.find_or_initialize_by(assignment: assignment, user: @user) }
+      let(:quiz_lti_submission) { BasicLTI::QuizzesNextVersionedSubmission.new(assignment, @user) }
+
+      before do
+        allow(BasicLTI::QuizzesNextVersionedSubmission).to receive(:new).and_return(quiz_lti_submission)
+        allow(quiz_lti_submission).to receive(:submission).and_return(submission)
+        submission.update_column :workflow_state, "deleted"
+      end
+
+      it "reports failure" do
+        request = BasicLTI::BasicOutcomes.process_request(tool, xml)
+        expect(request.code_major).to eq "failure"
+        expect(request.error_code).to eq :submission_deleted
+        expect(request.description).to eq "Submission is deleted and cannot be modified."
+      end
+    end
+
+    context "when submission validation raises an error" do
+      let(:submission) { Submission.find_or_initialize_by(assignment: assignment, user: @user) }
+      let(:quiz_lti_submission) { BasicLTI::QuizzesNextVersionedSubmission.new(assignment, @user) }
+      let(:grades) { [0.11, 0.22, 0.33] }
+      let(:launch_urls) do
+        [
+          "https://abcdef.com/uuurrrlll01",
+          "https://abcdef.com/uuurrrlll02",
+          "https://abcdef.com/uuurrrlll03"
+        ]
+      end
+
+      before do
+        allow(BasicLTI::QuizzesNextVersionedSubmission).to receive(:new).and_return(quiz_lti_submission)
+        allow(quiz_lti_submission).to receive(:submission).and_return(submission)
+        (0..2).each do |i|
+          grade = "#{TextHelper.round_if_whole(grades[i] * 100)}%"
+          grade, score = assignment.compute_grade_and_score(grade, nil)
+          submission.grade = grade
+          submission.score = score
+          submission.submission_type = "basic_lti_launch"
+          submission.workflow_state = "submitted"
+          submission.submitted_at = Time.zone.now
+          submission.url = launch_urls[i]
+          submission.grader_id = -1
+          submission.with_versioning(explicit: true) { submission.save! }
+        end
+        allow(submission).to receive(:grader_can_grade?).and_return(false)
+      end
+
+      context "when rolling back a submission version" do
+        let(:text) { '{ "reopened": true }' }
+
+        it "fails with validation error message" do
+          request = BasicLTI::BasicOutcomes.process_request(tool, request_xml(source_id, launch_urls[1], grades[2]))
+          expect(request.code_major).to eq "failure"
+          expect(request.error_code).to eq :submission_revert_failed
+          expect(request.description).to eq "Grade cannot be changed at this time: "
+        end
+      end
+
+      it "fails with validation error message" do
+        request = BasicLTI::BasicOutcomes.process_request(tool, xml)
+        expect(request.code_major).to eq "failure"
+        expect(request.error_code).to eq :submission_save_failed
+        expect(request.description).to eq "Grade cannot be changed at this time: "
+      end
     end
 
     context "result url" do

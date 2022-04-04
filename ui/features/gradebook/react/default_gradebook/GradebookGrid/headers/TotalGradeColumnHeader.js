@@ -19,7 +19,7 @@
 import React from 'react'
 import {bool, func, shape, string} from 'prop-types'
 import {IconMoreSolid} from '@instructure/ui-icons'
-import {Button} from '@instructure/ui-buttons'
+import {Button, IconButton} from '@instructure/ui-buttons'
 import {Grid} from '@instructure/ui-grid'
 import {View} from '@instructure/ui-view'
 
@@ -31,9 +31,15 @@ import ColumnHeader from './ColumnHeader'
 
 function renderTrigger(ref) {
   return (
-    <Button buttonRef={ref} margin="0" size="small" variant="icon" icon={IconMoreSolid}>
-      <ScreenReaderContent>{I18n.t('Total Options')}</ScreenReaderContent>
-    </Button>
+    <IconButton
+      elementRef={ref}
+      margin="0"
+      size="small"
+      renderIcon={IconMoreSolid}
+      withBackground={false}
+      withBorder={false}
+      screenReaderLabel={I18n.t('Total Options')}
+    />
   )
 }
 
@@ -95,6 +101,7 @@ export default class TotalGradeColumnHeader extends ColumnHeader {
     onMenuDismiss: Menu.propTypes.onDismiss.isRequired,
     grabFocus: bool,
     viewUngradedAsZero: bool.isRequired,
+    isRunningScoreToUngraded: bool,
     ...ColumnHeader.propTypes
   }
 
@@ -217,8 +224,13 @@ export default class TotalGradeColumnHeader extends ColumnHeader {
                     {this.props.onApplyScoreToUngraded && <Menu.Separator />}
 
                     {this.props.onApplyScoreToUngraded && (
-                      <Menu.Item onSelect={this.props.onApplyScoreToUngraded}>
-                        {I18n.t('Apply Score to Ungraded')}
+                      <Menu.Item
+                        disabled={this.props.isRunningScoreToUngraded}
+                        onSelect={this.props.onApplyScoreToUngraded}
+                      >
+                        {this.props.isRunningScoreToUngraded
+                          ? I18n.t('Applying Score to Ungraded')
+                          : I18n.t('Apply Score to Ungraded')}
                       </Menu.Item>
                     )}
                   </Menu>

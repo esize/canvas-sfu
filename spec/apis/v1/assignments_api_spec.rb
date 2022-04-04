@@ -281,6 +281,60 @@ describe AssignmentsApiController, type: :request do
           DueDateCacher.recompute_course(@course, run_immediately: true)
         end
 
+        describe "sharding" do
+          specs_require_sharding
+
+          before do
+            @shard1.activate do
+              account = Account.create!
+              @cs_course = Course.create!(account: account)
+              @cs_course.workflow_state = "available"
+              @cs_course.save!
+              @cs_course.assignments.create name: "assignment1"
+            end
+          end
+
+          it "returns assignments in the contexts' shard as a teacher" do
+            @shard1.activate do
+              @cs_course.enroll_user(@user, "TeacherEnrollment", enrollment_state: "active")
+            end
+
+            json = api_get_assignments_index_from_course(@cs_course, order_by: "due_at")
+
+            expect(json.map { |a| a["name"] }).to eq %w[assignment1]
+          end
+
+          it "returns assignments in the contexts' shard as a student" do
+            @shard1.activate do
+              @cs_course.enroll_user(@user, "StudentEnrollment", enrollment_state: "active")
+            end
+
+            json = api_get_assignments_index_from_course(@cs_course, order_by: "due_at")
+
+            expect(json.map { |a| a["name"] }).to eq %w[assignment1]
+          end
+
+          it "returns user assignments in the contexts' shard as a teacher" do
+            @shard1.activate do
+              @cs_course.enroll_user(@user, "TeacherEnrollment", enrollment_state: "active")
+            end
+
+            json = api_get_assignments_user_index(@user, @cs_course, @user, order_by: "due_at")
+
+            expect(json.map { |a| a["name"] }).to eq %w[assignment1]
+          end
+
+          it "returns user assignments in the contexts' shard as a student" do
+            @shard1.activate do
+              @cs_course.enroll_user(@user, "StudentEnrollment", enrollment_state: "active")
+            end
+
+            json = api_get_assignments_user_index(@user, @cs_course, @user, order_by: "due_at")
+
+            expect(json.map { |a| a["name"] }).to eq %w[assignment1]
+          end
+        end
+
         it "sorts the returned list of assignments by latest due date for teachers (nulls last)" do
           json = api_get_assignments_user_index(@teacher, @course, @teacher, order_by: "due_at")
           order = %w[assignment1 assignment7 assignment2 assignment5 assignment4 assignment3 assignment6 assignment8]
@@ -6402,6 +6456,7 @@ describe AssignmentsApiController, type: :request do
       @a2 = @course.assignments.create! title: "with overrides", unlock_at: 1.day.ago, due_at: 3.days.from_now, lock_at: 4.days.from_now
       @ao0 = assignment_override_model assignment: @a2, set: @course.default_section, unlock_at: 4.days.ago, due_at: 3.days.ago, lock_at: 4.days.from_now
       @ao1 = assignment_override_model assignment: @a2, set: @s1, due_at: 5.days.from_now, lock_at: 6.days.from_now
+      @q0 = @course.quizzes.create!(title: "a quiz", quiz_type: "assignment")
       @new_dates = (7..9).map { |x| x.days.from_now }
     end
 
@@ -6458,6 +6513,15 @@ describe AssignmentsApiController, type: :request do
                           "all_dates" => [{ "base" => true, "due_at" => @new_dates[1].iso8601 }]
                         }])
         expect(@a0.cache_key(:availability)).to_not eq old_key
+      end
+
+      it "clears cache register values for quizzes" do
+        old_key = Timecop.freeze(1.minute.ago) { @q0.cache_key(:availability) }
+        api_bulk_update(@course, [{
+                          "id" => @q0.assignment.id,
+                          "all_dates" => [{ "base" => true, "due_at" => @new_dates[1].iso8601 }]
+                        }])
+        expect(@q0.cache_key(:availability)).to_not eq old_key
       end
     end
 

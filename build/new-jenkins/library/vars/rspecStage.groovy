@@ -41,9 +41,14 @@ def createDistribution(nestedStages) {
     "RSPEC_PROCESSES=${configuration.getInteger('rspecq-processes')}",
     "RSPECQ_FILE_SPLIT_THRESHOLD=${configuration.fileSplitThreshold()}",
     "RSPECQ_MAX_REQUEUES=${configuration.getInteger('rspecq-max-requeues')}",
-    'TEST_PATTERN=^./(spec|gems/plugins/.*/spec_canvas)/',
     "RSPECQ_UPDATE_TIMINGS=${env.GERRIT_EVENT_TYPE == 'change-merged' ? '1' : '0'}",
   ]
+
+  if(env.ENABLE_AXE_SELENIUM == '1') {
+    rspecqEnvVars = rspecqEnvVars + ['TEST_PATTERN=^./(spec|gems/plugins/.*/spec_canvas)/selenium']
+  } else {
+    rspecqEnvVars = rspecqEnvVars + ['TEST_PATTERN=^./(spec|gems/plugins/.*/spec_canvas)/']
+  }
 
   extendedStage('RSpecQ Reporter for Rspec')
     .envVars(rspecqEnvVars)
@@ -65,30 +70,29 @@ def createDistribution(nestedStages) {
 def createLegacyDistribution(nestedStages) {
   def setupNodeHook = this.&setupNode
   def baseEnvVars = [
-    "ENABLE_AXE_SELENIUM=${env.ENABLE_AXE_SELENIUM}",
     'POSTGRES_PASSWORD=sekret',
     'SELENIUM_VERSION=3.141.59-20210929'
   ]
 
   // Used only for crystalball map generation
-  def seleniumNodeTotal = configuration.getInteger('selenium-ci-node-total')
-  def seleniumEnvVars = baseEnvVars + [
-    "CI_NODE_TOTAL=$seleniumNodeTotal",
+  def legacyNodeTotal = configuration.getInteger('selenium-ci-node-total')
+  def legacyEnvVars = baseEnvVars + [
+    "CI_NODE_TOTAL=$legacyNodeTotal",
     'COMPOSE_FILE=docker-compose.new-jenkins.yml:docker-compose.new-jenkins-selenium.yml',
     'EXCLUDE_TESTS=.*/performance',
     "FORCE_FAILURE=${configuration.isForceFailureSelenium() ? '1' : ''}",
     "RERUNS_RETRY=${configuration.getInteger('selenium-rerun-retry')}",
     "RSPEC_PROCESSES=${configuration.getInteger('selenium-processes')}",
-    'TEST_PATTERN=^./(spec|gems/plugins/.*/spec_canvas)/selenium',
+    'TEST_PATTERN=^./(spec|gems/plugins/.*/spec_canvas)/', // Crystalball map needs to run all specs
     'CRYSTALBALL_MAP=1'
   ]
 
-  seleniumNodeTotal.times { index ->
-    extendedStage("Selenium Test Set ${(index + 1).toString().padLeft(2, '0')}")
-      .envVars(seleniumEnvVars + ["CI_NODE_INDEX=$index"])
+  legacyNodeTotal.times { index ->
+    extendedStage("Legacy Test Set ${(index + 1).toString().padLeft(2, '0')}")
+      .envVars(legacyEnvVars + ["CI_NODE_INDEX=$index"])
       .hooks([onNodeAcquired: setupNodeHook, onNodeReleasing: { tearDownNode('selenium') }])
       .nodeRequirements(RSPEC_NODE_REQUIREMENTS)
-      .timeout(15)
+      .timeout(45)
       .queue(nestedStages, this.&runLegacySuite)
   }
 }

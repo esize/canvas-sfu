@@ -53,6 +53,8 @@ const locale = {
     "message": "Tillämpa ändringar på alla instanser för den här knappen och ikonen i kursen"
   },
   "apps_54d24a47": { "message": "Appar" },
+  "arrows_464a3e54": { "message": "Pilar" },
+  "art_icon_8e1daad": { "message": "Konstikon" },
   "aspect_ratio_will_be_preserved_cb5fdfb8": {
     "message": "Bildförhållande kommer att behållas"
   },
@@ -68,6 +70,7 @@ const locale = {
     "message": "Automatiskt sparat innehåll finns. Vill du läsa in det automatiskt sparade innehållet istället?"
   },
   "available_folders_694d0436": { "message": "Tillgängliga mappar" },
+  "basic_554cdc0a": { "message": "Grundläggande" },
   "below_81d4dceb": { "message": "Nedan" },
   "bottom_third_5f5fec1d": { "message": "Tredje nerifrån" },
   "button_color_608a0242": { "message": "Knappfärg" },
@@ -87,6 +90,7 @@ const locale = {
     "message": "cirkelmarkera oordnad lista"
   },
   "clear_2084585f": { "message": "Rensa" },
+  "clear_image_3213fe62": { "message": "Rensa bild" },
   "clear_selected_file_82388e50": { "message": "Rensa vald fil" },
   "clear_selected_file_filename_2fe8a58e": {
     "message": "Rensa vald fil: { filename }"
@@ -144,6 +148,7 @@ const locale = {
   "creative_commons_license_725584ae": {
     "message": "Creative Commons-licens:"
   },
+  "crop_image_41bf940c": { "message": "Beskär bild" },
   "crop_image_807ebb08": { "message": "Beskär bilden" },
   "current_image_f16c249c": { "message": "Aktuell bild" },
   "custom_6979cd81": { "message": "Anpassa" },
@@ -156,6 +161,7 @@ const locale = {
   "default_numerical_ordered_list_48dd3548": {
     "message": "numrera ordnad lista som standard"
   },
+  "delimiters_4db4840d": { "message": "Avgränsare" },
   "describe_the_image_e65d2e32": { "message": "(Beskriv bilden)" },
   "describe_the_video_2fe8f46a": { "message": "(Beskriv videon)" },
   "details_98a31b68": { "message": "Detaljer" },
@@ -163,6 +169,7 @@ const locale = {
   "dimension_type_55c83e4e": { "message": "Dimensionstyp" },
   "dimensions_45ddb7b7": { "message": "Dimensioner" },
   "directionality_26ae9e08": { "message": "Textens riktning" },
+  "directly_edit_latex_b7e9235b": { "message": "Direktredigera LaTeX" },
   "discussions_a5f96392": { "message": "Diskussioner" },
   "discussions_index_6c36ced": { "message": "Diskussionsindex" },
   "display_options_315aba85": { "message": "Visa alternativ" },
@@ -195,10 +202,13 @@ const locale = {
   "embed_preview_2d741e1f": { "message": "Bädda in förhandsvisning" },
   "embed_video_a97a64af": { "message": "Bädda in videon" },
   "embedded_content_aaeb4d3d": { "message": "inbäddat innehåll" },
+  "engineering_icon_f8f3cf43": { "message": "Ingenjörsikon" },
+  "english_icon_25bfe845": { "message": "Engelsk ikon" },
   "enter_at_least_3_characters_to_search_4f037ee0": {
     "message": "Skriv in minst 3 tecken för att söka"
   },
   "equation_1c5ac93c": { "message": "Ekvation" },
+  "equation_editor_39fbc3f1": { "message": "Ekvationsredigeraren" },
   "expand_preview_by_default_2abbf9f8": {
     "message": "Visa förhandsgranskning som standard"
   },
@@ -209,6 +219,7 @@ const locale = {
   "external_tools_6e77821": { "message": "Externa verktyg" },
   "extra_large_b6cdf1ff": { "message": "Extra stor" },
   "extra_small_9ae33252": { "message": "Extra liten" },
+  "extracurricular_icon_67c8ca42": { "message": "Fritidsikon" },
   "file_url_c12b64be": { "message": "Filens URL" },
   "filename_file_icon_602eb5de": { "message": "{ filename } filikon" },
   "filename_image_preview_6cef8f26": {
@@ -240,6 +251,7 @@ const locale = {
     "message": "Gå till redigerarens verktygsfält"
   },
   "grades_a61eba0a": { "message": "Omdömen" },
+  "greek_65c5b3f7": { "message": "Grekiska" },
   "group_documents_8bfd6ae6": { "message": "Gruppera dokument" },
   "group_files_4324f3df": { "message": "Gruppfiler" },
   "group_files_82e5dcdb": { "message": "Gruppfiler" },
@@ -250,6 +262,7 @@ const locale = {
   "heading_2_5b84eed2": { "message": "Rubrik 2" },
   "heading_3_2c83de44": { "message": "Rubrik 3" },
   "heading_4_b2e74be7": { "message": "Rubrik 4" },
+  "health_icon_8d292eb5": { "message": "Hälsoikon" },
   "height_69b03e15": { "message": "Höjd" },
   "hexagon_d8468e0d": { "message": "Hexagon" },
   "hide_description_bfb5502e": { "message": "Dölj beskrivning" },
@@ -265,12 +278,14 @@ const locale = {
   "i_hold_the_copyright_71ee91b1": {
     "message": "Jag är upphovsrättsinnehavare"
   },
+  "icon_color_b86dd6d6": { "message": "Ikonfärg" },
   "if_you_do_not_select_usage_rights_now_this_file_wi_14e07ab5": {
     "message": "Om du inte väljer användningsrättigheter nu kommer den här filen att publiceras efter att den har laddats upp."
   },
   "image_8ad06": { "message": "Bild" },
   "image_options_5412d02c": { "message": "Bildalternativ" },
   "image_options_tray_90a46006": { "message": "Alternativfält för bilder" },
+  "image_to_crop_3a34487d": { "message": "Bild till beskärning" },
   "images_7ce26570": { "message": "bilder" },
   "increase_indent_6d550a4a": { "message": "Öka indrag" },
   "insert_593145ef": { "message": "Infoga" },
@@ -283,8 +298,11 @@ const locale = {
   "invalid_file_type_881cc9b2": { "message": "Ogiltig filtyp" },
   "invalid_url_cbde79f": { "message": "Ogiltig URL" },
   "keyboard_shortcuts_ed1844bd": { "message": "Kortkommandon" },
+  "language_arts_icon_a798b0f8": { "message": "Språkvetenskapsikon" },
+  "languages_icon_9d20539": { "message": "Språkikon" },
   "large_9c5e80e7": { "message": "Stor" },
   "left_to_right_e9b4fd06": { "message": "Vänster-till-höger" },
+  "library_icon_ae1e54cf": { "message": "Biblioteksikon" },
   "link_7262adec": { "message": "Länk" },
   "link_options_a16b758b": { "message": "Länkalternativ" },
   "links_14b70841": { "message": "Länkar" },
@@ -298,12 +316,15 @@ const locale = {
   "loading_please_wait_d276220a": { "message": "Läser in, vänta" },
   "loading_preview_9f077aa1": { "message": "Läser in förhandsgranskning" },
   "locked_762f138b": { "message": "Låst" },
+  "math_icon_ad4e9d03": { "message": "Matteikon" },
   "media_af190855": { "message": "Media" },
   "medium_5a8e9ead": { "message": "Medium" },
   "middle_27dc1d5": { "message": "Mitten" },
+  "misc_3b692ea7": { "message": "Diverse" },
   "miscellaneous_e9818229": { "message": "Blandat" },
   "modules_c4325335": { "message": "Moduler" },
   "multi_color_image_63d7372f": { "message": "Flerfärgsbild" },
+  "music_icon_4db5c972": { "message": "Musikikon" },
   "must_be_at_least_percentage_22e373b6": {
     "message": "Måste vara minst { percentage }%"
   },
@@ -337,6 +358,7 @@ const locale = {
   "open_title_application_fd624fc5": {
     "message": "Öppna programmet { title }"
   },
+  "operators_a2ef9a93": { "message": "Operatörer" },
   "options_3ab0ea65": { "message": "Alternativ" },
   "ordered_and_unordered_lists_cfadfc38": {
     "message": "Ordnade och oordnade listor"
@@ -355,6 +377,10 @@ const locale = {
   "percentage_must_be_a_number_8033c341": {
     "message": "Procenttalet måste vara ett tal"
   },
+  "performing_arts_icon_f3497486": { "message": "Underhållningsikon" },
+  "physical_education_icon_d7dffd3e": {
+    "message": "Ikon för idrott och hälsa"
+  },
   "pixels_52ece7d1": { "message": "Pixlar" },
   "posted_when_a578f5ab": { "message": "Publicerad: { when }" },
   "preformatted_d0670862": { "message": "Förformaterad" },
@@ -372,6 +398,8 @@ const locale = {
   "raw_html_editor_e3993e41": { "message": "Raw HTML Editor" },
   "record_7c9448b": { "message": "Spela in" },
   "record_upload_media_5fdce166": { "message": "Spela in/ladda upp media" },
+  "relationships_6602af70": { "message": "Relationer" },
+  "religion_icon_246e0be1": { "message": "Religiös ikon" },
   "remove_link_d1f2f4d0": { "message": "Ta bort länk" },
   "resize_ec83d538": { "message": "Ändra storlek" },
   "restore_auto_save_deccd84b": {
@@ -555,7 +583,9 @@ const locale = {
   "yes_dde87d5": { "message": "Ja" },
   "you_may_not_upload_an_empty_file_11c31eb2": {
     "message": "Du får inte ladda upp en tom fil"
-  }
+  },
+  "zoom_in_image_bb97d4f": { "message": "Zooma in bilden" },
+  "zoom_out_image_d0a0a2ec": { "message": "Zooma ut bilden" }
 }
 
 

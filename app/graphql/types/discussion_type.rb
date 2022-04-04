@@ -78,6 +78,11 @@ module Types
       end
     end
 
+    field :user_count, Integer, null: true
+    def user_count
+      object.course.nil? ? 0 : object.course.enrollments.not_fake.active_or_pending_by_date_ignoring_access.distinct.count(:user_id)
+    end
+
     field :initial_post_required_for_current_user, Boolean, null: false
     def initial_post_required_for_current_user
       object.initial_post_required?(current_user, session)
@@ -137,7 +142,9 @@ module Types
 
     field :child_topics, [Types::DiscussionType], null: true
     def child_topics
-      load_association(:child_topics)
+      load_association(:child_topics).then do |child_topics|
+        child_topics.select { |topic| topic.context.active? }
+      end
     end
 
     field :context_name, String, null: true

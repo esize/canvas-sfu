@@ -22,7 +22,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import I18n from 'i18n!course_wizard'
 import ListItems from './ListItems'
-import getCookie from 'get-cookie'
+import getCookie from '@instructure/get-cookie'
 
 import {SFUCopyrightComplianceNotice} from '@sfu/sfu-copyright-compliance-notice' /* SFU MOD */
 
@@ -78,7 +78,7 @@ class InfoFrame extends React.Component {
       {
         itemShown: item
       },
-      function() {
+      function () {
         const $messageBox = $(this.messageBox)
         const $messageIcon = $(this.messageIcon)
 

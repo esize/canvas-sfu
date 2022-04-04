@@ -31,10 +31,6 @@ shared_examples_for "k5 important dates" do
   include SharedExamplesCommon
   include K5ImportantDatesSectionPageObject
 
-  before :once do
-    Account.site_admin.enable_feature!(:important_dates)
-  end
-
   it "shows the important dates section on the dashboard" do
     get "/"
 
@@ -159,8 +155,6 @@ shared_examples_for "k5 important dates calendar picker" do |context|
   include K5ImportantDatesSectionPageObject
 
   before :once do
-    Account.site_admin.enable_feature!(:important_dates)
-
     @account.settings[:calendar_contexts_limit] = 2
     @account.save!
   end
@@ -191,7 +185,6 @@ shared_examples_for "k5 important dates calendar picker" do |context|
       end
       user_session(@homeroom_teacher)
     when :observer
-      Account.site_admin.enable_feature!(:k5_parent_support)
       @observer = user_with_pseudonym(name: "Mom", email: "bestmom@example.com", workflow_state: "available")
       add_linked_observer(@student, @observer, root_account: @account)
       # For now, The calendar picker is only available if the observer is viewing his own enrollments

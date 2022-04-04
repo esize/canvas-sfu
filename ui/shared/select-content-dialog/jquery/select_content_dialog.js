@@ -57,7 +57,7 @@ SelectContentDialog.deepLinkingListener = event => {
   if (
     event.origin === ENV.DEEP_LINKING_POST_MESSAGE_ORIGIN &&
     event.data &&
-    event.data.messageType === 'LtiDeepLinkingResponse'
+    event.data.subject === 'LtiDeepLinkingResponse'
   ) {
     if (event.data.content_items.length > 1) {
       return processMultipleContentItems(event)
@@ -525,6 +525,11 @@ $(document).ready(function () {
       }
     } else if (item_type == 'context_external_tool') {
       var item_data = SelectContentDialog.extractContextExternalToolItemData()
+      if (item_data['item[assignment_id]']) {
+        // don't keep fields populated after an assignment was created
+        // since assignment creation via deep link requires another tool launch
+        SelectContentDialog.resetExternalToolFields()
+      }
 
       $dialog.find('.alert-error').remove()
 
@@ -632,16 +637,17 @@ $(document).ready(function () {
 
           if (item_data['item[type]'] == 'attachment') {
             BaseUploader.prototype.onUploadPosted = attachment => {
+              let file_matches = false
               // if the uploaded file replaced and existing file that already has a module item, don't create a new item
               const adding_to_module_id = $dialog.data().context_module_id
               if (
-                !Object.keys(ENV.MODULE_FILE_DETAILS).find(
-                  fdkey =>
-                    // there's module item with the id of the replaced file
-                    ENV.MODULE_FILE_DETAILS[fdkey].content_id == attachment.replacingFileId && // eslint-disable-line eqeqeq
-                    // and the module item is in the module we're working in
+                !Object.keys(ENV.MODULE_FILE_DETAILS).find(fdkey => {
+                  file_matches =
+                    ENV.MODULE_FILE_DETAILS[fdkey].content_id == attachment.replacingFileId &&
                     ENV.MODULE_FILE_DETAILS[fdkey].module_id == adding_to_module_id // eslint-disable-line eqeqeq
-                )
+                  if (file_matches) ENV.MODULE_FILE_DETAILS[fdkey].content_id = attachment.id
+                  return file_matches
+                })
               ) {
                 process_upload(attachment, false)
               }

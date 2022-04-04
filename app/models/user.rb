@@ -794,7 +794,7 @@ class User < ActiveRecord::Base
     true
   end
 
-  def participants
+  def participants(_opts = {})
     []
   end
 
@@ -1279,7 +1279,7 @@ class User < ActiveRecord::Base
     can :view_statistics
 
     given { |user| check_accounts_right?(user, :manage_students) }
-    can :read_profile and can :view_statistics and can :read_reports and can :read_grades
+    can :read_profile and can :read_reports and can :read_grades
 
     given { |user| check_accounts_right?(user, :manage_user_logins) }
     can :read and can :read_reports and can :read_profile and can :api_show_user and can :terminate_sessions
@@ -1607,9 +1607,17 @@ class User < ActiveRecord::Base
 
   def apply_contrast(colors)
     colors.each do |key, _v|
-      until WCAGColorContrast.ratio(colors[key].delete("#"), "ffffff") >= 4.5
-        rgb = colors[key].match(/^#(..)(..)(..)$/).captures.map { |c| (c.hex.to_i * 0.85).round }
-        colors[key] = "#%02x%02x%02x" % rgb
+      darkened_color = colors[key]
+      begin
+        until WCAGColorContrast.ratio(darkened_color.delete("#"), "ffffff") >= 4.5
+          darkened_color = "##{darkened_color.delete("#").chars.map { |c| c + c }.join}" if darkened_color.length == 4
+          rgb = darkened_color.match(/^#(..)(..)(..)$/).captures.map { |c| (c.hex.to_i * 0.85).round }
+          darkened_color = "#%02x%02x%02x" % rgb
+        end
+      rescue => e
+        Canvas::Errors.capture(e, {}, :info)
+      else
+        colors[key] = darkened_color
       end
     end
   end
@@ -2348,6 +2356,17 @@ class User < ActiveRecord::Base
 
         cached_current_course_ids.map { |id| "course_#{id}" } + group_ids.map { |id| "group_#{id}" }
       end
+  end
+
+  def cached_course_ids_for_observed_user(observed_user)
+    Rails.cache.fetch_with_batched_keys(["course_ids_for_observed_user", self, observed_user].cache_key, batch_object: self, batched_keys: :enrollments, expires_in: 1.day) do
+      enrollments
+        .shard(in_region_associated_shards)
+        .active_by_date
+        .of_observer_type
+        .where(associated_user_id: observed_user)
+        .pluck(:course_id)
+    end
   end
 
   # context codes of things that might have a schedulable appointment for the

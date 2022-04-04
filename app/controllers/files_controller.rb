@@ -303,7 +303,7 @@ class FilesController < ApplicationController
         scope = Attachments::ScopedToUser.new(@context || @folder, @current_user).scope
         scope = scope.preload(:user) if params[:include].include?("user") && params[:sort] != "user"
         scope = scope.preload(:usage_rights) if params[:include].include?("usage_rights")
-        scope = Attachment.search_by_attribute(scope, :display_name, params[:search_term])
+        scope = Attachment.search_by_attribute(scope, :display_name, params[:search_term], normalize_unicode: true)
 
         order_clause = case params[:sort]
                        when "position" # undocumented; kept for compatibility
@@ -333,6 +333,10 @@ class FilesController < ApplicationController
 
         if params[:exclude_content_types].present?
           scope = scope.by_exclude_content_types(Array(params[:exclude_content_types]))
+        end
+
+        if params[:category].present?
+          scope = scope.for_category(params[:category])
         end
 
         url = @context ? context_files_url : api_v1_list_files_url(@folder)
@@ -526,11 +530,19 @@ class FilesController < ApplicationController
 
       if @context.nil? || @current_user.nil? || @context == @current_user
         @attachment = Attachment.find(params[:id])
+
+        # Check if a specific context for the relation replacement chain
+        # was set. If so, use it to look up the attachment. This is needed
+        # for some services (like Buttons & Icons) to avoid setting @context
+        # and being redirected
+        if replacement_chain_context && @attachment.deleted?
+          @attachment = attachment_or_replacement(replacement_chain_context, params[:id])
+        end
+
         @context = nil unless @context == @current_user || @context == @attachment.context
         @skip_crumb = true unless @context
       else
-        # NOTE: Attachment#find has special logic to find overwriting files; see FindInContextAssociation
-        @attachment ||= @context.attachments.find(params[:id])
+        @attachment ||= attachment_or_replacement(@context, params[:id])
       end
 
       params[:download] ||= params[:preview]
@@ -948,6 +960,7 @@ class FilesController < ApplicationController
     @attachment.folder = Folder.where(id: params[:folder_id]).first
     @attachment.user = api_find(User, params[:user_id])
     @attachment.set_publish_state_for_usage_rights
+    @attachment.category = params[:category] if params[:category].present?
     @attachment.save!
 
     # apply duplicate handling
@@ -1335,6 +1348,18 @@ class FilesController < ApplicationController
   end
 
   private
+
+  def attachment_or_replacement(context, id)
+    # NOTE: Attachment#find has special logic to find overwriting files; see FindInContextAssociation
+    context.attachments.find(id)
+  end
+
+  def replacement_chain_context
+    return unless params[:replacement_chain_context_type] == "course"
+    return unless params[:replacement_chain_context_id].present?
+
+    api_find(Course.active, params[:replacement_chain_context_id])
+  end
 
   def log_attachment_access(attachment)
     log_asset_access(attachment, "files", "files")

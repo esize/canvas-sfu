@@ -181,6 +181,7 @@ RSpec.shared_examples "DiscussionType" do
     expect(discussion_type.resolve("assignment { _id }")).to eq discussion.assignment_id.to_s
     expect(discussion_type.resolve("delayedPostAt")).to eq discussion.delayed_post_at
     expect(discussion_type.resolve("lockAt")).to eq discussion.lock_at
+    expect(discussion_type.resolve("userCount")).to eq discussion.course.users.count
   end
 
   it "orders root_entries by last_reply_at" do
@@ -640,6 +641,15 @@ describe Types::DiscussionType do
       it "finds lists the user" do
         expect(discussion_type.resolve("mentionableUsersConnection { nodes { _id } }")).to eq(discussion.context.participating_users_in_context.map(&:id).map(&:to_s))
       end
+    end
+  end
+
+  context "groups discussion" do
+    let_once(:discussion) { group_discussion_with_deleted_group }
+    include_examples "DiscussionType"
+
+    it "doesn't show child topic associated to a deleted group" do
+      expect(discussion_type.resolve("childTopics { contextName }")).to match_array(["group 1", "group 2"])
     end
   end
 

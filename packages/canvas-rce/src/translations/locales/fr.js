@@ -55,6 +55,8 @@ const locale = {
     "message": "Appliquer les changements à toutes les instances de ce Bouton et des Icônes dans le cours."
   },
   "apps_54d24a47": { "message": "Applications" },
+  "arrows_464a3e54": { "message": "Flèches" },
+  "art_icon_8e1daad": { "message": "Icône art" },
   "aspect_ratio_will_be_preserved_cb5fdfb8": {
     "message": "Les proportions seront préservées."
   },
@@ -72,6 +74,7 @@ const locale = {
     "message": "Du contenu enregistré automatiquement existe. Souhaitez-vous charger le contenu enregistré automatiquement à la place ?"
   },
   "available_folders_694d0436": { "message": "Dossiers disponibles" },
+  "basic_554cdc0a": { "message": "Basique" },
   "below_81d4dceb": { "message": "En-dessous" },
   "bottom_third_5f5fec1d": { "message": "Tiers inférieur" },
   "button_color_608a0242": { "message": "Couleur du bouton" },
@@ -93,6 +96,7 @@ const locale = {
     "message": "liste non ordonnée à puces rondes"
   },
   "clear_2084585f": { "message": "Effacer" },
+  "clear_image_3213fe62": { "message": "Effacer image" },
   "clear_selected_file_82388e50": {
     "message": "Effacer le fichier sélectionné"
   },
@@ -152,6 +156,7 @@ const locale = {
   "creative_commons_license_725584ae": {
     "message": "Licence Creative Commons :"
   },
+  "crop_image_41bf940c": { "message": "Rogner image" },
   "crop_image_807ebb08": { "message": "Rogner l’image" },
   "current_image_f16c249c": { "message": "Image actuelle" },
   "custom_6979cd81": { "message": "Personnalisé" },
@@ -164,6 +169,7 @@ const locale = {
   "default_numerical_ordered_list_48dd3548": {
     "message": "liste à puce ordonnée par défaut"
   },
+  "delimiters_4db4840d": { "message": "Délimiteurs" },
   "describe_the_image_e65d2e32": { "message": "(Décrire l’image)" },
   "describe_the_video_2fe8f46a": { "message": "(Décrivez la vidéo)" },
   "details_98a31b68": { "message": "Détails" },
@@ -171,6 +177,9 @@ const locale = {
   "dimension_type_55c83e4e": { "message": "Type de dimension" },
   "dimensions_45ddb7b7": { "message": "Dimensions" },
   "directionality_26ae9e08": { "message": "Direction" },
+  "directly_edit_latex_b7e9235b": {
+    "message": "Modifier directement le LaTeX"
+  },
   "discussions_a5f96392": { "message": "Discussions" },
   "discussions_index_6c36ced": { "message": "Index des discussions" },
   "display_options_315aba85": { "message": "Afficher les options" },
@@ -203,10 +212,13 @@ const locale = {
   "embed_preview_2d741e1f": { "message": "Intégrer l''aperçu" },
   "embed_video_a97a64af": { "message": "Intégrer la vidéo" },
   "embedded_content_aaeb4d3d": { "message": "contenu intégré" },
+  "engineering_icon_f8f3cf43": { "message": "Icône ingénierie" },
+  "english_icon_25bfe845": { "message": "Icône anglais" },
   "enter_at_least_3_characters_to_search_4f037ee0": {
     "message": "Saisissez au moins 3 caractères pour lancer une recherche."
   },
   "equation_1c5ac93c": { "message": "Équation" },
+  "equation_editor_39fbc3f1": { "message": "Éditeur d''équations" },
   "expand_preview_by_default_2abbf9f8": {
     "message": "Étendre l’aperçu par défaut"
   },
@@ -217,6 +229,7 @@ const locale = {
   "external_tools_6e77821": { "message": "Outils externes" },
   "extra_large_b6cdf1ff": { "message": "Extra Large" },
   "extra_small_9ae33252": { "message": "Très petit" },
+  "extracurricular_icon_67c8ca42": { "message": "Icône extrascolaire" },
   "file_url_c12b64be": { "message": "URL du fichier" },
   "filename_file_icon_602eb5de": { "message": "{ filename } icône de fichier" },
   "filename_image_preview_6cef8f26": {
@@ -250,6 +263,7 @@ const locale = {
     "message": "Aller à la barre d''outils de l''éditeur"
   },
   "grades_a61eba0a": { "message": "Notes" },
+  "greek_65c5b3f7": { "message": "Grec" },
   "group_documents_8bfd6ae6": { "message": "Documents du groupe" },
   "group_files_4324f3df": { "message": "Fichiers de groupe" },
   "group_files_82e5dcdb": { "message": "Fichiers du groupe" },
@@ -260,6 +274,7 @@ const locale = {
   "heading_2_5b84eed2": { "message": "En-tête 2" },
   "heading_3_2c83de44": { "message": "En-tête 3" },
   "heading_4_b2e74be7": { "message": "En-tête 4" },
+  "health_icon_8d292eb5": { "message": "Icône santé" },
   "height_69b03e15": { "message": "Hauteur" },
   "hexagon_d8468e0d": { "message": "Hexagone" },
   "hide_description_bfb5502e": { "message": "Masquer la description" },
@@ -275,12 +290,14 @@ const locale = {
   "i_hold_the_copyright_71ee91b1": {
     "message": "Je détiens les droits d’auteur"
   },
+  "icon_color_b86dd6d6": { "message": "Icône couleur" },
   "if_you_do_not_select_usage_rights_now_this_file_wi_14e07ab5": {
     "message": "Si vous ne sélectionnez pas de droits d''utilisation maintenant, ce fichier sera envoyé mais non publié."
   },
   "image_8ad06": { "message": "Image" },
   "image_options_5412d02c": { "message": "Options d''image" },
   "image_options_tray_90a46006": { "message": "Bac des options d''image" },
+  "image_to_crop_3a34487d": { "message": "Image à rogner" },
   "images_7ce26570": { "message": "Images" },
   "increase_indent_6d550a4a": { "message": "Augmenter le retrait" },
   "insert_593145ef": { "message": "Insérer" },
@@ -293,8 +310,11 @@ const locale = {
   "invalid_file_type_881cc9b2": { "message": "Type de fichier non valide" },
   "invalid_url_cbde79f": { "message": "URL non valide" },
   "keyboard_shortcuts_ed1844bd": { "message": "Raccourcis clavier" },
+  "language_arts_icon_a798b0f8": { "message": "Icône Arts de la langue" },
+  "languages_icon_9d20539": { "message": "Icône langues" },
   "large_9c5e80e7": { "message": "Grand" },
   "left_to_right_e9b4fd06": { "message": "De gauche à droite" },
+  "library_icon_ae1e54cf": { "message": "Icône bibliothèque" },
   "link_7262adec": { "message": "Lien" },
   "link_options_a16b758b": { "message": "Options de lien" },
   "links_14b70841": { "message": "Liens" },
@@ -310,12 +330,15 @@ const locale = {
   },
   "loading_preview_9f077aa1": { "message": "Chargement de l’aperçu" },
   "locked_762f138b": { "message": "Verrouillé" },
+  "math_icon_ad4e9d03": { "message": "Icône maths" },
   "media_af190855": { "message": "Média" },
   "medium_5a8e9ead": { "message": "Moyen" },
   "middle_27dc1d5": { "message": "Milieu" },
+  "misc_3b692ea7": { "message": "Divers" },
   "miscellaneous_e9818229": { "message": "Divers" },
   "modules_c4325335": { "message": "Modules" },
   "multi_color_image_63d7372f": { "message": "Image multicolore" },
+  "music_icon_4db5c972": { "message": "Icône musique" },
   "must_be_at_least_percentage_22e373b6": {
     "message": "Doit être au moins égal à { percentage }%"
   },
@@ -349,6 +372,7 @@ const locale = {
   "open_title_application_fd624fc5": {
     "message": "Ouvrir l’application { title }"
   },
+  "operators_a2ef9a93": { "message": "Opérateurs" },
   "options_3ab0ea65": { "message": "Options" },
   "ordered_and_unordered_lists_cfadfc38": {
     "message": "Listes ordonnées et non ordonnées"
@@ -367,6 +391,8 @@ const locale = {
   "percentage_must_be_a_number_8033c341": {
     "message": "Le pourcentage doit être un nombre"
   },
+  "performing_arts_icon_f3497486": { "message": "Icône arts du spectacle" },
+  "physical_education_icon_d7dffd3e": { "message": "Icône éducation physique" },
   "pixels_52ece7d1": { "message": "Pixels" },
   "posted_when_a578f5ab": { "message": "Posté : { when }" },
   "preformatted_d0670862": { "message": "Préformaté" },
@@ -386,6 +412,8 @@ const locale = {
   "record_upload_media_5fdce166": {
     "message": "Enregistrement / Téléchargement de média"
   },
+  "relationships_6602af70": { "message": "Relations" },
+  "religion_icon_246e0be1": { "message": "Icône religion" },
   "remove_link_d1f2f4d0": { "message": "Supprimer lien" },
   "resize_ec83d538": { "message": "Redimensionner" },
   "restore_auto_save_deccd84b": {
@@ -579,7 +607,9 @@ const locale = {
   "yes_dde87d5": { "message": "Oui" },
   "you_may_not_upload_an_empty_file_11c31eb2": {
     "message": "Vous ne pouvez pas envoyer un fichier vide."
-  }
+  },
+  "zoom_in_image_bb97d4f": { "message": "Image zoom" },
+  "zoom_out_image_d0a0a2ec": { "message": "Image dézoom" }
 }
 
 

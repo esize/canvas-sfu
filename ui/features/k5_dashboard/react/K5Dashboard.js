@@ -44,7 +44,7 @@ import GradesPage from './GradesPage'
 import HomeroomPage from './HomeroomPage'
 import TodosPage from './TodosPage'
 import K5DashboardContext from '@canvas/k5/react/K5DashboardContext'
-import loadCardDashboard, {resetDashboardCards} from '@canvas/dashboard-card'
+import {CardDashboardLoader} from '@canvas/dashboard-card'
 import {mapStateToProps} from '@canvas/k5/redux/redux-helpers'
 import SchedulePage from '@canvas/k5/react/SchedulePage'
 import ResourcesPage from '@canvas/k5/react/ResourcesPage'
@@ -59,7 +59,7 @@ import usePlanner from '@canvas/k5/react/hooks/usePlanner'
 import useTabState from '@canvas/k5/react/hooks/useTabState'
 import {showFlashError} from '@canvas/alerts/react/FlashAlert'
 import ImportantDates from './ImportantDates'
-import ObserverOptions, {ObserverListShape} from '@canvas/observer-picker'
+import ObserverOptions, {ObservedUsersListShape} from '@canvas/observer-picker'
 import {savedObservedId} from '@canvas/observer-picker/ObserverGetObservee'
 
 const DASHBOARD_TABS = [
@@ -94,9 +94,13 @@ const K5DashboardOptionsMenu = ({onDisableK5Dashboard}) => {
   return (
     <Menu
       trigger={
-        <Button variant="icon" icon={IconMoreLine} data-testid="k5-dashboard-options">
-          <ScreenReaderContent>{I18n.t('Dashboard Options')}</ScreenReaderContent>
-        </Button>
+        <IconButton
+          renderIcon={IconMoreLine}
+          withBackground={false}
+          withBorder={false}
+          data-testid="k5-dashboard-options"
+          screenReaderLabel={I18n.t('Dashboard Options')}
+        />
       }
     >
       <Menu.Group
@@ -136,16 +140,14 @@ export const K5Dashboard = ({
   plannerEnabled = false,
   responsiveSize = 'large',
   hideGradesTabForStudents = false,
-  showImportantDates,
   selectedContextCodes,
   selectedContextsLimit,
-  parentSupportEnabled,
-  observerList,
+  observedUsersList,
   canAddObservee,
   openTodosInNewTab,
   loadingOpportunities
 }) => {
-  const initialObservedId = observerList.find(o => o.id === savedObservedId(currentUser.id))
+  const initialObservedId = observedUsersList.find(o => o.id === savedObservedId(currentUser.id))
     ? savedObservedId(currentUser.id)
     : undefined
 
@@ -159,6 +161,7 @@ export const K5Dashboard = ({
   const [tabsRef, setTabsRef] = useState(null)
   const [trayOpen, setTrayOpen] = useState(false)
   const [observedUserId, setObservedUserId] = useState(initialObservedId)
+  const [cardDashboardLoader, setCardDashboardLoader] = useState(null)
   const plannerInitialized = usePlanner({
     plannerEnabled,
     isPlannerActive: () => activeTab.current === TAB_IDS.SCHEDULE,
@@ -168,7 +171,7 @@ export const K5Dashboard = ({
   })
   const canDisableElementaryDashboard = currentUserRoles.some(r => ['admin', 'teacher'].includes(r))
   const useImportantDatesTray = responsiveSize !== 'large'
-  const observerMode = parentSupportEnabled && currentUserRoles.includes('observer')
+  const observerMode = currentUserRoles.includes('observer')
 
   // If the view width increases while the tray is open, change the state to close the tray
   if (trayOpen && !useImportantDatesTray) {
@@ -190,7 +193,7 @@ export const K5Dashboard = ({
 
   const handleChangeObservedUser = id => {
     if (id !== observedUserId) {
-      resetDashboardCards()
+      setCardDashboardLoader(null)
       setCardsSettled(false)
       setObservedUserId(id)
     }
@@ -199,8 +202,11 @@ export const K5Dashboard = ({
   useEffect(() => {
     // don't call on the initial load when we know we're in observer mode but don't have the ID yet
     if (!observerMode || (observerMode && observedUserId)) {
-      loadCardDashboard(loadCardDashboardCallBack, observerMode ? observedUserId : undefined)
+      const dcl = new CardDashboardLoader()
+      dcl.loadCardDashboard(loadCardDashboardCallBack, observerMode ? observedUserId : undefined)
+      setCardDashboardLoader(dcl)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [observedUserId, observerMode])
 
   useFetchApi({
@@ -246,8 +252,7 @@ export const K5Dashboard = ({
   }
 
   const renderDashboardHeader = sticky => {
-    const showingIcons =
-      (useImportantDatesTray && showImportantDates) || canDisableElementaryDashboard
+    const showingIcons = useImportantDatesTray || canDisableElementaryDashboard
     return (
       <Flex as="section" margin={`medium 0 ${sticky && showingIcons ? '0' : 'small'} 0`}>
         <Flex.Item shouldGrow shouldShrink margin="0 small 0 0">
@@ -255,7 +260,7 @@ export const K5Dashboard = ({
             {I18n.t('Welcome, %{name}!', {name: currentUser.display_name})}
           </Heading>
         </Flex.Item>
-        {useImportantDatesTray && showImportantDates && (
+        {useImportantDatesTray && (
           <Flex.Item align="start">
             <IconButton
               screenReaderLabel={I18n.t('View Important Dates')}
@@ -303,7 +308,7 @@ export const K5Dashboard = ({
                 </Heading>
               </ScreenReaderContent>
               <ObserverOptions
-                observerList={observerList}
+                observedUsersList={observedUsersList}
                 currentUser={currentUser}
                 handleChangeObservedUser={handleChangeObservedUser}
                 margin="medium 0 xx-small 0"
@@ -351,7 +356,6 @@ export const K5Dashboard = ({
               visible={currentTab === TAB_IDS.SCHEDULE}
               singleCourse={false}
               observedUserId={observedUserId}
-              contextCodes={cardsSettled ? cards?.map(c => c.assetString) : undefined}
             />
             <GradesPage
               visible={currentTab === TAB_IDS.GRADES}
@@ -377,13 +381,13 @@ export const K5Dashboard = ({
             )}
           </K5DashboardContext.Provider>
         </Flex.Item>
-        {!useImportantDatesTray && showImportantDates && (
+        {!useImportantDatesTray && (
           <Flex.Item as="div" size="18rem" id="important-dates-sidebar">
             {importantDates}
           </Flex.Item>
         )}
       </Flex>
-      {useImportantDatesTray && showImportantDates && (
+      {useImportantDatesTray && (
         <Tray
           label={I18n.t('Important Dates Tray')}
           open={trayOpen}
@@ -418,11 +422,9 @@ K5Dashboard.propTypes = {
   plannerEnabled: PropTypes.bool,
   responsiveSize: PropTypes.string,
   hideGradesTabForStudents: PropTypes.bool,
-  showImportantDates: PropTypes.bool.isRequired,
   selectedContextCodes: PropTypes.arrayOf(PropTypes.string),
   selectedContextsLimit: PropTypes.number.isRequired,
-  parentSupportEnabled: PropTypes.bool.isRequired,
-  observerList: ObserverListShape.isRequired,
+  observedUsersList: ObservedUsersListShape.isRequired,
   canAddObservee: PropTypes.bool.isRequired,
   openTodosInNewTab: PropTypes.bool.isRequired
 }

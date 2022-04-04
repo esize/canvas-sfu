@@ -820,6 +820,7 @@ export const quiz = (window.quiz = {
       .find('.question_points_holder')
       .showIf(
         !$question.closest('.question_holder').hasClass('group') &&
+          !$('#questions').hasClass('survey_quiz') &&
           question.question_type != 'text_only_question'
       )
     $question.find('.unsupported_question_type_message').remove()
@@ -910,6 +911,7 @@ export const quiz = (window.quiz = {
       .find('.question_points_holder')
       .showIf(
         !$formQuestion.closest('.question_holder').hasClass('group') &&
+          !$('#questions').hasClass('survey_quiz') &&
           question_type !== 'text_only_question'
       )
 
@@ -2743,6 +2745,28 @@ $(document).ready(function () {
       quiz.updateDisplayComments()
     }
     quiz.updateDisplayComments()
+  })
+
+  // attach HTML answers but only when they click the button
+  $('#questions').delegate('.edit_html', 'click', function (event) {
+    console.log('HERE!!')
+
+    event.preventDefault()
+    const $this = $(this)
+    let toggler = $this.data('editorToggle')
+    const inputColumn = $this.parents().find('.answer_type:visible')[0]
+    const rceWidth = inputColumn.offsetWidth
+
+    // create toggler instance on the first click
+    if (!toggler) {
+      toggler = new MultipleChoiceToggle($this, {
+        editorBoxLabel: I18n.t('label.answer.text', 'Answer text, rich text area'),
+        tinyOptions: {width: rceWidth}
+      })
+      $this.data('editorToggle', toggler)
+    }
+
+    toggler.toggle()
   })
 
   $(document).delegate('div.answer_comments, a.comment_focus', 'click', function (event) {
@@ -5116,26 +5140,6 @@ function numericalAnswerTypeChange($el) {
   $text.show()
   $text.find('input:first').focus()
 }
-
-// attach HTML answers but only when they click the button
-$('#questions').delegate('.edit_html', 'click', function (event) {
-  event.preventDefault()
-  const $this = $(this)
-  let toggler = $this.data('editorToggle')
-  const inputColumn = $this.parents().find('.answer_type:visible')[0]
-  const rceWidth = inputColumn.offsetWidth
-
-  // create toggler instance on the first click
-  if (!toggler) {
-    toggler = new MultipleChoiceToggle($this, {
-      editorBoxLabel: I18n.t('label.answer.text', 'Answer text, rich text area'),
-      tinyOptions: {width: rceWidth}
-    })
-    $this.data('editorToggle', toggler)
-  }
-
-  toggler.toggle()
-})
 
 $(() => {
   $(document)

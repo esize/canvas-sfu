@@ -456,19 +456,32 @@ describe Types::UserType do
     it "filters the conversations" do
       conversation(@student, @teacher, { body: "Howdy Partner" })
       conversation(@student, @random_person, { body: "Not in course" })
+      conversation(@student, @ta, { body: "Hey Im using SimpleTags tagged_scope_handler." })
 
       type = GraphQLTypeTester.new(@student, current_user: @student, domain_root_account: @student.account, request: ActionDispatch::TestRequest.create)
       result = type.resolve(
         "conversationsConnection(filter: \"course_#{@course.id}\") { nodes { conversation { conversationMessagesConnection { nodes { body } } } } }"
       )
+      expect(result.count).to eq 2
+      expect(result.flatten).to match_array ["Howdy Partner", "Hey Im using SimpleTags tagged_scope_handler."]
+
+      result = type.resolve(
+        "conversationsConnection(filter: \"user_#{@ta.id}\") { nodes { conversation { conversationMessagesConnection { nodes { body } } } } }"
+      )
       expect(result.count).to eq 1
-      expect(result[0][0]).to eq "Howdy Partner"
+      expect(result[0][0]).to eq "Hey Im using SimpleTags tagged_scope_handler."
 
       result = type.resolve(
         "conversationsConnection { nodes { conversation { conversationMessagesConnection { nodes { body } } } } }"
       )
-      expect(result.count).to eq 2
-      expect(result.flatten).to match_array ["Howdy Partner", "Not in course"]
+      expect(result.count).to eq 3
+      expect(result.flatten).to match_array ["Howdy Partner", "Not in course", "Hey Im using SimpleTags tagged_scope_handler."]
+
+      result = type.resolve(
+        "conversationsConnection(filter: [\"user_#{@ta.id}\", \"course_#{@course.id}\"]) { nodes { conversation { conversationMessagesConnection { nodes { body } } } } }"
+      )
+      expect(result.count).to eq 1
+      expect(result[0][0]).to eq "Hey Im using SimpleTags tagged_scope_handler."
     end
 
     it "scopes the conversations" do
@@ -787,6 +800,9 @@ describe Types::UserType do
           ... on User {
             submissionCommentsConnection(first: 10) {
               nodes {
+                _id
+                submissionId
+                createdAt
                 comment
                 assignment {
                   name
@@ -816,11 +832,11 @@ describe Types::UserType do
         final_grader: @teacher
       )
       assignment.grade_student(student, grade: 1, grader: @teacher, provisional: true)
-      submission = assignment.submissions.find_by(user: student)
+      @submission = assignment.submissions.find_by(user: student)
 
-      submission.add_comment(author: student, comment: "First comment")
-      submission.add_comment(author: @teacher, comment: "Second comment")
-      submission.add_comment(author: @teacher, comment: "Third comment")
+      @sc1 = @submission.add_comment(author: student, comment: "First comment")
+      @sc2 = @submission.add_comment(author: @teacher, comment: "Second comment")
+      @sc3 = @submission.add_comment(author: @teacher, comment: "Third comment")
     end
 
     it "can get comments" do
@@ -832,6 +848,30 @@ describe Types::UserType do
       nodes = result.dig("data", "legacyNode", "submissionCommentsConnection", "nodes")
 
       expect(nodes.map { |c| c["comment"] }).to match_array ["First comment", "Second comment", "Third comment"]
+    end
+
+    it "can get submissionId" do
+      result = CanvasSchema.execute(
+        submission_comments_mutation_str(@teacher.id),
+        context: { current_user: @teacher }
+      )
+
+      nodes = result.dig("data", "legacyNode", "submissionCommentsConnection", "nodes")
+
+      expect(nodes.map { |c| c["submissionId"] }).to match_array [@submission.id.to_s, @submission.id.to_s, @submission.id.to_s]
+    end
+
+    it "can get createdAt" do
+      result = CanvasSchema.execute(
+        submission_comments_mutation_str(@teacher.id),
+        context: { current_user: @teacher }
+      )
+
+      nodes = result.dig("data", "legacyNode", "submissionCommentsConnection", "nodes")
+
+      [@sc1, @sc2, @sc3].each do |sc|
+        expect(Time.parse(nodes.find { |n| n["_id"] == sc.id.to_s }["createdAt"])).to be_within(1.minute).of(sc.created_at)
+      end
     end
 
     it "can get assignment names" do

@@ -53,6 +53,8 @@ const locale = {
     "message": "Änderungen für alle Schaltflächen und Icons im Kurs übernehmen"
   },
   "apps_54d24a47": { "message": "Apps" },
+  "arrows_464a3e54": { "message": "Pfeile" },
+  "art_icon_8e1daad": { "message": "Kunstsymbol" },
   "aspect_ratio_will_be_preserved_cb5fdfb8": {
     "message": "Seitenverhältnis wird beibehalten"
   },
@@ -68,6 +70,7 @@ const locale = {
     "message": "Automatisch gespeicherte Inhalte vorhanden. Möchten Sie lieber die automatisch gespeicherten Inhalte laden?"
   },
   "available_folders_694d0436": { "message": "Verfügbare Ordner" },
+  "basic_554cdc0a": { "message": "Grundlegend" },
   "below_81d4dceb": { "message": "Unten" },
   "bottom_third_5f5fec1d": { "message": "Unteres Drittel" },
   "button_color_608a0242": { "message": "Farbe der Schaltfläche" },
@@ -89,6 +92,7 @@ const locale = {
     "message": "Ungeordnete Liste einkreisen"
   },
   "clear_2084585f": { "message": "Löschen" },
+  "clear_image_3213fe62": { "message": "Bild löschen" },
   "clear_selected_file_82388e50": { "message": "Ausgewählte Datei löschen" },
   "clear_selected_file_filename_2fe8a58e": {
     "message": "Ausgewählte Datei löschen: { filename }"
@@ -142,6 +146,7 @@ const locale = {
   "creative_commons_license_725584ae": {
     "message": "Creative Commons-Lizenz:"
   },
+  "crop_image_41bf940c": { "message": "Bild zuschneiden" },
   "crop_image_807ebb08": { "message": "Bild zuschneiden" },
   "current_image_f16c249c": { "message": "Aktuelles Bild" },
   "custom_6979cd81": { "message": "Angepasst" },
@@ -154,6 +159,7 @@ const locale = {
   "default_numerical_ordered_list_48dd3548": {
     "message": "Standardmäßig numerisch sortierte Liste"
   },
+  "delimiters_4db4840d": { "message": "Trennzeichen" },
   "describe_the_image_e65d2e32": { "message": "(Beschreiben Sie das Bild)" },
   "describe_the_video_2fe8f46a": { "message": "(Beschreiben Sie das Video)" },
   "details_98a31b68": { "message": "Details" },
@@ -161,6 +167,7 @@ const locale = {
   "dimension_type_55c83e4e": { "message": "Dimensionstyp" },
   "dimensions_45ddb7b7": { "message": "Abmessungen" },
   "directionality_26ae9e08": { "message": "Schreibrichtung" },
+  "directly_edit_latex_b7e9235b": { "message": "LaTeX direkt bearbeiten" },
   "discussions_a5f96392": { "message": "Diskussionen" },
   "discussions_index_6c36ced": { "message": "Diskussionsindex" },
   "display_options_315aba85": { "message": "Anzeigeoptionen" },
@@ -193,10 +200,13 @@ const locale = {
   "embed_preview_2d741e1f": { "message": "Vorschau einbetten" },
   "embed_video_a97a64af": { "message": "Video einbetten" },
   "embedded_content_aaeb4d3d": { "message": "Eingebettete Inhalte" },
+  "engineering_icon_f8f3cf43": { "message": "Engineering-Symbol" },
+  "english_icon_25bfe845": { "message": "Englisch-Symbol" },
   "enter_at_least_3_characters_to_search_4f037ee0": {
     "message": "Geben Sie für die Suche mindestens 3 Zeichen ein."
   },
   "equation_1c5ac93c": { "message": "Gleichung" },
+  "equation_editor_39fbc3f1": { "message": "Formel-Editor" },
   "expand_preview_by_default_2abbf9f8": {
     "message": "Vorschau standardmäßig erweitern"
   },
@@ -205,6 +215,7 @@ const locale = {
   "external_tools_6e77821": { "message": "Externe Tools" },
   "extra_large_b6cdf1ff": { "message": "Extra groß" },
   "extra_small_9ae33252": { "message": "Extra klein" },
+  "extracurricular_icon_67c8ca42": { "message": "Außerschulisches Symbol" },
   "file_url_c12b64be": { "message": "Datei-URL" },
   "filename_file_icon_602eb5de": { "message": "Dateisymbol für { filename }" },
   "filename_image_preview_6cef8f26": {
@@ -236,6 +247,7 @@ const locale = {
     "message": "Gehen Sie zur Editor-Symbolleiste"
   },
   "grades_a61eba0a": { "message": "Noten" },
+  "greek_65c5b3f7": { "message": "Griechisch" },
   "group_documents_8bfd6ae6": { "message": "Gruppendokumente" },
   "group_files_4324f3df": { "message": "Gruppendateien" },
   "group_files_82e5dcdb": { "message": "Gruppendateien" },
@@ -246,6 +258,7 @@ const locale = {
   "heading_2_5b84eed2": { "message": "Überschrift 2" },
   "heading_3_2c83de44": { "message": "Überschrift 3" },
   "heading_4_b2e74be7": { "message": "Überschrift 4" },
+  "health_icon_8d292eb5": { "message": "Gesundheitssymbol" },
   "height_69b03e15": { "message": "Höhe" },
   "hexagon_d8468e0d": { "message": "Sechseck" },
   "hide_description_bfb5502e": { "message": "Beschreibung ausblenden" },
@@ -261,12 +274,14 @@ const locale = {
   "i_hold_the_copyright_71ee91b1": {
     "message": "Ich bin der Urheberrechtsinhaber"
   },
+  "icon_color_b86dd6d6": { "message": "Symbolfarbe" },
   "if_you_do_not_select_usage_rights_now_this_file_wi_14e07ab5": {
     "message": "Wenn Sie jetzt keine Nutzungsrechte auswählen, wird diese Datei nach dem Hochladen nicht veröffentlicht."
   },
   "image_8ad06": { "message": "Bild" },
   "image_options_5412d02c": { "message": "Bildoptionen" },
   "image_options_tray_90a46006": { "message": "Fach für Bildoptionen" },
+  "image_to_crop_3a34487d": { "message": "Bild zum Zuschneiden" },
   "images_7ce26570": { "message": "Bilder" },
   "increase_indent_6d550a4a": { "message": "Einzug vergrößern" },
   "insert_593145ef": { "message": "Einfügen" },
@@ -277,8 +292,11 @@ const locale = {
   "invalid_file_type_881cc9b2": { "message": "Ungültiger Dateityp" },
   "invalid_url_cbde79f": { "message": "Ungültige URL" },
   "keyboard_shortcuts_ed1844bd": { "message": "Tastenkombinationen" },
+  "language_arts_icon_a798b0f8": { "message": "Symbol für „Sprachkunst“" },
+  "languages_icon_9d20539": { "message": "Sprachen-Symbol" },
   "large_9c5e80e7": { "message": "Groß" },
   "left_to_right_e9b4fd06": { "message": "Von links nach rechts" },
+  "library_icon_ae1e54cf": { "message": "Bibliothekssymbol" },
   "link_7262adec": { "message": "Link" },
   "link_options_a16b758b": { "message": "Link-Optionen" },
   "links_14b70841": { "message": "Links" },
@@ -292,12 +310,15 @@ const locale = {
   "loading_please_wait_d276220a": { "message": "Ladevorgang, bitte warten" },
   "loading_preview_9f077aa1": { "message": "Vorschau wird geladen" },
   "locked_762f138b": { "message": "Gesperrt" },
+  "math_icon_ad4e9d03": { "message": "Symbol „Mathematik“" },
   "media_af190855": { "message": "Medien" },
   "medium_5a8e9ead": { "message": "Medium" },
   "middle_27dc1d5": { "message": "Mitte" },
+  "misc_3b692ea7": { "message": "Sonstige" },
   "miscellaneous_e9818229": { "message": "Verschiedenes" },
   "modules_c4325335": { "message": "Module" },
   "multi_color_image_63d7372f": { "message": "Mehrfarbiges Bild" },
+  "music_icon_4db5c972": { "message": "Musiksymbol" },
   "must_be_at_least_percentage_22e373b6": {
     "message": "Mindestens { percentage }%"
   },
@@ -331,6 +352,7 @@ const locale = {
   "open_title_application_fd624fc5": {
     "message": "Anwendung { title } öffnen"
   },
+  "operators_a2ef9a93": { "message": "Operatoren" },
   "options_3ab0ea65": { "message": "Optionen" },
   "ordered_and_unordered_lists_cfadfc38": {
     "message": "Geordnete und ungeordnete Listen"
@@ -349,6 +371,12 @@ const locale = {
   "percentage_must_be_a_number_8033c341": {
     "message": "Prozentsatz muss eine Zahl sein"
   },
+  "performing_arts_icon_f3497486": {
+    "message": "Symbol für „Darstellende Kunst“"
+  },
+  "physical_education_icon_d7dffd3e": {
+    "message": "Symbol Für Körperertüchtigung"
+  },
   "pixels_52ece7d1": { "message": "Pixel" },
   "posted_when_a578f5ab": { "message": "Gepostet am: { when }" },
   "preformatted_d0670862": { "message": "Vorformatiert" },
@@ -366,6 +394,8 @@ const locale = {
   "raw_html_editor_e3993e41": { "message": "Raw-HTML-Editor" },
   "record_7c9448b": { "message": "Aufnehmen" },
   "record_upload_media_5fdce166": { "message": "Medien aufzeichnen/hochladen" },
+  "relationships_6602af70": { "message": "Beziehungen" },
+  "religion_icon_246e0be1": { "message": "Religionssymbol" },
   "remove_link_d1f2f4d0": { "message": "Link entfernen" },
   "resize_ec83d538": { "message": "Größe ändern" },
   "restore_auto_save_deccd84b": {
@@ -549,7 +579,9 @@ const locale = {
   "yes_dde87d5": { "message": "Ja" },
   "you_may_not_upload_an_empty_file_11c31eb2": {
     "message": "Sie können keine leere Datei hochladen."
-  }
+  },
+  "zoom_in_image_bb97d4f": { "message": "Bild vergrößern" },
+  "zoom_out_image_d0a0a2ec": { "message": "Bild verkleinern" }
 }
 
 

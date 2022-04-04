@@ -53,6 +53,8 @@ const locale = {
     "message": "Applica modifiche a tutte le istanze di questo pulsante e questa icona nel corso"
   },
   "apps_54d24a47": { "message": "App" },
+  "arrows_464a3e54": { "message": "Frecce" },
+  "art_icon_8e1daad": { "message": "Icona art" },
   "aspect_ratio_will_be_preserved_cb5fdfb8": {
     "message": "Le proporzioni verranno mantenute"
   },
@@ -72,6 +74,7 @@ const locale = {
     "message": "Contenuto salvataggio automatico esistente. Caricare al suo posto il contenuto salvato automaticamente?"
   },
   "available_folders_694d0436": { "message": "Cartelle disponibili" },
+  "basic_554cdc0a": { "message": "Base" },
   "below_81d4dceb": { "message": "Sotto" },
   "bottom_third_5f5fec1d": { "message": "Terzo inferiore" },
   "button_color_608a0242": { "message": "Colore pulsanti" },
@@ -95,6 +98,7 @@ const locale = {
     "message": "cerchia elenco non ordinato"
   },
   "clear_2084585f": { "message": "Cancella" },
+  "clear_image_3213fe62": { "message": "Cancella immagine" },
   "clear_selected_file_82388e50": { "message": "Cancella file selezionato" },
   "clear_selected_file_filename_2fe8a58e": {
     "message": "Cancella file selezionato: { filename }"
@@ -154,6 +158,7 @@ const locale = {
   "creative_commons_license_725584ae": {
     "message": "Licenza Creative Commons:"
   },
+  "crop_image_41bf940c": { "message": "Ritaglia immagine" },
   "crop_image_807ebb08": { "message": "Ritaglia immagine" },
   "current_image_f16c249c": { "message": "Immagine attuale" },
   "custom_6979cd81": { "message": "Personalizzato" },
@@ -166,6 +171,7 @@ const locale = {
   "default_numerical_ordered_list_48dd3548": {
     "message": "elenco ordinato numericamente predefinito"
   },
+  "delimiters_4db4840d": { "message": "Delimitatori" },
   "describe_the_image_e65d2e32": { "message": "(Descrivi l’immagine)" },
   "describe_the_video_2fe8f46a": { "message": "(Descrivi il video)" },
   "details_98a31b68": { "message": "Dettagli" },
@@ -173,6 +179,7 @@ const locale = {
   "dimension_type_55c83e4e": { "message": "Tipo di dimensione" },
   "dimensions_45ddb7b7": { "message": "Dimensioni" },
   "directionality_26ae9e08": { "message": "Direzionalità" },
+  "directly_edit_latex_b7e9235b": { "message": "Modifica direttamente LaTeX" },
   "discussions_a5f96392": { "message": "Discussioni" },
   "discussions_index_6c36ced": { "message": "Indice discussioni" },
   "display_options_315aba85": { "message": "Visualizza opzioni" },
@@ -205,10 +212,13 @@ const locale = {
   "embed_preview_2d741e1f": { "message": "Incorpora anteprima" },
   "embed_video_a97a64af": { "message": "Incorpora il video" },
   "embedded_content_aaeb4d3d": { "message": "contenuto incorporato" },
+  "engineering_icon_f8f3cf43": { "message": "Icona Progettazione" },
+  "english_icon_25bfe845": { "message": "Icona Inglese" },
   "enter_at_least_3_characters_to_search_4f037ee0": {
     "message": "Inserisci almeno 3 caratteri per la ricerca"
   },
   "equation_1c5ac93c": { "message": "Equazione" },
+  "equation_editor_39fbc3f1": { "message": "Editor equazione" },
   "expand_preview_by_default_2abbf9f8": {
     "message": "Espandi anteprima per impostazione predefinita"
   },
@@ -217,6 +227,7 @@ const locale = {
   "external_tools_6e77821": { "message": "Strumenti esterni" },
   "extra_large_b6cdf1ff": { "message": "Extra Large" },
   "extra_small_9ae33252": { "message": "Extra piccola" },
+  "extracurricular_icon_67c8ca42": { "message": "Icona Extracurricolare" },
   "file_url_c12b64be": { "message": "URL file" },
   "filename_file_icon_602eb5de": { "message": "Icona file { filename }" },
   "filename_image_preview_6cef8f26": {
@@ -250,6 +261,7 @@ const locale = {
     "message": "Vai alla barra degli strumenti dell''editor"
   },
   "grades_a61eba0a": { "message": "Voti" },
+  "greek_65c5b3f7": { "message": "Greco" },
   "group_documents_8bfd6ae6": { "message": "Documenti di gruppo" },
   "group_files_4324f3df": { "message": "File di gruppo" },
   "group_files_82e5dcdb": { "message": "File gruppo" },
@@ -260,6 +272,7 @@ const locale = {
   "heading_2_5b84eed2": { "message": "Intestazione 2" },
   "heading_3_2c83de44": { "message": "Intestazione 3" },
   "heading_4_b2e74be7": { "message": "Intestazione 4" },
+  "health_icon_8d292eb5": { "message": "Icona Salute" },
   "height_69b03e15": { "message": "Altezza" },
   "hexagon_d8468e0d": { "message": "Esagono" },
   "hide_description_bfb5502e": { "message": "Nascondi descrizione" },
@@ -275,12 +288,14 @@ const locale = {
   "i_hold_the_copyright_71ee91b1": {
     "message": "Sono il proprietario del copyright"
   },
+  "icon_color_b86dd6d6": { "message": "Icona Colore" },
   "if_you_do_not_select_usage_rights_now_this_file_wi_14e07ab5": {
     "message": "Se non selezioni i diritti di utilizzo ora, questo file sarà in stato \"non pubblicato\" dopo il caricamento."
   },
   "image_8ad06": { "message": "Immagine" },
   "image_options_5412d02c": { "message": "Opzioni immagine" },
   "image_options_tray_90a46006": { "message": "Barra opzioni immagine" },
+  "image_to_crop_3a34487d": { "message": "Immagine da ritagliare" },
   "images_7ce26570": { "message": "Immagini" },
   "increase_indent_6d550a4a": { "message": "Aumenta rientro" },
   "insert_593145ef": { "message": "Inserisci" },
@@ -293,8 +308,11 @@ const locale = {
   "invalid_file_type_881cc9b2": { "message": "Tipo file non valido" },
   "invalid_url_cbde79f": { "message": "URL non valido" },
   "keyboard_shortcuts_ed1844bd": { "message": "Scelte rapide da tastiera" },
+  "language_arts_icon_a798b0f8": { "message": "Icona Studio della lingua" },
+  "languages_icon_9d20539": { "message": "Icona Lingue" },
   "large_9c5e80e7": { "message": "Grande" },
   "left_to_right_e9b4fd06": { "message": "Da sinistra a destra" },
+  "library_icon_ae1e54cf": { "message": "Icona Libreria" },
   "link_7262adec": { "message": "Link" },
   "link_options_a16b758b": { "message": "Opzioni link" },
   "links_14b70841": { "message": "Link" },
@@ -310,12 +328,15 @@ const locale = {
   },
   "loading_preview_9f077aa1": { "message": "Caricamento dell’anteprima" },
   "locked_762f138b": { "message": "Bloccato" },
+  "math_icon_ad4e9d03": { "message": "Icona Matematica" },
   "media_af190855": { "message": "Elementi multimediali" },
   "medium_5a8e9ead": { "message": "Medio" },
   "middle_27dc1d5": { "message": "Centro" },
+  "misc_3b692ea7": { "message": "Varie" },
   "miscellaneous_e9818229": { "message": "Varie" },
   "modules_c4325335": { "message": "Moduli" },
   "multi_color_image_63d7372f": { "message": "Immagine multicolore" },
+  "music_icon_4db5c972": { "message": "Icona Musica" },
   "must_be_at_least_percentage_22e373b6": {
     "message": "Deve essere almeno { percentage }%"
   },
@@ -349,6 +370,7 @@ const locale = {
   "open_title_application_fd624fc5": {
     "message": "Apri applicazione { title }"
   },
+  "operators_a2ef9a93": { "message": "Operatori" },
   "options_3ab0ea65": { "message": "Opzioni" },
   "ordered_and_unordered_lists_cfadfc38": {
     "message": "Elenchi ordinati e non ordinati"
@@ -367,6 +389,8 @@ const locale = {
   "percentage_must_be_a_number_8033c341": {
     "message": "La percentuale dev’essere un numero"
   },
+  "performing_arts_icon_f3497486": { "message": "Icona Arti dello spettacolo" },
+  "physical_education_icon_d7dffd3e": { "message": "Icona Educazione fisica" },
   "pixels_52ece7d1": { "message": "Pixel" },
   "posted_when_a578f5ab": { "message": "Postato: { when }" },
   "preformatted_d0670862": { "message": "Preformattato" },
@@ -386,6 +410,8 @@ const locale = {
   "record_upload_media_5fdce166": {
     "message": "Registra/Carica file multimediali"
   },
+  "relationships_6602af70": { "message": "Relazioni" },
+  "religion_icon_246e0be1": { "message": "Icona Religione" },
   "remove_link_d1f2f4d0": { "message": "Rimuovi link" },
   "resize_ec83d538": { "message": "Ridimensiona" },
   "restore_auto_save_deccd84b": {
@@ -569,7 +595,9 @@ const locale = {
   "yes_dde87d5": { "message": "Sì" },
   "you_may_not_upload_an_empty_file_11c31eb2": {
     "message": "Non si possono caricare file vuoti"
-  }
+  },
+  "zoom_in_image_bb97d4f": { "message": "Ingrandisci immagine" },
+  "zoom_out_image_d0a0a2ec": { "message": "Riduci immagine" }
 }
 
 

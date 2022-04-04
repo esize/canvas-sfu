@@ -472,7 +472,6 @@ window.modules = (function () {
       $module.addClass('dont_remove')
       $form.find('.module_name').toggleClass('lonely_entry', isNew)
       const $toFocus = $('.ig-header-admin .al-trigger', $module)
-      const responsive_misc = !!window.ENV?.FEATURES?.responsive_misc
       const fullSizeModal = window.matchMedia('(min-width: 600px)').matches
       const responsiveWidth = fullSizeModal ? 600 : 320
       $form
@@ -482,7 +481,7 @@ window.modules = (function () {
           title: isNew
             ? I18n.t('titles.add', 'Add Module')
             : I18n.t('titles.edit', 'Edit Module Settings'),
-          width: responsive_misc ? responsiveWidth : 600,
+          width: responsiveWidth,
           height: isNew ? 400 : 600,
           close() {
             modules.hideEditModule(true)
@@ -508,6 +507,15 @@ window.modules = (function () {
         $module.remove()
       }
       $('#add_context_module_form:visible').dialog('close')
+    },
+
+    addContentTagToEnv(content_tag) {
+      ENV.MODULE_FILE_DETAILS[content_tag.id] = {
+        content_details: content_tag.content_details,
+        content_id: content_tag.content_id,
+        id: content_tag.id,
+        module_id: content_tag.context_module_id
+      }
     },
 
     addItemToModule($module, data) {
@@ -1220,19 +1228,19 @@ modules.initModuleManagement = function (duplicate) {
         let displayType
         const data = $(this).getTemplateData({textValues: ['id', 'type']})
         data.title = $(this).find('.title').attr('title')
-        if (data.type == 'assignment') {
-          displayType = I18n.t('optgroup.assignments', 'Assignments')
-        } else if (data.type == 'attachment') {
-          displayType = I18n.t('optgroup.files', 'Files')
-        } else if (data.type == 'quiz') {
+        if (data.type === 'quiz' || data.type === 'lti-quiz' || $(this).hasClass('lti-quiz')) {
           displayType = I18n.t('optgroup.quizzes', 'Quizzes')
-        } else if (data.type == 'external_url') {
+        } else if (data.type === 'assignment') {
+          displayType = I18n.t('optgroup.assignments', 'Assignments')
+        } else if (data.type === 'attachment') {
+          displayType = I18n.t('optgroup.files', 'Files')
+        } else if (data.type === 'external_url') {
           displayType = I18n.t('optgroup.external_urls', 'External URLs')
-        } else if (data.type == 'context_external_tool') {
+        } else if (data.type === 'context_external_tool') {
           displayType = I18n.t('optgroup.external_tools', 'External Tools')
-        } else if (data.type == 'discussion_topic') {
+        } else if (data.type === 'discussion_topic') {
           displayType = I18n.t('optgroup.discussion_topics', 'Discussions')
-        } else if (data.type == 'wiki_page') {
+        } else if (data.type === 'wiki_page') {
           displayType = I18n.t('Pages')
         }
         let $group = $optgroups[displayType]
@@ -1571,6 +1579,7 @@ modules.initModuleManagement = function (duplicate) {
           'Are you sure you want to remove this item from the module?'
         ),
         success(data) {
+          delete ENV.MODULE_FILE_DETAILS[data.content_tag.id]
           $(this).slideUp(function () {
             $(this).remove()
             modules.updateTaggedItems()
@@ -1774,14 +1783,13 @@ modules.initModuleManagement = function (duplicate) {
       const id = $(this).parents('.context_module').find('.header').attr('id')
       const name = $(this).parents('.context_module').find('.name').attr('title')
       const options = {for_modules: true, context_module_id: id}
-      const responsive_misc = !!window.ENV?.FEATURES?.responsive_misc
       const midSizeModal = window.matchMedia('(min-width: 500px)').matches
       const fullSizeModal = window.matchMedia('(min-width: 770px)').matches
       const responsiveWidth = fullSizeModal ? 770 : midSizeModal ? 500 : 320
       options.select_button_text = I18n.t('buttons.add_item', 'Add Item')
       options.holder_name = name
       options.height = 550
-      options.width = responsive_misc ? responsiveWidth : 770
+      options.width = responsiveWidth
       options.dialog_title = I18n.t('titles.add_item', 'Add Item to %{module}', {module: name})
       options.close = function () {
         $trigger.focus()
@@ -1793,6 +1801,13 @@ modules.initModuleManagement = function (duplicate) {
 
   function generate_submit(id, focusLink = true) {
     return item_data => {
+      // a content item with an assignment_id means that an assignment was already created
+      // on the backend, so no module item should be created now. Reload the page to show
+      // the newly created assignment
+      if (item_data['item[assignment_id]']) {
+        return window.location.reload()
+      }
+
       const $module = $('#context_module_' + id)
       let nextPosition = modules.getNextPosition($module)
       item_data.content_details = ['items']
@@ -1805,6 +1820,7 @@ modules.initModuleManagement = function (duplicate) {
           $item.remove()
           data.content_tag.type = item_data['item[type]']
           $item = modules.addItemToModule($module, data.content_tag)
+          modules.addContentTagToEnv(data.content_tag)
           $module.find('.context_module_items.ui-sortable').sortable('enable').sortable('refresh')
           initNewItemPublishButton($item, data.content_tag)
           initNewItemDirectShare($item, data.content_tag)

@@ -14,7 +14,7 @@ module SFU
       def build(req_user, selected_courses, account_id, teacher_username, teacher_sis_user_id, teacher2_sis_user_id, teacher2_role, cross_list)
         raise 'The main teacher was not found.' if teacher_sis_user_id.nil?
 
-        course_array = [%w(course_id short_name long_name account_id term_id status start_date end_date)]
+        course_array = [%w(course_id short_name long_name account_id term_id status)]
         section_array = [%w(section_id course_id name status start_date end_date)]
         enrollment_array = [%w(course_id user_id role section_id status)]
 
@@ -52,8 +52,7 @@ module SFU
           long_name = (long_names[0, 1] + short_names[1..-1]).join(' / ') if long_name.length > CANVAS_COURSE_NAME_MAX
 
           # create course csv
-          selected_term = self.class.term(term)
-          course_array.push [course_id, short_name, long_name, account_id, term, 'active', selected_term.start_at, selected_term.end_at]
+          course_array.push [course_id, short_name, long_name, account_id, term, 'active']
 
           # create section csv
           sections.each { |section| section_array.concat section_csv(section, course_id) }
@@ -139,14 +138,12 @@ module SFU
         title = course_arr[4].to_s
         child_sections = course_arr[5]
 
-        selected_term = self.class.term(course[:term])
-
         course[:course_id] = "#{course[:term]}-#{name}-#{number}-#{section_name}"
         course[:main_section_id] = "#{course[:course_id]}:::#{time_stamp}"
         course[:short_name] = "#{name}#{number} #{section_name}".upcase
         course[:long_name] =  "#{course[:short_name]} #{title}"
         course[:default_section_id] = default_section_id(course[:term], course[:main_section_id], section_name, child_sections)
-        course[:course] = [course[:course_id], course[:short_name], course[:long_name], account_id, course[:term], 'active', selected_term.start_at, selected_term.end_at]
+        course[:course] = [course[:course_id], course[:short_name], course[:long_name], account_id, course[:term], 'active']
         course[:enrollments] << [course[:course_id], teacher1, 'teacher', course[:default_section_id], 'active']
         course[:enrollments] << [course[:course_id], teacher2, teacher2_role, course[:default_section_id], 'active'] unless teacher2.nil?
 
@@ -194,12 +191,7 @@ module SFU
         ncc[:term] = course_arr[3] # Can be empty!
         ncc[:short_long_name] = course_arr.last
 
-        # Similar to credit courses, we explicitly set the start/end dates (except for "default term")
-        selected_term = self.class.term(ncc[:term])
-        start_date = selected_term ? selected_term.start_at : ''
-        end_date = selected_term ? selected_term.end_at : ''
-
-        ncc[:course] = [ncc[:course_id], ncc[:short_long_name], ncc[:short_long_name], account_sis_id, ncc[:term], 'active', start_date, end_date]
+        ncc[:course] = [ncc[:course_id], ncc[:short_long_name], ncc[:short_long_name], account_sis_id, ncc[:term], 'active']
         ncc[:enrollments] << [ncc[:course_id], teacher1, 'teacher', nil, 'active']
         ncc[:enrollments] << [ncc[:course_id], teacher2, teacher2_role, nil, 'active'] unless teacher2.nil?
         ncc
@@ -232,10 +224,6 @@ module SFU
         else
           nil
         end
-      end
-
-      def self.term(term_code)
-        EnrollmentTerm.active.find_by(sis_source_id: term_code)
       end
 
       def csv_string(data)

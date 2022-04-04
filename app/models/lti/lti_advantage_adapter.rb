@@ -132,7 +132,10 @@ module Lti
     # For information on how the cached ID token is eventually retrieved
     # and sent to a tool, please refer to the inline documentation of
     # app/controllers/lti/ims/authentication_controller.rb
-    def generate_post_payload
+    def generate_post_payload(student_id: nil)
+      # Takes a student ID parameter for compatibility with the LTI 1.1 method
+      # (in LtiOutboundAdapter), but we don't use it here yet. See INTEROP-7227
+      # and student_context_card spec in external_tools_controller_spec.rb
       login_request(generate_lti_params)
     end
 
@@ -171,14 +174,16 @@ module Lti
       message_hint = cache_payload(lti_params)
       login_hint = Lti::Asset.opaque_identifier_for(@user, context: @context) || User.public_lti_id
 
-      LtiAdvantage::Messages::LoginRequest.new(
+      req = LtiAdvantage::Messages::LoginRequest.new(
         iss: Canvas::Security.config["lti_iss"],
         login_hint: login_hint,
         client_id: @tool.global_developer_key_id,
         target_link_uri: target_link_uri,
         lti_message_hint: message_hint,
         canvas_region: @context.shard.database_server.config[:region] || "not_configured"
-      ).as_json
+      )
+      req.lti_storage_target = "_parent" if Account.site_admin.feature_enabled?(:lti_platform_storage)
+      req.as_json
     end
 
     def cache_payload(lti_params)

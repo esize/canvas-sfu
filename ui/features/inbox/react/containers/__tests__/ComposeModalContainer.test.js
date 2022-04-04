@@ -20,11 +20,18 @@ import * as uploadFileModule from '@canvas/upload-file'
 import {AlertManagerContext} from '@canvas/alerts/react/AlertManager'
 import {ApolloProvider} from 'react-apollo'
 import ComposeModalManager from '../ComposeModalContainer/ComposeModalManager'
-import {fireEvent, render, waitFor} from '@testing-library/react'
+import {fireEvent, render, waitFor, screen} from '@testing-library/react'
+import waitForApolloLoading from '../../../util/waitForApolloLoading'
 import {handlers} from '../../../graphql/mswHandlers'
 import {mswClient} from '../../../../../shared/msw/mswClient'
 import {mswServer} from '../../../../../shared/msw/mswServer'
 import React from 'react'
+import {responsiveQuerySizes} from '../../../util/utils'
+
+jest.mock('../../../util/utils', () => ({
+  ...jest.requireActual('../../../util/utils'),
+  responsiveQuerySizes: jest.fn()
+}))
 
 describe('ComposeModalContainer', () => {
   const server = mswServer(handlers)
@@ -32,6 +39,22 @@ describe('ComposeModalContainer', () => {
     // eslint-disable-next-line no-undef
     fetchMock.dontMock()
     server.listen()
+
+    // Add appropriate mocks for responsive
+    window.matchMedia = jest.fn().mockImplementation(() => {
+      return {
+        matches: true,
+        media: '',
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn()
+      }
+    })
+
+    // Repsonsive Query Mock Default
+    responsiveQuerySizes.mockImplementation(() => ({
+      desktop: {minWidth: '768px'}
+    }))
   })
 
   afterEach(() => {
@@ -59,6 +82,7 @@ describe('ComposeModalContainer', () => {
     setOnSuccess = jest.fn(),
     isReply,
     isReplyAll,
+    isForward,
     conversation
   ) => {
     return render(
@@ -69,6 +93,7 @@ describe('ComposeModalContainer', () => {
             onDismiss={jest.fn()}
             isReply={isReply}
             isReplyAll={isReplyAll}
+            isForward={isForward}
             conversation={conversation}
           />
         </AlertManagerContext.Provider>
@@ -184,6 +209,23 @@ describe('ComposeModalContainer', () => {
       const courseDropdown = await findByTestId('course-select')
       fireEvent.click(courseDropdown)
       expect(await queryByText('All Courses')).not.toBeInTheDocument()
+      await waitForApolloLoading()
+    })
+
+    // Skipped until Flakiness is addressed
+    it.skip('displays the selected course', async () => {
+      const component = setup()
+
+      let select = await component.findByTestId('course-select')
+      fireEvent.click(select)
+
+      const selectOptions = await component.findAllByText('Fighting Magneto 101')
+      expect(selectOptions.length).toBeGreaterThan(0)
+
+      fireEvent.click(selectOptions[0])
+      select = await component.findByTestId('course-select')
+
+      expect(select.getAttribute('value')).toBe('Fighting Magneto 101')
     })
   })
 
@@ -207,6 +249,50 @@ describe('ComposeModalContainer', () => {
 
       await waitFor(() => expect(mockedSetOnSuccess).toHaveBeenCalled())
     })
+
+    it.skip('allows created conversations to be added to faculty journal', async () => {
+      window.ENV.CONVERSATIONS = {
+        ATTACHMENTS_FOLDER_ID: 1,
+        NOTES_ENABLED: true,
+        CAN_ADD_NOTES_FOR_ACCOUNT: true,
+        CAN_ADD_NOTES_FOR_COURSES: {1: true}
+      }
+      const mockedSetOnSuccess = jest.fn().mockResolvedValue({})
+      const component = setup(jest.fn(), mockedSetOnSuccess)
+      await waitForApolloLoading()
+
+      // Set course
+      const select = await component.findByTestId('course-select')
+      fireEvent.click(select)
+      const selectOptions = await component.findAllByText('Fighting Magneto 101')
+      fireEvent.click(selectOptions[0])
+
+      // Set recipient
+      const input = await component.findByTestId('address-book-input')
+      fireEvent.change(input, {target: {value: 'Fred'}})
+      const items = await screen.findAllByTestId('address-book-item')
+      fireEvent.mouseDown(items[0])
+
+      // set as faculty journal entry
+      await waitFor(() => component.getByTestId('faculty-message-checkbox'))
+      const checkbox = await component.getByTestId('faculty-message-checkbox')
+      fireEvent.click(checkbox)
+      expect(checkbox.checked).toBe(true)
+
+      // Set subject
+      const subjectInput = await component.findByTestId('subject-input')
+      fireEvent.change(subjectInput, {target: {value: 'Journalized Message'}})
+
+      // Set body
+      const bodyInput = component.getByTestId('message-body')
+      fireEvent.change(bodyInput, {target: {value: 'This is a journalized message'}})
+
+      // Hit send
+      const button = component.getByTestId('send-button')
+      fireEvent.click(button)
+
+      await waitFor(() => expect(mockedSetOnSuccess).toHaveBeenCalled())
+    })
   })
 
   describe('reply', () => {
@@ -223,7 +309,7 @@ describe('ComposeModalContainer', () => {
     })
 
     it('should include past messages', async () => {
-      const component = setup(jest.fn(), jest.fn(), true, false, {
+      const component = setup(jest.fn(), jest.fn(), true, false, false, {
         _id: '1',
         conversationMessagesConnection: {
           nodes: [
@@ -241,7 +327,7 @@ describe('ComposeModalContainer', () => {
 
     it('allows replying to a conversation', async () => {
       const mockedSetOnSuccess = jest.fn().mockResolvedValue({})
-      const component = setup(jest.fn(), mockedSetOnSuccess, true, false, {
+      const component = setup(jest.fn(), mockedSetOnSuccess, true, false, false, {
         _id: '1',
         conversationMessagesConnection: {
           nodes: [
@@ -269,7 +355,7 @@ describe('ComposeModalContainer', () => {
   describe('replyAll', () => {
     it('allows replying all to a conversation', async () => {
       const mockedSetOnSuccess = jest.fn().mockResolvedValue({})
-      const component = setup(jest.fn(), mockedSetOnSuccess, false, true, {
+      const component = setup(jest.fn(), mockedSetOnSuccess, false, true, false, {
         _id: '1',
         conversationMessagesConnection: {
           nodes: [
@@ -299,6 +385,72 @@ describe('ComposeModalContainer', () => {
       fireEvent.click(button)
 
       await waitFor(() => expect(mockedSetOnSuccess).toHaveBeenCalled())
+    })
+  })
+
+  describe('forward', () => {
+    it('allows replying all to a conversation', async () => {
+      const mockedSetOnSuccess = jest.fn().mockResolvedValue({})
+      const component = setup(jest.fn(), mockedSetOnSuccess, false, false, true, {
+        _id: '1',
+        conversationMessagesConnection: {
+          nodes: [
+            {
+              author: {
+                _id: '1337'
+              },
+              recipients: [
+                {
+                  _id: '1337'
+                },
+                {
+                  _id: '1338'
+                }
+              ]
+            }
+          ]
+        }
+      })
+
+      // Set body
+      const bodyInput = await component.findByTestId('message-body')
+      fireEvent.change(bodyInput, {target: {value: 'Potato'}})
+
+      // Hit send
+      const button = component.getByTestId('send-button')
+      fireEvent.click(button)
+
+      await waitFor(() => expect(mockedSetOnSuccess).toHaveBeenCalled())
+    })
+  })
+
+  describe('Responsive', () => {
+    describe('Mobile', () => {
+      beforeEach(() => {
+        responsiveQuerySizes.mockImplementation(() => ({
+          mobile: {maxWidth: '67'}
+        }))
+      })
+
+      it('Should emit correct testId for mobile compose window', async () => {
+        const component = setup()
+        const modal = await component.findByTestId('compose-modal-mobile')
+        expect(modal).toBeTruthy()
+      })
+    })
+
+    describe('Desktop', () => {
+      beforeEach(() => {
+        responsiveQuerySizes.mockImplementation(() => ({
+          desktop: {minWidth: '768'}
+        }))
+      })
+
+      it('Should emit correct testId for destop compose window', async () => {
+        const component = setup()
+        const modal = await component.findByTestId('compose-modal-desktop')
+        expect(modal).toBeTruthy()
+      })
     })
   })
 })

@@ -71,6 +71,11 @@ require "atom"
 #           "description": "A URL to retrieve a generic avatar.",
 #           "example": "https://en.gravatar.com/avatar/d8cb8c8cd40ddf0cd05241443a591868?s=80&r=g",
 #           "type": "string"
+#         },
+#         "display_name": {
+#           "description": "The anonymized display name for the student.",
+#           "example": "Student 2",
+#           "type": "string"
 #         }
 #       }
 #     }
@@ -189,7 +194,7 @@ class UsersController < ApplicationController
                                         user_dashboard toggle_hide_dashcard_color_overlays
                                         masquerade external_tool dashboard_sidebar settings activity_stream
                                         activity_stream_summary pandata_events_token dashboard_cards
-                                        user_graded_submissions show terminate_sessions]
+                                        user_graded_submissions show terminate_sessions dashboard_stream_items]
   before_action :require_registered_user, only: [:delete_user_service,
                                                  :create_user_service]
   before_action :reject_student_view_student, only: %i[delete_user_service
@@ -518,7 +523,7 @@ class UsersController < ApplicationController
                PERMISSION: create_permission_root_account || create_permission_mcc_account,
                RESTRICT_TO_MCC_ACCOUNT: !!(!create_permission_root_account && create_permission_mcc_account)
              },
-             OBSERVER_LIST: observed_users(@current_user, session),
+             OBSERVED_USERS_LIST: observed_users(@current_user, session),
              CAN_ADD_OBSERVEE: @current_user
                                  .profile
                                  .tabs_available(@current_user, root_account: @domain_root_account)
@@ -526,8 +531,8 @@ class UsersController < ApplicationController
            })
 
     # prefetch dashboard cards with the right observer url param
-    if @current_user.roles(@domain_root_account).include?("observer") && (Account.site_admin.feature_enabled?(:k5_parent_support) || Account.site_admin.feature_enabled?(:observer_picker))
-      @cards_prefetch_observer_param = @selected_observed_user&.id
+    if @current_user.roles(@domain_root_account).include?("observer")
+      @cards_prefetch_observed_param = @selected_observed_user&.id
     end
 
     if k5_user?
@@ -547,10 +552,6 @@ class UsersController < ApplicationController
       js_bundle :k5_dashboard
     else
       # things needed only for classic dashboard
-      js_env({
-               DASHBOARD_SIDEBAR_URL: dashboard_sidebar_url
-             })
-
       css_bundle :dashboard
       js_bundle :dashboard
     end
@@ -568,7 +569,16 @@ class UsersController < ApplicationController
   def dashboard_stream_items
     cancel_cache_buster
 
-    @stream_items = @current_user.try(:cached_recent_stream_items) || []
+    @user = params[:observed_user].present? && Account.site_admin.feature_enabled?(:observer_picker) ? api_find(User, params[:observed_user]) : @current_user
+    @is_observing_student = @current_user != @user
+    course_ids = nil
+    if @is_observing_student
+      course_ids = @current_user.cached_course_ids_for_observed_user(@user)
+      return render_unauthorized_action unless course_ids.any?
+    end
+    courses = course_ids.present? ? api_find_all(Course, course_ids) : nil
+
+    @stream_items = @user.cached_recent_stream_items(contexts: courses)
     if stale?(etag: @stream_items)
       render partial: "shared/recent_activity", layout: false
     end
@@ -622,13 +632,22 @@ class UsersController < ApplicationController
 
   def dashboard_sidebar
     GuardRail.activate(:secondary) do
-      unless @current_user&.has_student_enrollment? && !@current_user.non_student_enrollment?
-        # it's not even using any of this for students - it's just using planner now
+      @user = params[:observed_user].present? && Account.site_admin.feature_enabled?(:observer_picker) ? api_find(User, params[:observed_user]) : @current_user
+      @is_observing_student = @current_user != @user
+      course_ids = nil
+
+      if @is_observing_student
+        course_ids = @current_user.cached_course_ids_for_observed_user(@user)
+        return render_unauthorized_action unless course_ids.any?
+      end
+
+      if (!@user&.has_student_enrollment? || @user.non_student_enrollment?) && !@is_observing_student
+        # it's not even using any of this for students/observers observing students - it's just using planner now
         prepare_current_user_dashboard_items
       end
 
-      if (@show_recent_feedback = @current_user.student_enrollments.active.exists?)
-        @recent_feedback = @current_user&.recent_feedback || []
+      if (@show_recent_feedback = @user.student_enrollments.active.exists?)
+        @recent_feedback = @user.recent_feedback(course_ids: course_ids) || []
       end
     end
 
@@ -1302,6 +1321,8 @@ class UsersController < ApplicationController
       @enrollments = @enrollments.sort_by { |e| [e.state_sortable, e.rank_sortable, e.course.name] }
       # pre-populate the reverse association
       @enrollments.each { |e| e.user = @user }
+
+      @show_page_views = !!(page_views_enabled? && @user.grants_right?(@current_user, session, :view_statistics))
 
       status = @user.deleted? ? 404 : 200
       respond_to do |format|

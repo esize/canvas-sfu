@@ -45,7 +45,7 @@ class ProficiencyRating extends React.Component {
     descriptionError: PropTypes.string,
     disableDelete: PropTypes.bool.isRequired,
     focusField: PropTypes.oneOf(['description', 'points', 'mastery', 'trash']),
-    mastery: PropTypes.bool.isRequired,
+    mastery: requiredIf(({individualOutcome}) => !individualOutcome, PropTypes.bool),
     onColorChange: requiredIf(({individualOutcome}) => !individualOutcome, PropTypes.func),
     onDelete: PropTypes.func.isRequired,
     onDescriptionChange: PropTypes.func.isRequired,
@@ -166,6 +166,7 @@ class ProficiencyRating extends React.Component {
             onChange={this.handleDescriptionChange}
             inputRef={element => this.setDescriptionRef(element)}
             defaultValue={description}
+            data-testid="rating-description-input"
           />
         ) : (
           <Text>
@@ -208,9 +209,9 @@ class ProficiencyRating extends React.Component {
   }
 
   renderPointsInput = () => {
-    const {points, pointsError, position, isMobileView, canManage} = this.props
+    const {points, pointsError, position, isMobileView, canManage, individualOutcome} = this.props
     return (
-      <div className="points">
+      <div className={individualOutcome ? 'points individualOutcome' : 'points'}>
         {canManage ? (
           <>
             <TextInput
@@ -224,7 +225,8 @@ class ProficiencyRating extends React.Component {
               }
               onChange={this.handlePointChange}
               defaultValue={I18n.n(points)}
-              width={isMobileView ? '7rem' : '4rem'}
+              width={isMobileView ? (individualOutcome ? '3rem' : '7rem') : '4rem'}
+              data-testid="rating-points-input"
             />
 
             <div className="pointsDescription" aria-hidden="true">
@@ -266,9 +268,9 @@ class ProficiencyRating extends React.Component {
         {canManage ? (
           <Popover
             on="click"
-            show={this.state.showColorPopover}
+            isShowingContent={this.state.showColorPopover}
             onToggle={this.handleMenuToggle}
-            onShow={this.focusColorPicker}
+            onPositioned={this.focusColorPicker}
             shouldContainFocus
             // Note: without this prop, there's a focus issue where the window will scroll up
             // on Chrome which seems to be caused by an issue within Popover (possibly INSTUI-1799)
@@ -276,8 +278,7 @@ class ProficiencyRating extends React.Component {
             // when it mounts (and resolves the scroll behavior), so we manually focus on
             // mount with focusColorPicker
             shouldFocusContentOnTriggerBlur
-          >
-            <Popover.Trigger>
+            renderTrigger={
               <Button ref={this.setColorRef} variant="link">
                 <div>
                   <span className="colorPickerIcon" style={{background: formatColor(color)}} />
@@ -287,25 +288,24 @@ class ProficiencyRating extends React.Component {
                   <span aria-hidden="true">{I18n.t('Change')}</span>
                 </div>
               </Button>
-            </Popover.Trigger>
-            <Popover.Content>
-              <ColorPicker
-                ref={this.setColorPickerRef}
-                parentComponent="ProficiencyRating"
-                colors={PREDEFINED_COLORS}
-                currentColor={formatColor(color)}
-                hidePrompt
-                nonModal
-                hideOnScroll={false}
-                withAnimation={false}
-                withBorder={false}
-                withBoxShadow={false}
-                withArrow={false}
-                focusOnMount={false}
-                afterClose={this.handleMenuClose}
-                setStatusColor={this.setColor}
-              />
-            </Popover.Content>
+            }
+          >
+            <ColorPicker
+              ref={this.setColorPickerRef}
+              parentComponent="ProficiencyRating"
+              colors={PREDEFINED_COLORS}
+              currentColor={formatColor(color)}
+              hidePrompt
+              nonModal
+              hideOnScroll={false}
+              withAnimation={false}
+              withBorder={false}
+              withBoxShadow={false}
+              withArrow={false}
+              focusOnMount={false}
+              afterClose={this.handleMenuClose}
+              setStatusColor={this.setColor}
+            />
           </Popover>
         ) : (
           <>
@@ -343,6 +343,7 @@ class ProficiencyRating extends React.Component {
           onClick={individualOutcome ? this.handleRealDelete : this.handleDelete}
           renderIcon={<IconTrashLine />}
           screenReaderLabel={I18n.t(`Delete mastery level %{position}`, {position})}
+          data-testid="rating-delete-btn"
         />
         {!individualOutcome && (
           <ConfirmMasteryModal
@@ -364,16 +365,25 @@ class ProficiencyRating extends React.Component {
     const {isMobileView, canManage, individualOutcome} = this.props
     return (
       <Flex
-        padding={`${isMobileView ? '0 0 small 0' : '0 small small small'}`}
+        padding={`${
+          isMobileView
+            ? '0 0 small 0'
+            : individualOutcome
+            ? '0 small small 0'
+            : '0 small small small'
+        }`}
         width="100%"
         alignItems={isMobileView ? 'center' : 'start'}
+        justifyItems={isMobileView ? 'space-between' : 'start'}
       >
-        <Flex.Item textAlign="center" padding="0 medium 0 0" size={isMobileView ? '25%' : '15%'}>
-          {this.renderMastery()}
-        </Flex.Item>
+        {!individualOutcome && (
+          <Flex.Item textAlign="center" padding="0 medium 0 0" size={isMobileView ? '25%' : '15%'}>
+            {this.renderMastery()}
+          </Flex.Item>
+        )}
         <Flex.Item
           padding="0 small 0 0"
-          size={isMobileView ? '75%' : individualOutcome ? '65%' : '40%'}
+          size={isMobileView ? '75%' : individualOutcome ? (canManage ? '80%' : '60%') : '40%'}
           align="start"
         >
           {this.renderDescription()}
@@ -382,7 +392,7 @@ class ProficiencyRating extends React.Component {
               {this.renderPointsInput()}
               <div className={`mobileRow ${canManage ? null : 'view-only'}`}>
                 {!individualOutcome && this.renderColorPicker()}
-                {canManage && this.renderDeleteButton()}
+                {canManage && !individualOutcome && this.renderDeleteButton()}
               </div>
             </>
           )}
@@ -399,6 +409,11 @@ class ProficiencyRating extends React.Component {
               </Flex.Item>
             )}
           </>
+        )}
+        {isMobileView && individualOutcome && canManage && (
+          <Flex.Item align="start" size="20%" textAlign="end">
+            {this.renderDeleteButton()}
+          </Flex.Item>
         )}
       </Flex>
     )

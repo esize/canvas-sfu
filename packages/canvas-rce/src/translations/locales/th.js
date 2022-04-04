@@ -53,6 +53,8 @@ const locale = {
     "message": "ปรับใช้การเปลี่ยนแปลงกับส่วนรายการทั้งหมดปุ่มและไอคอนนี้ในบทเรียนนี้"
   },
   "apps_54d24a47": { "message": "แอพ" },
+  "arrows_464a3e54": { "message": "ลูกศร" },
+  "art_icon_8e1daad": { "message": "ไอคอนอาร์ตเวิร์ค" },
   "aspect_ratio_will_be_preserved_cb5fdfb8": {
     "message": "สัดส่วนจะถูกรักษาไว้ตามเดิม"
   },
@@ -70,6 +72,7 @@ const locale = {
     "message": "มีเนื้อหาบันทึกอัตโนมัติ ต้องการโหลดเนื้อหาบันทึกอัตโนมัติแทนหรือไม่"
   },
   "available_folders_694d0436": { "message": "โฟลเดอร์ที่ใช้ได้" },
+  "basic_554cdc0a": { "message": "พื้นฐาน" },
   "below_81d4dceb": { "message": "ด้านล่าง" },
   "bottom_third_5f5fec1d": { "message": "อันดับที่สามจากด้านล่าง" },
   "button_color_608a0242": { "message": "สีปุ่ม" },
@@ -87,6 +90,7 @@ const locale = {
     "message": "วงเลือกรายการที่ไม่ได้จัดลำดับ"
   },
   "clear_2084585f": { "message": "ล้าง" },
+  "clear_image_3213fe62": { "message": "ล้างภาพ" },
   "clear_selected_file_82388e50": { "message": "ล้างไฟล์ที่เลือก" },
   "clear_selected_file_filename_2fe8a58e": {
     "message": "ล้างไฟล์ที่เลือก: { filename }"
@@ -140,6 +144,7 @@ const locale = {
   "creative_commons_license_725584ae": {
     "message": "สิทธิ์ใช้งาน Creative Commons:"
   },
+  "crop_image_41bf940c": { "message": "ครอปภาพ" },
   "crop_image_807ebb08": { "message": "ครอปภาพ" },
   "current_image_f16c249c": { "message": "ภาพปัจจุบัน" },
   "custom_6979cd81": { "message": "กำหนดเอง" },
@@ -152,6 +157,7 @@ const locale = {
   "default_numerical_ordered_list_48dd3548": {
     "message": "รายการที่จัดลำดับแบบมีตัวเลขกำกับเริ่มต้น"
   },
+  "delimiters_4db4840d": { "message": "ตัวคั่น" },
   "describe_the_image_e65d2e32": { "message": "(ระบุรายละเอียดภาพ)" },
   "describe_the_video_2fe8f46a": { "message": "(ระบุรายละเอียดวิดีโอ)" },
   "details_98a31b68": { "message": "รายละเอียด" },
@@ -159,6 +165,7 @@ const locale = {
   "dimension_type_55c83e4e": { "message": "ประเภทขนาด" },
   "dimensions_45ddb7b7": { "message": "ขนาด" },
   "directionality_26ae9e08": { "message": "ทิศทาง" },
+  "directly_edit_latex_b7e9235b": { "message": "แก้ไข LaTeX โดยตรง" },
   "discussions_a5f96392": { "message": "การพูดคุย" },
   "discussions_index_6c36ced": { "message": "ดัชนีการพูดคุย" },
   "display_options_315aba85": { "message": "แสดงตัวเลือก" },
@@ -191,10 +198,13 @@ const locale = {
   "embed_preview_2d741e1f": { "message": "ผนวกการแสดงตัวอย่าง" },
   "embed_video_a97a64af": { "message": "ผนวกวิดีโอ" },
   "embedded_content_aaeb4d3d": { "message": "เนื้อหาที่ผนวก" },
+  "engineering_icon_f8f3cf43": { "message": "ไอคอนวิศวกรรม" },
+  "english_icon_25bfe845": { "message": "ไอคอนอังกฤษ" },
   "enter_at_least_3_characters_to_search_4f037ee0": {
     "message": "กรอกอย่างน้อย 3 ตัวอักษรเพื่อค้นหา"
   },
   "equation_1c5ac93c": { "message": "สมการ" },
+  "equation_editor_39fbc3f1": { "message": "ตัวแก้ไขสมการ" },
   "expand_preview_by_default_2abbf9f8": {
     "message": "ขยายตัวอย่างเป็นค่าเริ่มต้น"
   },
@@ -203,6 +213,7 @@ const locale = {
   "external_tools_6e77821": { "message": "เครื่องมือจากภายนอก" },
   "extra_large_b6cdf1ff": { "message": "ใหญ่พิเศษ" },
   "extra_small_9ae33252": { "message": "เล็กพิเศษ" },
+  "extracurricular_icon_67c8ca42": { "message": "ไอคอนกิจกรรมนอกหลักสูตร" },
   "file_url_c12b64be": { "message": "URL ไฟล์" },
   "filename_file_icon_602eb5de": { "message": "ไอคอนไฟล์ { filename }" },
   "filename_image_preview_6cef8f26": {
@@ -234,6 +245,7 @@ const locale = {
     "message": "ไปที่แถบเครื่องมือของโปรแกรมแก้ไข"
   },
   "grades_a61eba0a": { "message": "เกรด" },
+  "greek_65c5b3f7": { "message": "กรีก" },
   "group_documents_8bfd6ae6": { "message": "เอกสารของกลุ่ม" },
   "group_files_4324f3df": { "message": "ไฟล์ของกลุ่ม" },
   "group_files_82e5dcdb": { "message": "ไฟล์ของกลุ่ม" },
@@ -244,6 +256,7 @@ const locale = {
   "heading_2_5b84eed2": { "message": "หัวเรื่อง 2" },
   "heading_3_2c83de44": { "message": "หัวเรื่อง 3" },
   "heading_4_b2e74be7": { "message": "หัวเรื่อง 4" },
+  "health_icon_8d292eb5": { "message": "ไอคอนสุขภาพ" },
   "height_69b03e15": { "message": "ความสูง" },
   "hexagon_d8468e0d": { "message": "หกเหลี่ยม" },
   "hide_description_bfb5502e": { "message": "ซ่อนรายละเอียด" },
@@ -255,12 +268,14 @@ const locale = {
     "message": "ฉันได้รับสิทธิ์อนุญาตให้ใช้ไฟล์นี้"
   },
   "i_hold_the_copyright_71ee91b1": { "message": "ฉันถือลิขสิทธิ์" },
+  "icon_color_b86dd6d6": { "message": "สีไอคอน" },
   "if_you_do_not_select_usage_rights_now_this_file_wi_14e07ab5": {
     "message": "หากคุณไม่เลือกสิทธิ์การใช้งาน ไฟล์นี้จะถูกเลิกเผยแพร่หลังจากอัพโหลดแล้ว"
   },
   "image_8ad06": { "message": "ภาพ" },
   "image_options_5412d02c": { "message": "ตัวเลือกภาพ" },
   "image_options_tray_90a46006": { "message": "ถาดตัวเลือกภาพ" },
+  "image_to_crop_3a34487d": { "message": "ภาพที่จะครอป" },
   "images_7ce26570": { "message": "ภาพ" },
   "increase_indent_6d550a4a": { "message": "เพิ่มการเยื้อง" },
   "insert_593145ef": { "message": "ใบกัด" },
@@ -271,8 +286,11 @@ const locale = {
   "invalid_file_type_881cc9b2": { "message": "ประเภทไฟล์ไม่ถูกต้อง" },
   "invalid_url_cbde79f": { "message": "URL ไม่ถูกต้อง" },
   "keyboard_shortcuts_ed1844bd": { "message": "ชอร์ตคัทแป้นพิมพ์" },
+  "language_arts_icon_a798b0f8": { "message": "ไอคอนศิลปศาสตร์ด้านภาษา" },
+  "languages_icon_9d20539": { "message": "ไอคอนภาษา" },
   "large_9c5e80e7": { "message": "ใหญ่" },
   "left_to_right_e9b4fd06": { "message": "ซ้ายไปขวา" },
+  "library_icon_ae1e54cf": { "message": "ไอคอนห้องสมุด" },
   "link_7262adec": { "message": "ลิงค์" },
   "link_options_a16b758b": { "message": "ตัวเลือกลิงค์" },
   "links_14b70841": { "message": "ลิงค์" },
@@ -286,12 +304,15 @@ const locale = {
   "loading_please_wait_d276220a": { "message": "กำลังโหลด กรุณารอสักครู่" },
   "loading_preview_9f077aa1": { "message": "กำลังโหลดตัวอย่าง" },
   "locked_762f138b": { "message": "ล็อคแล้ว" },
+  "math_icon_ad4e9d03": { "message": "ไอคอนคณิตศาสตร์" },
   "media_af190855": { "message": "มีเดีย" },
   "medium_5a8e9ead": { "message": "ปานกลาง" },
   "middle_27dc1d5": { "message": "ตรงกลาง" },
+  "misc_3b692ea7": { "message": "เบ็ดเตล็ด" },
   "miscellaneous_e9818229": { "message": "เบ็ดเตล็ด" },
   "modules_c4325335": { "message": "หน่วยการเรียน" },
   "multi_color_image_63d7372f": { "message": "ภาพหลายสี" },
+  "music_icon_4db5c972": { "message": "ไอคอนดนตรี" },
   "must_be_at_least_percentage_22e373b6": {
     "message": "จะต้องเท่ากับอย่างน้อย { percentage }%"
   },
@@ -325,6 +346,7 @@ const locale = {
   "open_title_application_fd624fc5": {
     "message": "เปิดแอพพลิเคชั่น { title }"
   },
+  "operators_a2ef9a93": { "message": "ผู้ดำเนินการ" },
   "options_3ab0ea65": { "message": "ตัวเลือก" },
   "ordered_and_unordered_lists_cfadfc38": {
     "message": "รายการที่จัดลำดับและไม่ได้จัดลำดับ"
@@ -343,6 +365,8 @@ const locale = {
   "percentage_must_be_a_number_8033c341": {
     "message": "เปอร์เซ็นต์จะต้องเป็นตัวเลข"
   },
+  "performing_arts_icon_f3497486": { "message": "ไอคอนนาฏศิลป์" },
+  "physical_education_icon_d7dffd3e": { "message": "ไอคอนพลศึกษา" },
   "pixels_52ece7d1": { "message": "พิกเซล" },
   "posted_when_a578f5ab": { "message": "โพสต์เมื่อ: { when }" },
   "preformatted_d0670862": { "message": "กำหนดรูปแบบไว้ล่วงหน้า" },
@@ -360,6 +384,8 @@ const locale = {
   "raw_html_editor_e3993e41": { "message": "Raw HTML Editor" },
   "record_7c9448b": { "message": "บันทึก" },
   "record_upload_media_5fdce166": { "message": "บันทึก/อัพโหลดสื่อ" },
+  "relationships_6602af70": { "message": "ความสัมพันธ์" },
+  "religion_icon_246e0be1": { "message": "ไอคอนศาสนา" },
   "remove_link_d1f2f4d0": { "message": "ลบลิงค์" },
   "resize_ec83d538": { "message": "ปรับขนาด" },
   "restore_auto_save_deccd84b": {
@@ -531,7 +557,9 @@ const locale = {
   "yes_dde87d5": { "message": "ใช่" },
   "you_may_not_upload_an_empty_file_11c31eb2": {
     "message": "คุณไม่สามารถอัพโหลดไฟล์เปล่า"
-  }
+  },
+  "zoom_in_image_bb97d4f": { "message": "ซูมภาพเข้า" },
+  "zoom_out_image_d0a0a2ec": { "message": "ซูมภาพออก" }
 }
 
 

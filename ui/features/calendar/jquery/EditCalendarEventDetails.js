@@ -26,6 +26,7 @@ import editCalendarEventTemplate from '../jst/editCalendarEvent.handlebars'
 import '@canvas/datetime'
 import '@canvas/forms/jquery/jquery.instructure_forms'
 import '@canvas/jquery/jquery.instructure_misc_helpers'
+import awaitElement from '@canvas/await-element'
 import 'date'
 import {changeTimezone} from '@canvas/datetime/changeTimezone'
 import commonEventFactory from '@canvas/calendar/jquery/CommonEvent/index'
@@ -93,8 +94,8 @@ export default class EditCalendarEventDetails {
     return filterConferenceTypes(conferenceTypes, context)
   }
 
-  renderConferenceWidget = () => {
-    const conferenceNode = document.getElementById('calendar_event_conference_selection')
+  renderConferenceWidget = async () => {
+    const conferenceNode = await awaitElement('calendar_event_conference_selection')
     const activeConferenceTypes = this.getActiveConferenceTypes()
     const setConference = this.canUpdateConference() ? this.setConference : null
     if (!this.conference && (!this.canUpdateConference() || activeConferenceTypes.length === 0)) {
@@ -164,7 +165,6 @@ export default class EditCalendarEventDetails {
 
     data.important =
       this.currentContextInfo.k5_course &&
-      ENV.FEATURES?.important_dates &&
       this.$form.find('#calendar_event_important_dates').prop('checked')
 
     return data
@@ -239,9 +239,7 @@ export default class EditCalendarEventDetails {
     }
 
     // Only show important date checkbox if selected context is k5 subject
-    this.$form
-      .find('#important_dates')
-      .toggle(this.currentContextInfo.k5_course && ENV.FEATURES?.important_dates)
+    this.$form.find('#important_dates').toggle(this.currentContextInfo.k5_course)
   }
 
   duplicateCheckboxChanged = (jsEvent, _propagate) =>
@@ -274,7 +272,7 @@ export default class EditCalendarEventDetails {
     if (this.event.startDate()) {
       const dateParts = this.event
         .startDate()
-        .toISOString()
+        .toISOString(true)
         .split('-')
         .map(v => parseInt(v, 10))
       dateParts[1] -= 1 // fix up month since they start at 0
@@ -286,13 +284,15 @@ export default class EditCalendarEventDetails {
       timeStyle: 'short'
     }).format
 
-    const dateFormatter = new Intl.DateTimeFormat(ENV.LOCALE || navigator.language, {
-      dateStyle: 'medium'
-    }).format
+    const dateFormatter = (date, timeZone) => {
+      const options = {dateStyle: 'medium'}
+      if (timeZone) options.timeZone = timeZone
+      return new Intl.DateTimeFormat(ENV.LOCALE || navigator.language, options).format(date)
+    }
 
     // set them up as appropriate variants of datetime_field
     $date
-      .val(dateFormatter(dateVal))
+      .val(dateFormatter(dateVal, ENV.TIMEZONE))
       .data('inputdate', dateVal.toISOString())
       .date_field()
       .change(_e => {

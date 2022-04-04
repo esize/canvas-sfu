@@ -346,6 +346,52 @@ module ActiveRecord
     end
   end
 
+  describe ".global_id?" do
+    specs_require_sharding
+
+    before do
+      @shard1.activate do
+        @account = Account.create!
+      end
+    end
+
+    it "returns true if passed an explicit global id" do
+      @shard1.activate do
+        expect(Account).to be_global_id(@account.global_id)
+      end
+    end
+
+    it "returns true if passed a stringified global id" do
+      @shard1.activate do
+        expect(Account).to be_global_id(@account.global_id.to_s)
+      end
+    end
+
+    it "returns true if passed an id that resolves to a global id" do
+      @shard2.activate do
+        expect(Account).to be_global_id(@account.id)
+      end
+    end
+
+    it "returns false if passed an explicit local id" do
+      @shard2.activate do
+        expect(Account).not_to be_global_id(@account.local_id)
+      end
+    end
+
+    it "returns false if passed an id that resolves to a local id" do
+      @shard1.activate do
+        expect(Account).not_to be_global_id(@account.id)
+      end
+    end
+
+    it "returns false if passed nil" do
+      @shard1.activate do
+        expect(Account).not_to be_global_id(nil)
+      end
+    end
+  end
+
   describe Relation do
     describe "lock_with_exclusive_smarts" do
       let(:scope) { User.active }
@@ -397,16 +443,50 @@ module ActiveRecord
         end
       end
 
+      shared_examples_for "query creation sharding" do
+        specs_require_sharding
+
+        it "derives the appropriate shard from its input, if they all share the same shard" do
+          expect(base_s1.union(base_s1).shard_value).to be @shard1
+
+          @shard2.activate do
+            expect(base_s1.union(base_s1).shard_value).to be @shard1
+          end
+        end
+
+        it "rejects input that are on different shards" do
+          expect { base_s1.union(base_s2) }.to raise_error(/multiple shard values passed to union/)
+        end
+      end
+
       context "directly on the table" do
         let(:base) { User.active }
+        let(:base_s1) { @shard1.activate { User.active } }
+        let(:base_s2) { @shard2.activate { User.active } }
 
         include_examples "query creation"
+        include_examples "query creation sharding"
       end
 
       context "through a relation" do
         let(:base) { Account.create.users }
+        let(:base_s1) { @shard1.activate { Account.create.users } }
+        let(:base_s2) { @shard2.activate { Account.create.users } }
 
         include_examples "query creation"
+        include_examples "query creation sharding"
+      end
+
+      context "through a where query that references multiple shards" do
+        let(:user) { User.create }
+        let(:user_s1) { @shard1.activate { User.create } }
+        let(:user_s2) { @shard2.activate { User.create } }
+
+        let(:base) { User.where(id: [user_s1, user_s2]) }
+        let(:base_s1) { @shard1.activate { User.where(id: [user_s1, user_s2]) } }
+        let(:base_s2) { @shard2.activate { User.where(id: [user_s1, user_s2]) } }
+
+        include_examples "query creation sharding"
       end
     end
   end
@@ -499,6 +579,144 @@ module ActiveRecord
   end
 end
 
+describe ActiveRecord::ConnectionAdapters::SchemaStatements do
+  describe ".add_replica_identity" do
+    subject { test_adapter_instance.add_replica_identity model_name, field_name, new_default_column_value }
+
+    let(:model_name) { "Example" }
+    let(:field_name) { :test_field }
+    let(:existing_default_column_value) { nil }
+    let(:new_default_column_value) { "test default value" }
+
+    let(:example_model) do
+      Class.new(ActiveRecord::Base) do
+        self.table_name = "examples"
+
+        def self.exists?; end
+      end
+    end
+
+    let(:example_column) do
+      Class.new(ActiveRecord::ConnectionAdapters::Column)
+    end
+
+    let(:test_adapter) do
+      Class.new do
+        include ActiveRecord::ConnectionAdapters::SchemaStatements
+
+        @column_definitions = Hash.new { |h, k| h[k] = {} }
+        class << self
+          attr_reader :column_definitions
+        end
+
+        def initialize
+          super
+          @column_definitions = self.class.column_definitions
+        end
+
+        def self.define_column(table_name, field, column)
+          @column_definitions[table_name][field] = column
+        end
+
+        def column_definitions(table_name)
+          @column_definitions[table_name].keys
+        end
+
+        def new_column_from_field(table_name, field)
+          @column_definitions[table_name][field]
+        end
+
+        def change_column_null(*args); end
+
+        def add_index(*args); end
+
+        # rubocop:disable Naming/AccessorMethodName we're implementing a module method here
+        def set_replica_identity(*args); end
+        # rubocop:enable Naming/AccessorMethodName
+      end
+    end
+
+    let(:test_adapter_instance) { test_adapter.new }
+
+    before do
+      stub_const(model_name, example_model)
+      stub_const("TestColumn", example_column)
+
+      existing_column = TestColumn.new(field_name.to_s, existing_default_column_value)
+      test_adapter.define_column(Example.table_name, field_name, existing_column)
+
+      allow(DataFixup::BackfillNulls).to receive(:run)
+    end
+
+    it "adds an index" do
+      index_name = "index_#{Example.table_name}_replica_identity"
+      expect(test_adapter_instance).to receive(:add_index) do |table_name, column_name, **options|
+        raise "incorrect table name #{table_name}" unless table_name == Example.table_name
+        raise "incorrect column name #{column_name}" unless column_name == [field_name, Example.primary_key]
+        raise "index isn't unique" unless options[:unique]
+        raise "incorrect index name #{options[:name]}" unless options[:name] == index_name
+      end
+      subject
+    end
+
+    it "sets the replica identity" do
+      index_name = "index_#{Example.table_name}_replica_identity"
+      expect(test_adapter_instance).to receive(:set_replica_identity).with(Example.table_name, index_name)
+      subject
+    end
+
+    context "when the column is nullable" do
+      it "backfills nulls with the new default value" do
+        expect(DataFixup::BackfillNulls).to receive(:run).with(Example, field_name, default_value: new_default_column_value)
+        subject
+      end
+
+      it "sets the field to not be nullable" do
+        expect(test_adapter_instance).to receive(:change_column_null).with(Example.table_name, field_name, false)
+        subject
+      end
+    end
+
+    context "when the column is not nullable" do
+      before do
+        existing_column = TestColumn.new(field_name.to_s, existing_default_column_value, nil, false)
+        test_adapter.define_column(Example.table_name, field_name, existing_column)
+      end
+
+      it "does not run a backfill of null values" do
+        expect(DataFixup::BackfillNulls).not_to receive(:run)
+        subject
+      end
+    end
+
+    context "on an existing table" do
+      before do
+        allow(Example).to receive(:exists?).and_return(true)
+      end
+
+      it "adds the index with algorithm: concurrently" do
+        expect(test_adapter_instance).to receive(:add_index) do |_table_name, _field_name, **options|
+          raise "didn't add index with algorithm: :concurrently" unless options[:algorithm] == :concurrently
+        end
+        subject
+      end
+    end
+
+    context "on a new table" do
+      before do
+        allow(Example).to receive(:exists?).and_return(false)
+      end
+
+      it "does not require the migration run outside of a transaction" do
+        expect(test_adapter_instance).to receive(:add_index) do |_table_name, _field_name, **options|
+          raise "added index with algorithm: :concurrently" if options[:algorithm] == :concurrently
+        end
+        subject
+      end
+    end
+  end
+end
+
 describe ActiveRecord::Migration::CommandRecorder do
   it "reverses if_exists/if_not_exists" do
     recorder = ActiveRecord::Migration::CommandRecorder.new
@@ -516,8 +734,11 @@ describe ActiveRecord::Migration::CommandRecorder do
                                       [:add_index, [:accounts, :id, { if_not_exists: true }]],
                                       [:add_foreign_key, [:enrollments, :users, { if_not_exists: true }]],
                                       [:add_column, [:courses, :id, :integer, { limit: 8, if_not_exists: true }], nil],
-
-                                      [:remove_index, [:accounts, { column: :course_template_id, algorithm: :concurrently, if_exists: true }]],
+                                      (if CANVAS_RAILS6_0
+                                         [:remove_index, [:accounts, { algorithm: :concurrently, column: :course_template_id, if_exists: true }]]
+                                       else
+                                         [:remove_index, [:accounts, :course_template_id, { algorithm: :concurrently, if_exists: true }], nil]
+                                       end),
                                       [:remove_foreign_key, [:accounts, :courses, { column: :course_template_id, if_exists: true }], nil],
                                       [:remove_column, [:accounts, :course_template_id, :integer, { limit: 8, if_exists: true }], nil],
                                     ])

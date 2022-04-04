@@ -1,6 +1,3 @@
-require Pathname(File.dirname(__FILE__)) + "../model/sfu/sfu"
-require Pathname(File.dirname(__FILE__)) + "../helpers/common"
-
 class ApiController < ApplicationController
   before_action :require_user
   include Common

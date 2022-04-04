@@ -52,13 +52,15 @@ const locale = {
   "announcements_a4b8ed4a": { "message": "Anuncis" },
   "apply_781a2546": { "message": "Aplica" },
   "apply_changes_to_all_instances_of_this_button_and__3a3bea34": {
-    "message": "Aplica els canvis a totes les instàncies d’aquest botó i d’aquesta icona al curs"
+    "message": "Aplica els canvis a totes les instàncies d’aquest botó i d’aquesta icona a l''assignatura"
   },
   "apps_54d24a47": { "message": "Aplicacions" },
+  "arrows_464a3e54": { "message": "Fletxes" },
+  "art_icon_8e1daad": { "message": "Icona d''art" },
   "aspect_ratio_will_be_preserved_cb5fdfb8": {
     "message": "La relació d''aspecte es mantindrà"
   },
-  "assignments_1e02582c": { "message": "Tasques" },
+  "assignments_1e02582c": { "message": "Activitats" },
   "attributes_963ba262": { "message": "Atributs" },
   "audio_and_video_recording_not_supported_please_use_5ce3f0d7": {
     "message": "La funció d’enregistrament d’àudio i vídeo no és compatible; utilitzeu un altre navegador."
@@ -72,6 +74,7 @@ const locale = {
     "message": "Existeix contingut desat automàticament. Voleu carregar el contingut desat automàticament al seu lloc?"
   },
   "available_folders_694d0436": { "message": "Carpetes disponibles" },
+  "basic_554cdc0a": { "message": "Bàsic" },
   "below_81d4dceb": { "message": "A sota de" },
   "bottom_third_5f5fec1d": { "message": "Terç inferior" },
   "button_color_608a0242": { "message": "Color del botó" },
@@ -89,6 +92,7 @@ const locale = {
     "message": "marca amb un cercle la llista desordenada"
   },
   "clear_2084585f": { "message": "Suprimeix" },
+  "clear_image_3213fe62": { "message": "Esborra la imatge" },
   "clear_selected_file_82388e50": {
     "message": "Esborra el fitxer seleccionat"
   },
@@ -139,17 +143,20 @@ const locale = {
   "count_plural_one_item_loaded_other_items_loaded_857023b7": {
     "message": "{ count, plural,\n    one {# element carregat}\n  other {# elements carregats}\n}"
   },
-  "course_documents_104d76e0": { "message": "Documents del curs" },
-  "course_files_62deb8f8": { "message": "Fitxers del curs" },
-  "course_files_a31f97fc": { "message": "Fitxers del curs" },
-  "course_images_f8511d04": { "message": "Imatges del curs" },
-  "course_links_b56959b9": { "message": "Enllaços del curs" },
-  "course_media_ec759ad": { "message": "Elements multimèdia del curs" },
-  "course_navigation_dd035109": { "message": "Navegació del curs" },
+  "course_documents_104d76e0": { "message": "Documents de l''assignatura" },
+  "course_files_62deb8f8": { "message": "Fitxers de l''assignatura" },
+  "course_files_a31f97fc": { "message": "Fitxers de l''assignatura" },
+  "course_images_f8511d04": { "message": "Imatges de l''assignatura" },
+  "course_links_b56959b9": { "message": "Enllaços de l''assignatura" },
+  "course_media_ec759ad": {
+    "message": "Elements multimèdia de l''assignatura"
+  },
+  "course_navigation_dd035109": { "message": "Navegació de l''assignatura" },
   "create_button_and_icon_5c089934": { "message": "Botó i icona Crea" },
   "creative_commons_license_725584ae": {
     "message": "Llicència de Creative Commons:"
   },
+  "crop_image_41bf940c": { "message": "Retalla la imatge" },
   "crop_image_807ebb08": { "message": "Retalla la imatge" },
   "current_image_f16c249c": { "message": "Imatge actual" },
   "custom_6979cd81": { "message": "Personalitzat" },
@@ -162,6 +169,7 @@ const locale = {
   "default_numerical_ordered_list_48dd3548": {
     "message": "llista ordenada enumerada predeterminada"
   },
+  "delimiters_4db4840d": { "message": "Delimitadors" },
   "describe_the_image_e65d2e32": { "message": "(Descriu la imatge)" },
   "describe_the_video_2fe8f46a": { "message": "(Descriu el vídeo)" },
   "details_98a31b68": { "message": "Detalls" },
@@ -169,8 +177,9 @@ const locale = {
   "dimension_type_55c83e4e": { "message": "Tipus de dimensió" },
   "dimensions_45ddb7b7": { "message": "Mides" },
   "directionality_26ae9e08": { "message": "Direccionalitat" },
-  "discussions_a5f96392": { "message": "Debats" },
-  "discussions_index_6c36ced": { "message": "Índex dels debats" },
+  "directly_edit_latex_b7e9235b": { "message": "Edita directament LaTeX" },
+  "discussions_a5f96392": { "message": "Fòrums" },
+  "discussions_index_6c36ced": { "message": "Índex dels fòrums" },
   "display_options_315aba85": { "message": "Mostra les opcions" },
   "display_text_link_opens_in_a_new_tab_75e9afc9": {
     "message": "Mostra l''enllaç al text (s''obre en una pestanya nova)"
@@ -185,8 +194,10 @@ const locale = {
   "drag_handle_use_up_and_down_arrows_to_resize_e29eae5c": {
     "message": "Arrossegueu el controlador. Utilitzeu les fletxes cap a dalt i cap a baix per canviar la mida"
   },
-  "due_multiple_dates_cc0ee3f5": { "message": "Venciment: Dates múltiples" },
-  "due_when_7eed10c6": { "message": "Venciment: { when }" },
+  "due_multiple_dates_cc0ee3f5": {
+    "message": "Data de lliurament: Dates múltiples"
+  },
+  "due_when_7eed10c6": { "message": "Data de lliurament: { when }" },
   "edit_c5fbea07": { "message": "Edita" },
   "edit_equation_f5279959": { "message": "Edita l''equació" },
   "edit_existing_button_icon_3d0277bd": {
@@ -203,10 +214,13 @@ const locale = {
   "embed_preview_2d741e1f": { "message": "Integra la visualització prèvia" },
   "embed_video_a97a64af": { "message": "Integra el vídeo" },
   "embedded_content_aaeb4d3d": { "message": "contingut incrustat" },
+  "engineering_icon_f8f3cf43": { "message": "Icona d’enginyeria" },
+  "english_icon_25bfe845": { "message": "Icona d’anglès" },
   "enter_at_least_3_characters_to_search_4f037ee0": {
     "message": "Introduïu com a mínim 3 caràcters per cercar"
   },
   "equation_1c5ac93c": { "message": "Equació" },
+  "equation_editor_39fbc3f1": { "message": "Editor d’equacions" },
   "expand_preview_by_default_2abbf9f8": {
     "message": "Desplega la visualització prèvia per defecte"
   },
@@ -215,6 +229,7 @@ const locale = {
   "external_tools_6e77821": { "message": "Eines externes" },
   "extra_large_b6cdf1ff": { "message": "Extragran" },
   "extra_small_9ae33252": { "message": "Molt petit" },
+  "extracurricular_icon_67c8ca42": { "message": "Icona extracurricular" },
   "file_url_c12b64be": { "message": "URL del fitxer" },
   "filename_file_icon_602eb5de": { "message": "Icona del fitxer { filename }" },
   "filename_image_preview_6cef8f26": {
@@ -247,7 +262,8 @@ const locale = {
   "go_to_the_editor_s_toolbar_a5cb875f": {
     "message": "Ves a la barra d''eines de l''editor"
   },
-  "grades_a61eba0a": { "message": "Qualificacions" },
+  "grades_a61eba0a": { "message": "Notes" },
+  "greek_65c5b3f7": { "message": "Grec" },
   "group_documents_8bfd6ae6": { "message": "Agrupa els documents" },
   "group_files_4324f3df": { "message": "Fitxers del grup" },
   "group_files_82e5dcdb": { "message": "Fitxers del grup" },
@@ -258,6 +274,7 @@ const locale = {
   "heading_2_5b84eed2": { "message": "Capçalera 2" },
   "heading_3_2c83de44": { "message": "Capçalera 3" },
   "heading_4_b2e74be7": { "message": "Capçalera 4" },
+  "health_icon_8d292eb5": { "message": "Icona de salut" },
   "height_69b03e15": { "message": "Altura" },
   "hexagon_d8468e0d": { "message": "Hexàgon" },
   "hide_description_bfb5502e": { "message": "Amaga la descripció" },
@@ -273,12 +290,14 @@ const locale = {
   "i_hold_the_copyright_71ee91b1": {
     "message": "Soc el titular dels drets d''autor"
   },
+  "icon_color_b86dd6d6": { "message": "Color de la icona" },
   "if_you_do_not_select_usage_rights_now_this_file_wi_14e07ab5": {
     "message": "Si no seleccioneu els drets d''ús ara, s''anul·larà la publicació d''aquest fitxer un cop s''hagi carregat."
   },
   "image_8ad06": { "message": "Imatge" },
   "image_options_5412d02c": { "message": "Opcions d''imatge" },
   "image_options_tray_90a46006": { "message": "Safata d''opcions d''imatge" },
+  "image_to_crop_3a34487d": { "message": "Imatge que cal retallar" },
   "images_7ce26570": { "message": "Imatges" },
   "increase_indent_6d550a4a": { "message": "Augmenta la sagnia" },
   "insert_593145ef": { "message": "Insereix" },
@@ -291,8 +310,11 @@ const locale = {
   "invalid_file_type_881cc9b2": { "message": "Tipus de fitxer no vàlid" },
   "invalid_url_cbde79f": { "message": "URL no vàlida" },
   "keyboard_shortcuts_ed1844bd": { "message": "Dreceres del teclat" },
+  "language_arts_icon_a798b0f8": { "message": "Icona d''arts lingüístiques" },
+  "languages_icon_9d20539": { "message": "Icona d’idiomes" },
   "large_9c5e80e7": { "message": "Gran" },
   "left_to_right_e9b4fd06": { "message": "Esquerra a dreta" },
+  "library_icon_ae1e54cf": { "message": "Icona de biblioteca" },
   "link_7262adec": { "message": "Enllaç" },
   "link_options_a16b758b": { "message": "Opcions d''enllaç" },
   "links_14b70841": { "message": "Enllaços" },
@@ -308,12 +330,15 @@ const locale = {
     "message": "S’està carregant la visualització prèvia"
   },
   "locked_762f138b": { "message": "Bloquejat" },
+  "math_icon_ad4e9d03": { "message": "Icona de matemàtiques" },
   "media_af190855": { "message": "Element multimèdia" },
   "medium_5a8e9ead": { "message": "Mitjà" },
   "middle_27dc1d5": { "message": "Centre" },
+  "misc_3b692ea7": { "message": "Miscel·lània" },
   "miscellaneous_e9818229": { "message": "Diversos" },
-  "modules_c4325335": { "message": "Mòduls" },
+  "modules_c4325335": { "message": "Continguts" },
   "multi_color_image_63d7372f": { "message": "Imatge multicolor" },
+  "music_icon_4db5c972": { "message": "Icona de música" },
   "must_be_at_least_percentage_22e373b6": {
     "message": "Ha de ser un { percentage }% com a mínim"
   },
@@ -347,6 +372,7 @@ const locale = {
   "open_title_application_fd624fc5": {
     "message": "Obre l’aplicació { title }"
   },
+  "operators_a2ef9a93": { "message": "Operadors" },
   "options_3ab0ea65": { "message": "Opcions" },
   "ordered_and_unordered_lists_cfadfc38": {
     "message": "Llistes ordenades i desordenades"
@@ -365,6 +391,10 @@ const locale = {
   "percentage_must_be_a_number_8033c341": {
     "message": "El percentatge ha de ser un número."
   },
+  "performing_arts_icon_f3497486": {
+    "message": "Icona d''arts interpretatives"
+  },
+  "physical_education_icon_d7dffd3e": { "message": "Icona d’educació física" },
   "pixels_52ece7d1": { "message": "Píxels" },
   "posted_when_a578f5ab": { "message": "Publicat: { when }" },
   "preformatted_d0670862": { "message": "Amb format previ" },
@@ -382,7 +412,7 @@ const locale = {
   },
   "published_c944a23d": { "message": "publicat" },
   "published_when_302d8e23": { "message": "Publicat: { when }" },
-  "quizzes_7e598f57": { "message": "Qüestionaris" },
+  "quizzes_7e598f57": { "message": "Proves" },
   "raw_html_editor_e3993e41": {
     "message": "Editor de dades HTML sense processar"
   },
@@ -390,6 +420,8 @@ const locale = {
   "record_upload_media_5fdce166": {
     "message": "Enregistra o penja l''element multimèdia"
   },
+  "relationships_6602af70": { "message": "Relacions" },
+  "religion_icon_246e0be1": { "message": "Icona de religió" },
   "remove_link_d1f2f4d0": { "message": "Elimina l''enllaç" },
   "resize_ec83d538": { "message": "Canvia la mida" },
   "restore_auto_save_deccd84b": {
@@ -520,7 +552,7 @@ const locale = {
   "usage_right_ff96f3e2": { "message": "Dret d''ús:" },
   "usage_rights_required_5fe4dd68": { "message": "Drets d''ús (obligatori)" },
   "use_arrow_keys_to_navigate_options_2021cc50": {
-    "message": "Utilitzeu les tecles de fletxes per navegar per les opcions."
+    "message": "Utilitzeu les tecles de fletxes per desplaçar-vos per les opcions."
   },
   "use_arrow_keys_to_select_a_shape_c8eb57ed": {
     "message": "Feu servir les tecles de fletxes per seleccionar una forma."
@@ -573,7 +605,9 @@ const locale = {
   "yes_dde87d5": { "message": "Sí" },
   "you_may_not_upload_an_empty_file_11c31eb2": {
     "message": "No podeu penjar cap fitxer buit."
-  }
+  },
+  "zoom_in_image_bb97d4f": { "message": "Apropa la imatge" },
+  "zoom_out_image_d0a0a2ec": { "message": "Allunya la imatge" }
 }
 
 

@@ -3011,6 +3011,77 @@ describe User do
     end
   end
 
+  describe "cached_course_ids_for_observed_user" do
+    before :once do
+      @observer = user_factory(active_all: true)
+      @student1 = user_factory(active_all: true)
+      @student2 = user_factory(active_all: true)
+      @course1 = course_factory(active_all: true)
+      @course2 = course_factory(active_all: true)
+    end
+
+    it "returns course ids where user is observing student" do
+      @course1.enroll_student(@student1)
+      @course2.enroll_student(@student1)
+      @course1.enroll_user(@observer, "ObserverEnrollment", associated_user_id: @student1.id)
+      @course2.enroll_user(@observer, "ObserverEnrollment", associated_user_id: @student1.id)
+
+      course_ids = @observer.cached_course_ids_for_observed_user(@student1)
+      expect(course_ids).to contain_exactly(@course1.id, @course2.id)
+    end
+
+    it "returns empty array if not observing student" do
+      @course2.enroll_student(@observer)
+      @course1.enroll_student(@student1)
+
+      course_ids = @observer.cached_course_ids_for_observed_user(@student1)
+      expect(course_ids).to eq([])
+    end
+
+    it "returns course ids only for passed student, even if observing others" do
+      @course1.enroll_student(@student1)
+      @course2.enroll_student(@student2)
+      @course1.enroll_user(@observer, "ObserverEnrollment", associated_user_id: @student1.id)
+      @course2.enroll_user(@observer, "ObserverEnrollment", associated_user_id: @student2.id)
+
+      course_ids = @observer.cached_course_ids_for_observed_user(@student1)
+      expect(course_ids).to contain_exactly(@course1.id)
+      course_ids = @observer.cached_course_ids_for_observed_user(@student2)
+      expect(course_ids).to contain_exactly(@course2.id)
+    end
+
+    it "does not include inactive enrollments" do
+      @course1.enroll_student(@student1)
+      @course2.enroll_student(@student1)
+      @course1.enroll_user(@observer, "ObserverEnrollment", associated_user_id: @student1.id, enrollment_state: :completed)
+      @course2.enroll_user(@observer, "ObserverEnrollment", associated_user_id: @student1.id)
+
+      course_ids = @observer.cached_course_ids_for_observed_user(@student1)
+      expect(course_ids).to contain_exactly(@course2.id)
+    end
+
+    context "with sharding" do
+      specs_require_sharding
+
+      before :once do
+        @shard2.activate do
+          account2 = Account.create!
+          @course3 = course_factory(active_all: true, account: account2)
+        end
+      end
+
+      it "includes course ids from another shard" do
+        @course1.enroll_student(@student1)
+        @course3.enroll_student(@student1)
+        @course1.enroll_user(@observer, "ObserverEnrollment", associated_user_id: @student1.id)
+        @course3.enroll_user(@observer, "ObserverEnrollment", associated_user_id: @student1.id)
+
+        course_ids = @observer.cached_course_ids_for_observed_user(@student1)
+        expect(course_ids).to contain_exactly(@course1.id, @course3.id)
+      end
+    end
+  end
+
   describe "#conversation_context_codes" do
     before :once do
       @user = user_factory(active_all: true)
@@ -3626,9 +3697,14 @@ describe User do
         expect(user.custom_colors.map { |_k, v| WCAGColorContrast.ratio(v.delete("#"), "ffffff") }).to all(be >= 4.5)
       end
 
+      it "doesn't break in the presence of 3 character hashes" do
+        user.preferences[:custom_colors] = { user_1: "#fff" }
+        expect(user.custom_colors[:user_1]).to eq("#717171")
+      end
+
       it "leaves colors with enough contrast alone" do
         user.preferences[:custom_colors] = { user_1: "#757777" }
-        expect(user.custom_colors[:user_1]).to be("#757777")
+        expect(user.custom_colors[:user_1]).to eq("#757777")
       end
     end
   end

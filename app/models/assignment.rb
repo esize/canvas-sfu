@@ -128,6 +128,7 @@ class Assignment < ActiveRecord::Base
   has_many :conditional_release_rules, class_name: "ConditionalRelease::Rule", dependent: :destroy, foreign_key: "trigger_assignment_id", inverse_of: :trigger_assignment
   has_many :conditional_release_associations, class_name: "ConditionalRelease::AssignmentSetAssociation", dependent: :destroy, inverse_of: :assignment
 
+  scope :assigned_to_student, ->(student_id) { joins(:submissions).where(submissions: { user_id: student_id }) }
   scope :anonymous, -> { where(anonymous_grading: true) }
   scope :moderated, -> { where(moderated_grading: true) }
   scope :auditable, -> { anonymous.or(moderated) }
@@ -337,6 +338,13 @@ class Assignment < ActiveRecord::Base
     result
   end
 
+  def finish_duplicating
+    return unless ["duplicating", "failed_to_duplicate"].include?(workflow_state)
+
+    self.workflow_state =
+      (duplicate_of&.workflow_state == "published" || !can_unpublish?) ? "published" : "unpublished"
+  end
+
   def can_duplicate?
     return false if quiz?
     return false if external_tool_tag.present? && !quiz_lti?
@@ -468,6 +476,7 @@ class Assignment < ActiveRecord::Base
     grading_type
     due_at
     description
+    duplicate_of_id
     lock_at
     unlock_at
     assignment_group_id
@@ -506,6 +515,8 @@ class Assignment < ActiveRecord::Base
     grader_comments_visible_to_graders
     grader_names_visible_to_final_grader
     grader_count
+    important_dates
+    muted
   ].freeze
 
   def external_tool?
@@ -1305,12 +1316,9 @@ class Assignment < ActiveRecord::Base
       event :publish, transitions_to: :published
     end
     state :duplicating do
-      event :finish_duplicating, transitions_to: :unpublished
       event :fail_to_duplicate, transitions_to: :failed_to_duplicate
     end
-    state :failed_to_duplicate do
-      event :finish_duplicating, transitions_to: :unpublished
-    end
+    state :failed_to_duplicate
     state :importing do
       event :finish_importing, transitions_to: :unpublished
       event :fail_to_import, transitions_to: :fail_to_import
@@ -1455,14 +1463,14 @@ class Assignment < ActiveRecord::Base
     round_if_whole(result).to_s
   end
 
-  def interpret_grade(grade)
+  def interpret_grade(grade, prefer_points_over_scheme: false)
     case grade.to_s
     when /^[+-]?\d*\.?\d+%$/
       # interpret as a percentage
       percentage = grade.to_f / 100.0.to_d
       points_possible.to_f * percentage
     when /^[+-]?\d*\.?\d+$/
-      if uses_grading_standard && (standard_based_score = grading_standard_or_default.grade_to_score(grade))
+      if !prefer_points_over_scheme && uses_grading_standard && (standard_based_score = grading_standard_or_default.grade_to_score(grade))
         (points_possible || 0.0) * standard_based_score / 100.0
       else
         grade.to_f
@@ -1481,10 +1489,10 @@ class Assignment < ActiveRecord::Base
     end
   end
 
-  def grade_to_score(grade = nil)
+  def grade_to_score(grade = nil, prefer_points_over_scheme: false)
     return nil if grade.blank?
 
-    parsed_grade = interpret_grade(grade)
+    parsed_grade = interpret_grade(grade, prefer_points_over_scheme: prefer_points_over_scheme)
     case self.grading_type
     when "points", "percent", "letter_grade", "gpa_scale"
       score = parsed_grade
@@ -1900,11 +1908,11 @@ class Assignment < ActiveRecord::Base
     all_submissions.where(user_id: user_id).first_or_initialize
   end
 
-  def compute_grade_and_score(grade, score)
+  def compute_grade_and_score(grade, score, prefer_points_over_scheme: false)
     grade = nil if grade == ""
 
     if grade
-      score = grade_to_score(grade)
+      score = grade_to_score(grade, prefer_points_over_scheme: prefer_points_over_scheme)
     end
     if score
       grade = score_to_grade(score, grade)
@@ -2021,7 +2029,7 @@ class Assignment < ActiveRecord::Base
     return if submission.user != original_student && submission.excused?
 
     grader = opts[:grader]
-    grade, score = compute_grade_and_score(opts[:grade], opts[:score])
+    grade, score = compute_grade_and_score(opts[:grade], opts[:score], prefer_points_over_scheme: opts[:prefer_points_over_scheme])
 
     did_grade = false
     submission.attributes = opts.slice(:submission_type, :url, :body)
@@ -2852,12 +2860,8 @@ class Assignment < ActiveRecord::Base
   scope :for_group_category, ->(group_category_id) { where(group_category_id: group_category_id) }
 
   scope :visible_to_students_in_course_with_da, lambda { |user_id, course_id|
-    if Account.site_admin.feature_enabled?(:visible_assignments_scope_change)
-      joins(:assignment_student_visibilities)
-        .where(assignment_student_visibilities: { user_id: user_id, course_id: course_id })
-    else
-      joins(:submissions).where(submissions: { user_id: user_id })
-    end
+    joins(:assignment_student_visibilities)
+      .where(assignment_student_visibilities: { user_id: user_id, course_id: course_id })
   }
 
   # course_ids should be courses that restrict visibility based on overrides
@@ -3801,6 +3805,15 @@ class Assignment < ActiveRecord::Base
       submission_types =~ /online|external_tool/
     else
       submission_types_array.include?(submission_type)
+    end
+  end
+
+  def anonymous_student_identities
+    @anonymous_student_identities ||= begin
+      assigned_submissions = all_submissions.active.order(:anonymous_id).order("md5(id::text)")
+      assigned_submissions.pluck(:user_id).each_with_object({}).with_index(1) do |(user_id, identities), student_number|
+        identities[user_id] = I18n.t("Student %{student_number}", { student_number: student_number })
+      end
     end
   end
 

@@ -77,7 +77,7 @@ const locale = {
   "button_outline_size_cc1d1df7": { "message": "Storleik på knappeomriss" },
   "button_shape_dbecb573": { "message": "Knappeform" },
   "button_size_20f5fce1": { "message": "Knappestorleik" },
-  "buttons_and_icons_e66ee12c": { "message": "Knappar og ikonar" },
+  "buttons_and_icons_e66ee12c": { "message": "Knappar og ikon" },
   "c_2001_acme_inc_283f7f80": { "message": "(c) 2001 Acme Inc." },
   "cancel_caeb1e68": { "message": "Avbryt" },
   "choose_caption_file_9c45bc4e": { "message": "Vel undertekstfil" },
@@ -160,6 +160,7 @@ const locale = {
   "dimension_type_55c83e4e": { "message": "Dimensjonstype" },
   "dimensions_45ddb7b7": { "message": "Dimensjonar" },
   "directionality_26ae9e08": { "message": "Retningsgivande" },
+  "directly_edit_latex_b7e9235b": { "message": "Rediger LaTeX direkte" },
   "discussions_a5f96392": { "message": "Diskusjonar" },
   "discussions_index_6c36ced": { "message": "Diskusjonsoversikt" },
   "display_options_315aba85": { "message": "Vis alternativ" },
@@ -196,6 +197,7 @@ const locale = {
     "message": "Oppgi minst 3 teikn for å søke"
   },
   "equation_1c5ac93c": { "message": "Likning" },
+  "equation_editor_39fbc3f1": { "message": "Likningseditor" },
   "expand_preview_by_default_2abbf9f8": {
     "message": "Utvid førehandsvisinga som standard"
   },
@@ -247,7 +249,7 @@ const locale = {
   "hide_title_description_caf092ef": { "message": "Skjul { title } skildring" },
   "home_351838cd": { "message": "Heim" },
   "html_code_editor_fd967a44": { "message": "HTML-editor" },
-  "html_editor_fb2ab713": { "message": "HTML-redigeringsprogram" },
+  "html_editor_fb2ab713": { "message": "HTML-editor" },
   "i_have_obtained_permission_to_use_this_file_6386f087": {
     "message": "Eg har løyve til å bruke denne fila. "
   },
@@ -258,6 +260,7 @@ const locale = {
   "image_8ad06": { "message": "Bilde" },
   "image_options_5412d02c": { "message": "Alternativ for bilde" },
   "image_options_tray_90a46006": { "message": "Redigeringsmeny for bilde" },
+  "image_to_crop_3a34487d": { "message": "Bilete å skjere" },
   "images_7ce26570": { "message": "Bilde" },
   "increase_indent_6d550a4a": { "message": "Auk innrykk" },
   "insert_593145ef": { "message": "Set inn" },

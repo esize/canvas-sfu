@@ -1231,6 +1231,7 @@ ko:
   add_8523c19b: 추가
   add_an_attachment_b2e9092f: "첨부 추가"
   add_app_baf540f: "앱 추가"
+  add_as_a_faculty_journal_entry_55a38a30: "교원 일지 항목으로 추가"
   add_comment_3205529f: "의견 추가"
   add_contact_method_d2dfea03: "연락 방법 추가하기"
   add_content_58b4305a: "내용 추가"
@@ -2206,6 +2207,7 @@ ko:
   authnrequest_sent_to_idp_74e030fc: "IdP로 전송된 AuthnRequest"
   authnresponse_from_idp_185037e9: "IdP에서 반환된 AuthnResponse"
   author_215203d2: 작성자
+  availability_8942cde6: "이용 가능"
   available_from_587ce92f: "다음부터 사용 가능"
   available_from_f84e4611: "다음부터 사용 가능"
   avatar_8a8aa935: 아바타
@@ -6737,6 +6739,7 @@ ko:
     online_url_submission: "온라인 URL 제출물"
     quiz_submission: "퀴즈 제출물"
     text_entry_submission: "텍스트 항목 제출물"
+  id_290feb5: ID
   identifier_format_6ca23365: "식별자 형식"
   idp_certificate_fingerprint_e530cdd1: "IdP 인증서 지문"
   idp_loginresponse_decrypted_2f2674b4: "IdP LoginResponse 해독됨"
@@ -7221,6 +7224,7 @@ ko:
   mark_all_as_unread_a435be3d: "모두 읽지 않음으로 표시"
   mark_as_read_47ec83dd: "읽음으로 표시"
   mark_as_unread_4ded3977: "읽지 않음으로 표시"
+  mastery_at_cf0c477b: "숙달 점수"
   mathquill: 
     tabs: 
       arrows: 화살표
@@ -9604,6 +9608,8 @@ ko:
     errors: 
       create_failed: "의견 생성 실패함"
   page_views: 
+    browsers: 
+      unrecognized: "인식할 수 없는 브라우저"
     download_filename: "%{user}의 페이지뷰"
     table: 
       headers: 
@@ -11724,6 +11730,7 @@ ko:
         are_you_sure_remove: "목록에서 이 루브릭을 제거하시겠습니까?"
       remove_rubric: "목록에서 이 루브릭 제거"
   rubrics_b5ef369b: 루브릭
+  run_at_759b47d: "실행 시각"
   running_totals_d6f45b6b: "누적 합계"
   save_11a80ec3: 저장
   save_key_b4dede06: "키 저장"
@@ -12718,6 +12725,7 @@ ko:
   status_e051bb30: 상태
   status_e7fdbe06: 상태
   step: 단계
+  strand_955969b1: 고립
   student_5da6bfd1: 학생
   student_groups: "학생 그룹"
   student_groups_863201c1: "학생 그룹"
@@ -12966,6 +12974,7 @@ ko:
     rubrics: 루브릭
     settings: 설정
     syllabus: "강의 계획"
+  tag_7bb005ff: 태그
   take_a_picture_d582acf1: "사진 촬영"
   take_the_quiz_87214d7e: "퀴즈 치르기"
   take_the_quiz_again_8ea51a6c: "퀴즈 다시 치르기"

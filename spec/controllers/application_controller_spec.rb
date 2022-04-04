@@ -122,10 +122,10 @@ RSpec.describe ApplicationController do
         expect(controller.js_env[:files_domain]).to eq "files.example.com"
       end
 
-      it "auto-sets timezone and locale" do
+      it "auto-sets timezone and locales" do
         I18n.with_locale(:fr) do
           Time.use_zone("Alaska") do
-            expect(@controller.js_env[:LOCALE]).to eq "fr"
+            expect(@controller.js_env[:LOCALES]).to eq ["fr", "en"] # 'en' is always the last fallback
             expect(@controller.js_env[:BIGEASY_LOCALE]).to eq "fr_FR"
             expect(@controller.js_env[:FULLCALENDAR_LOCALE]).to eq "fr"
             expect(@controller.js_env[:MOMENT_LOCALE]).to eq "fr"
@@ -262,36 +262,6 @@ RSpec.describe ApplicationController do
 
           it "populates js_env with elementary theme setting" do
             expect(controller.js_env[:FEATURES]).to include(:canvas_k6_theme)
-          end
-        end
-
-        context "responsive_awareness" do
-          before do
-            controller.instance_variable_set(:@domain_root_account, Account.default)
-          end
-
-          it "is false if the feature flag is off" do
-            expect(controller.js_env[:FEATURES][:responsive_awareness]).to be_falsey
-          end
-
-          it "is true if the feature flag is on" do
-            Account.default.enable_feature!(:responsive_awareness)
-            expect(controller.js_env[:FEATURES][:responsive_awareness]).to be_truthy
-          end
-        end
-
-        context "responsive_misc" do
-          before do
-            controller.instance_variable_set(:@domain_root_account, Account.default)
-          end
-
-          it "is false if the feature flag is off" do
-            expect(controller.js_env[:FEATURES][:responsive_misc]).to be_falsey
-          end
-
-          it "is true if the feature flag is on" do
-            Account.default.enable_feature!(:responsive_misc)
-            expect(controller.js_env[:FEATURES][:responsive_misc]).to be_truthy
           end
         end
 
@@ -440,18 +410,18 @@ RSpec.describe ApplicationController do
 
         it "loads gateway uri from dynamic settings" do
           allow(DynamicSettings).to receive(:find).and_return({
-                                                                        "api_gateway_enabled" => "true",
-                                                                        "api_gateway_uri" => "http://the-gateway/graphql"
-                                                                      })
+                                                                "api_gateway_enabled" => "true",
+                                                                "api_gateway_uri" => "http://the-gateway/graphql"
+                                                              })
           jsenv = controller.js_env({})
           expect(jsenv[:API_GATEWAY_URI]).to eq("http://the-gateway/graphql")
         end
 
         it "will not expose gateway uri from dynamic settings if not enabled" do
           allow(DynamicSettings).to receive(:find).and_return({
-                                                                        "api_gateway_enabled" => "false",
-                                                                        "api_gateway_uri" => "http://the-gateway/graphql"
-                                                                      })
+                                                                "api_gateway_enabled" => "false",
+                                                                "api_gateway_uri" => "http://the-gateway/graphql"
+                                                              })
           jsenv = controller.js_env({})
           expect(jsenv[:API_GATEWAY_URI]).to be_nil
         end
@@ -2566,6 +2536,52 @@ describe CoursesController do
       expect(data["is_master_course_child_content"]).to be_truthy
       expect(data["restricted_by_master_course"]).to be_truthy
       expect(data["master_course_restrictions"]).to eq({ content: true })
+    end
+  end
+
+  describe "annotate_sentry" do
+    it "sets the db_cluster tag correctly" do
+      expect(Sentry).to receive(:set_tags).with({ db_cluster: Account.default.shard.database_server.id })
+      get "index"
+    end
+  end
+
+  describe "set_normalized_route" do
+    it "does nothing by default" do
+      get "index"
+      expect(controller.instance_variable_get(:@normalized_route)).to be_nil
+    end
+
+    context "when Sentry is enabled on the frontend" do
+      before do
+        ConfigFile.stub("sentry", { dsn: "dummy-dsn", frontend_dsn: "dummy-frontend-dsn" })
+      end
+
+      after do
+        ConfigFile.unstub
+        SentryExtensions::Settings.reset_settings
+      end
+
+      context "given a standard route" do
+        it "correctly sets the value" do
+          get "index"
+          expect(controller.js_env[:SENTRY_FRONTEND][:normalized_route]).to eq("/courses")
+        end
+      end
+
+      context "given a route with a single path parameter" do
+        it "correctly sets the value" do
+          get "show", params: { id: 1 }
+          expect(controller.js_env[:SENTRY_FRONTEND][:normalized_route]).to eq("/courses/{id}")
+        end
+      end
+
+      context "given a route with multiple path parameters" do
+        it "correctly sets the value" do
+          get "settings", params: { course_id: 1 }
+          expect(controller.js_env[:SENTRY_FRONTEND][:normalized_route]).to eq("/courses/{course_id}/settings/{full_path}")
+        end
+      end
     end
   end
 

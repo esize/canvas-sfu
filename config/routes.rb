@@ -951,6 +951,8 @@ CanvasRails::Application.routes.draw do
     end
   end
 
+  resources :jobs_v2, only: [:index]
+
   get "equation_images/:id" => "equation_images#show", :as => :equation_images, :id => /.+/
 
   # assignments at the top level (without a context) -- we have some specs that
@@ -2407,6 +2409,15 @@ CanvasRails::Application.routes.draw do
       get "jobs", action: :index
       get "jobs/:id", action: :show
       post "jobs/batch_update", action: :batch_update
+    end
+
+    # jobs_v2 actually does do regular pagination, but the comments above
+    # otherwise still apply
+    scope(controller: :jobs_v2) do
+      get "jobs/tags/queued", action: :queued_tags, as: :jobs_tags_queued
+      get "jobs/tags/running", action: :running_tags, as: :jobs_tags_running
+      get "jobs/tags/future", action: :future_tags, as: :jobs_tags_future
+      get "jobs/tags/failed", action: :failed_tags, as: :jobs_tags_failed
     end
   end
 
