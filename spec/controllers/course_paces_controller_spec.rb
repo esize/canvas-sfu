@@ -41,6 +41,9 @@ describe CoursePacesController, type: :controller do
   before :once do
     course_with_teacher(active_all: true)
     @course.update(start_at: "2021-09-30", restrict_enrollments_to_course_dates: true)
+    @course.root_account.enable_feature!(:course_paces)
+    @course.enable_course_paces = true
+    @course.save!
     student_in_course(active_all: true)
     course_pace_model(course: @course)
     @student_enrollment = @student.enrollments.first
@@ -61,6 +64,11 @@ describe CoursePacesController, type: :controller do
     end
 
     @course.enable_course_paces = true
+    @course.blackout_dates = [BlackoutDate.new({
+                                                 event_title: "blackout dates 1",
+                                                 start_date: "2021-10-03",
+                                                 end_date: "2021-10-03"
+                                               })]
     @course.save!
     @course.account.enable_feature!(:course_paces)
 
@@ -90,7 +98,7 @@ describe CoursePacesController, type: :controller do
   end
 
   describe "GET #index" do
-    it "populates js_env with course, enrollment, sections, and course_pace details" do
+    it "populates js_env with course, enrollment, sections, blackout_dates, and course_pace details" do
       @section = @course.course_sections.first
       @student_enrollment = @course.enrollments.find_by(user_id: @student.id)
       @progress = @course_pace.create_publish_progress
@@ -99,7 +107,7 @@ describe CoursePacesController, type: :controller do
       expect(response).to be_successful
       expect(assigns[:js_bundles].flatten).to include(:course_paces)
       js_env = controller.js_env
-      expect(js_env[:BLACKOUT_DATES]).to eq([])
+      expect(js_env[:BLACKOUT_DATES]).to eq(@course.blackout_dates.as_json(include_root: false))
       expect(js_env[:COURSE]).to match(hash_including({
                                                         id: @course.id,
                                                         name: @course.name,
@@ -226,7 +234,7 @@ describe CoursePacesController, type: :controller do
     it "updates the CoursePace" do
       put :update, params: { course_id: @course.id, id: @course_pace.id, course_pace: valid_update_params }
       expect(response).to be_successful
-      expect(@course_pace.reload.end_date.to_s).to eq(valid_update_params[:end_date])
+      expect(@course_pace.reload.end_date.to_date.to_s).to eq(valid_update_params[:end_date])
       expect(@course_pace.workflow_state).to eq(valid_update_params[:workflow_state])
       expect(
         @course_pace.course_pace_module_items.joins(:module_item).find_by(content_tags: { content_id: @a1.id }).duration
@@ -264,7 +272,7 @@ describe CoursePacesController, type: :controller do
       response_body = JSON.parse(response.body)
       expect(response_body["course_pace"]["id"]).to eq(course_pace.id)
 
-      expect(course_pace.end_date.to_s).to eq(valid_update_params[:end_date])
+      expect(course_pace.end_date.to_date.to_s).to eq(valid_update_params[:end_date])
       expect(course_pace.workflow_state).to eq(valid_update_params[:workflow_state])
       expect(
         course_pace.course_pace_module_items.joins(:module_item).find_by(content_tags: { content_id: @a1.id }).duration

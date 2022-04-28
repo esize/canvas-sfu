@@ -58,8 +58,8 @@ export const daysBetween = (
   blackoutDates: BlackoutDate[] = [],
   inclusiveEnd = true
 ): number => {
-  const startDate = moment(start).startOf('day')
-  const endDate = moment(end).startOf('day')
+  const startDate = moment(start).endOf('day')
+  const endDate = moment(end).endOf('day')
 
   if (inclusiveEnd) {
     endDate.endOf('day').add(1, 'day')
@@ -98,6 +98,10 @@ export const addDays = (
 ): string => {
   const date = moment(start)
 
+  while (dayIsDisabled(date, excludeWeekends, blackoutDates)) {
+    date.add(1, 'day')
+  }
+
   while (numberOfDays > 0) {
     date.add(1, 'days')
 
@@ -110,8 +114,10 @@ export const addDays = (
 }
 
 const msInADay = 1000 * 60 * 60 * 24
-export const rawDaysBetweenInclusive = (start_date: string, end_date: string): number =>
-  Math.round(moment(end_date).diff(moment(start_date)) / msInADay) + 1
+export const rawDaysBetweenInclusive = (
+  start_date: moment.Moment,
+  end_date: moment.Moment
+): number => Math.round(end_date.diff(start_date) / msInADay) + 1
 
 export const stripTimezone = (date: string): string => {
   return date.split('T')[0]

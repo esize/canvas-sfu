@@ -167,6 +167,8 @@ export default class Assignment extends Model
 
   courseID: => @get('course_id')
 
+  inPacedCourse: => @get('in_paced_course')
+
   submissionTypes: (submissionTypes) =>
     return @_submissionTypes() unless arguments.length > 0
     @set 'submission_types', submissionTypes
@@ -463,7 +465,7 @@ export default class Assignment extends Model
 
   htmlUrl: =>
     if @isQuizLTIAssignment() && canManage() && ENV.FLAGS && ENV.FLAGS.new_quizzes_modules_support
-      return @htmlEditUrl()
+      return "#{@htmlEditUrl()}?quiz_lti"
     else
       return @get 'html_url'
 
@@ -499,9 +501,6 @@ export default class Assignment extends Model
 
   newQuizzesAssignmentBuildButtonEnabled: =>
     return ENV.NEW_QUIZZES_ASSIGNMENT_BUILD_BUTTON_ENABLED
-
-  newMasteryConnectIconEnabled: =>
-    return ENV.FLAGS && ENV.FLAGS.updated_mastery_connect_icon
 
   showBuildButton: =>
     @isQuizLTIAssignment() && @newQuizzesAssignmentBuildButtonEnabled()
@@ -629,10 +628,9 @@ export default class Assignment extends Model
       'pointsPossible', 'position', 'postToSIS', 'postToSISEnabled', 'published',
       'restrictFileExtensions', 'secureParams', 'selectedSubmissionTypeToolId',
       'showBuildButton', 'showGradersAnonymousToGradersCheckbox', 'singleSectionDueDate',
-      'submissionType', 'submissionTypeSelectionTools', 'submissionTypesFrozen', 
+      'submissionType', 'submissionTypeSelectionTools', 'submissionTypesFrozen',
       'turnitinAvailable', 'turnitinEnabled', 'unlockAt', 'vericiteAvailable',
-      'vericiteEnabled', 'importantDates', 'externalToolIframeWidth', 'externalToolIframeHeight',
-      'newMasteryConnectIconEnabled'
+      'vericiteEnabled', 'importantDates', 'externalToolIframeWidth', 'externalToolIframeHeight'
     ]
 
     hash =
