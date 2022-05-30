@@ -54,7 +54,7 @@ class ActiveRecord::Base
 
       if transaction_index
         # we wrap a transaction around controller actions, so try to see if this call came from that
-        if wrap_index && (transaction_index..wrap_index).all? { |i| stacktrace[i].match?(/transaction|synchronize/) }
+        if wrap_index && (transaction_index..wrap_index).all? { |i| stacktrace[i].match?(/transaction|synchronize|unguard/) }
           false
         else
           # check if this is being run through an after_transaction_commit since the last transaction
@@ -70,6 +70,9 @@ class ActiveRecord::Base
     end
 
     def vacuum
+      # can't vacuum in a transaction
+      return if Rails.env.test?
+
       GuardRail.activate(:deploy) do
         connection.vacuum(table_name, analyze: true)
       end
@@ -250,10 +253,17 @@ class ActiveRecord::Base
   end
 
   def touch_context
-    return if @@skip_touch_context ||= false || @skip_touch_context ||= false
+    @@skip_touch_context ||= false
+    @skip_touch_context ||= false
+    # temporarily logging extra details here to debug LS-3147
+    log_details = is_a? Announcement
+    Canvas::Errors.capture_exception(:touch_context, "touch_context: @@skip_touch_context=#{@@skip_touch_context}; @skip_touch_context=#{@skip_touch_context}", :info) if log_details
+    return if @@skip_touch_context || @skip_touch_context
 
     self.class.connection.after_transaction_commit do
+      Canvas::Errors.capture_exception(:touch_context, "touch_context: respond_to?(:context_type)=#{respond_to?(:context_type)}; respond_to?(:context_id)=#{respond_to?(:context_id)}; context_type=#{context_type}; context_id=#{context_id}", :info) if log_details
       if respond_to?(:context_type) && respond_to?(:context_id) && context_type && context_id
+        Canvas::Errors.capture_exception(:touch_context, "touch_context: context_type.constantize.where(id: context_id).count=#{context_type.constantize.where(id: context_id).count}", :info) if log_details
         context_type.constantize.where(id: context_id).update_all(updated_at: Time.now.utc)
       end
     end
@@ -714,7 +724,7 @@ class ActiveRecord::Base
       configurations.configs_for.each do |config|
         config.instance_variable_set(:@configuration_hash, config.configuration_hash.merge(override).freeze)
       end
-      clear_all_connections!
+      clear_all_connections!(nil)
 
       # Just return something that isn't an ar connection object so consoles don't explode
       override
