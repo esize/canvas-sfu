@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 #
-# Copyright (C) 2018 - present Instructure, Inc.
+# Copyright (C) 2022 - present Instructure, Inc.
 #
 # This file is part of Canvas.
 #
@@ -18,10 +18,18 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-class FixResourceLinksFromCopiedCoursesNullUrls < ActiveRecord::Migration[6.0]
-  tag :postdeploy
+class AddCalendarEventsSeriesHead < ActiveRecord::Migration[6.1]
+  disable_ddl_transaction!
+  tag :predeploy
 
-  def up
-    DataFixup::FixResourceLinksFromCopiedCoursesNullUrls.delay_if_production(priority: Delayed::LOW_PRIORITY).run
+  # This column is very sparsly populated so I want to let
+  # its value default to NULL for falsey values.
+  # Plus, the general approach to recurring event series is for
+  # any columns in calendar_events pertainint to event series
+  # are null unless the event is part of a series
+  # rubocop:disable Migration/BooleanColumns
+  def change
+    add_column :calendar_events, :series_head, :boolean, if_not_exists: true
   end
+  # rubocop:enable Migration/BooleanColumns
 end
