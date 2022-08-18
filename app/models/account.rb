@@ -24,6 +24,7 @@ class Account < ActiveRecord::Base
   include Context
   include OutcomeImportContext
   include Pronouns
+  include SearchTermHelper
 
   INSTANCE_GUID_SUFFIX = "canvas-lms"
   # a list of columns necessary for validation and save callbacks to work on a slim object
@@ -605,26 +606,26 @@ class Account < ActiveRecord::Base
     if keys_to_clear.any?
       shard.activate do
         self.class.connection.after_transaction_commit do
-          delay_if_production(singleton: "Account#clear_downstream_caches/#{global_id}")
+          delay_if_production(singleton: "Account#clear_downstream_caches/#{global_id}:#{keys_to_clear.join("/")}")
             .clear_downstream_caches(*keys_to_clear, xlog_location: self.class.current_xlog_location)
         end
       end
     end
   end
 
-  def clear_downstream_caches(*key_types, xlog_location: nil, is_retry: false)
+  def clear_downstream_caches(*keys_to_clear, xlog_location: nil, is_retry: false)
     shard.activate do
       if xlog_location
         timeout = Setting.get("account_cache_clear_replication_timeout", "60").to_i.seconds
         unless self.class.wait_for_replication(start: xlog_location, timeout: timeout)
-          delay(run_at: Time.now + timeout, singleton: "Account#clear_downstream_caches/#{global_id}")
+          delay(run_at: Time.now + timeout, singleton: "Account#clear_downstream_caches/#{global_id}:#{keys_to_clear.join("/")}")
             .clear_downstream_caches(*keys_to_clear, xlog_location: xlog_location, is_retry: true)
           # we still clear, but only the first time; after that we just keep waiting
           return if is_retry
         end
       end
 
-      Account.clear_cache_keys([id] + Account.sub_account_ids_recursive(id), *key_types)
+      Account.clear_cache_keys([id] + Account.sub_account_ids_recursive(id), *keys_to_clear)
     end
   end
 
@@ -1401,6 +1402,13 @@ class Account < ActiveRecord::Base
         (grants_right?(user, :view_notifications) || Account.site_admin.grants_right?(user, :read_messages))
     end
     can :view_bounced_emails
+
+    given do |user|
+      user &&
+        (user_account_associations.where(user_id: user).exists? || grants_right?(user, :read)) &&
+        (account_calendar_visible || grants_right?(user, :manage_account_calendar_visibility))
+    end
+    can :view_account_calendar_details
   end
 
   def reload(*)
