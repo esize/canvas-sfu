@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - present Instructure, Inc.
+ * Copyright (C) 2022 - present Instructure, Inc.
  *
  * This file is part of Canvas.
  *
@@ -16,12 +16,10 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default function originalityReportSubmissionKey(submission) {
-  try {
-    let submittedAt = new Date(submission.submitted_at)
-    submittedAt = `${submittedAt.toISOString().split('.')[0]}Z`
-    return (submittedAt && `submission_${submission.id}_${submittedAt}`) || ''
-  } catch (_error) {
-    return ''
-  }
+export default function round(number, decimalDigits = 2) {
+  if (decimalDigits < 0) throw new Error('decimal digits must be >= 0')
+  if (decimalDigits % 1 !== 0) throw new Error('decimal digits must be a whole number')
+  const val = Math.round(number * 10 ** decimalDigits) / 10 ** decimalDigits
+  if (Number.isNaN(val)) throw new Error('the first arguments must be a number')
+  return val === 0 ? 0 : val // prevent round(-0) from returning -0
 }

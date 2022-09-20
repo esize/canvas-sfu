@@ -50,6 +50,54 @@ class BigBlueButtonConference < WebConference
     visible: false
   }
 
+  user_setting_field :share_webcam, {
+    name: -> { t("Share webcam") },
+    description: -> { t("Share webcam") },
+    type: :boolean,
+    default: true,
+    visible: false
+  }
+
+  user_setting_field :share_microphone, {
+    name: -> { t("Share microphone") },
+    description: -> { t("Share microphone") },
+    type: :boolean,
+    default: true,
+    visible: false
+  }
+
+  user_setting_field :send_public_chat, {
+    name: -> { t("Send public chat messages") },
+    description: -> { t("Send public chat messages") },
+    type: :boolean,
+    default: true,
+    visible: false
+  }
+
+  user_setting_field :send_private_chat, {
+    name: -> { t("Send private chat messages") },
+    description: -> { t("Send private chat messages") },
+    type: :boolean,
+    default: true,
+    visible: false
+  }
+
+  user_setting_field :enable_waiting_room, {
+    name: -> { t("Enable waiting room") },
+    description: -> { t("Enable waiting room") },
+    type: :boolean,
+    default: true,
+    visible: false
+  }
+
+  user_setting_field :share_other_webcams, {
+    name: -> { t("See other viewers webcams") },
+    description: -> { t("See other viewers webcams") },
+    type: :boolean,
+    default: true,
+    visible: false
+  }
+
   class << self
     def send_request(action, options, use_fallback_config: false)
       url_str = generate_request(action, options, use_fallback_config: use_fallback_config)
