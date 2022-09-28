@@ -16,6 +16,10 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+def getFuzzyTagSuffix() {
+  return "fuzzy-${env.IMAGE_CACHE_MERGE_SCOPE}"
+}
+
 def getRailsLoadAllLocales() {
   return configuration.isChangeMerged() ? 1 : (configuration.getBoolean('rails-load-all-locales', 'false') ? 1 : 0)
 }
@@ -115,6 +119,16 @@ def lintersImage() {
   }
 }
 
+def preloadCacheImagesAsync() {
+  // Start loading webpack-assets immediately in case this build will re-use it.
+  libraryScript.load('bash/docker-with-flakey-network-protection.sh', '/tmp/docker-with-flakey-network-protection.sh')
+
+  sh """#!/bin/bash
+    /tmp/docker-with-flakey-network-protection.sh pull starlord.inscloudgate.net/jenkins/dockerfile:1.0-experimental &
+    /tmp/docker-with-flakey-network-protection.sh pull ${env.WEBPACK_ASSETS_PREFIX}:${getFuzzyTagSuffix()} &
+  """
+}
+
 def premergeCacheImage() {
   credentials.withStarlordCredentials {
     withEnv([
@@ -128,7 +142,8 @@ def premergeCacheImage() {
       'RAILS_LOAD_ALL_LOCALES=0',
       "RUBY_RUNNER_PREFIX=${env.RUBY_RUNNER_PREFIX}",
       "WEBPACK_BUILDER_PREFIX=${env.WEBPACK_BUILDER_PREFIX}",
-      "WEBPACK_CACHE_PREFIX=${env.WEBPACK_CACHE_PREFIX}",
+      "WEBPACK_ASSETS_FUZZY_TAG=${env.WEBPACK_ASSETS_PREFIX}:${getFuzzyTagSuffix()}",
+      "WEBPACK_ASSETS_PREFIX=${env.WEBPACK_ASSETS_PREFIX}",
       "YARN_RUNNER_PREFIX=${env.YARN_RUNNER_PREFIX}",
     ]) {
       slackSendCacheBuild {
@@ -146,7 +161,7 @@ def premergeCacheImage() {
         ./build/new-jenkins/docker-with-flakey-network-protection.sh push -a $YARN_RUNNER_PREFIX || true
         ./build/new-jenkins/docker-with-flakey-network-protection.sh push -a $RUBY_RUNNER_PREFIX || true
         ./build/new-jenkins/docker-with-flakey-network-protection.sh push -a $BASE_RUNNER_PREFIX || true
-        ./build/new-jenkins/docker-with-flakey-network-protection.sh push -a $WEBPACK_CACHE_PREFIX
+        ./build/new-jenkins/docker-with-flakey-network-protection.sh push -a $WEBPACK_ASSETS_PREFIX
       """, label: 'upload cache images')
     }
   }
@@ -155,6 +170,7 @@ def premergeCacheImage() {
 def patchsetImage(asyncStepsStr = '') {
   credentials.withStarlordCredentials {
     def cacheScope = configuration.isChangeMerged() ? env.IMAGE_CACHE_MERGE_SCOPE : env.IMAGE_CACHE_BUILD_SCOPE
+    def webpackAssetsFuzzyTag = configuration.isChangeMerged() ? "" : "${env.WEBPACK_ASSETS_PREFIX}:${getFuzzyTagSuffix()}"
 
     slackSendCacheBuild {
       withEnv([
@@ -169,7 +185,8 @@ def patchsetImage(asyncStepsStr = '') {
         "RAILS_LOAD_ALL_LOCALES=${getRailsLoadAllLocales()}",
         "RUBY_RUNNER_PREFIX=${env.RUBY_RUNNER_PREFIX}",
         "WEBPACK_BUILDER_PREFIX=${env.WEBPACK_BUILDER_PREFIX}",
-        "WEBPACK_CACHE_PREFIX=${env.WEBPACK_CACHE_PREFIX}",
+        "WEBPACK_ASSETS_FUZZY_TAG=${webpackAssetsFuzzyTag}",
+        "WEBPACK_ASSETS_PREFIX=${env.WEBPACK_ASSETS_PREFIX}",
         "YARN_RUNNER_PREFIX=${env.YARN_RUNNER_PREFIX}",
       ]) {
         try {
@@ -200,7 +217,7 @@ def patchsetImage(asyncStepsStr = '') {
       ./build/new-jenkins/docker-with-flakey-network-protection.sh push -a $YARN_RUNNER_PREFIX || true
       ./build/new-jenkins/docker-with-flakey-network-protection.sh push -a $RUBY_RUNNER_PREFIX || true
       ./build/new-jenkins/docker-with-flakey-network-protection.sh push -a $BASE_RUNNER_PREFIX || true
-      ./build/new-jenkins/docker-with-flakey-network-protection.sh push -a $WEBPACK_CACHE_PREFIX
+      ./build/new-jenkins/docker-with-flakey-network-protection.sh push -a $WEBPACK_ASSETS_PREFIX
     """, label: 'upload cache images')
   }
 }
