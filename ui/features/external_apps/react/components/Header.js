@@ -27,10 +27,10 @@ import SFUPrivacyNotice from '@sfu/sfu-pia-notice' /* SFU MOD */
 
 const I18n = useI18nScope('external_tools')
 
-const Header = ({children}) => (
+const Header = React.forwardRef(({children}, ref) => (
   <View as="header" margin="small none">
     <Flex>
-      <Flex.Item shouldGrow>
+      <Flex.Item shouldGrow={true}>
         <Heading margin="none">{I18n.t('External Apps')}</Heading>
       </Flex.Item>
       <Flex.Item align="end">{children}</Flex.Item>
@@ -42,7 +42,7 @@ const Header = ({children}) => (
       )}
     </p>
     <p>
-      <Link href="https://www.eduappcenter.com/">
+      <Link ref={ref} href="https://www.eduappcenter.com/">
         <ScreenReaderContent>{I18n.t('Link to lti tools.')}</ScreenReaderContent>
         {I18n.t('See some LTI tools that work great with Canvas.')}
       </Link>
@@ -51,6 +51,6 @@ const Header = ({children}) => (
     <SFUPrivacyNotice alertStyle="alert" usage="external_apps" />
     {/* END SFU MOD */}
   </View>
-)
+))
 
 export default Header

@@ -15,18 +15,61 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-export function originalityReportSubmissionKey(submission) {
+
+import type {SubmissionOriginalityData, OriginalityData} from '@canvas/grading/grading.d'
+
+export function originalityReportSubmissionKey(submission: {
+  id: string
+  submitted_at: null | string | Date
+  submittedAt?: null | string | Date
+}): string {
   try {
-    let submittedAt = new Date(submission.submitted_at || submission.submittedAt)
-    submittedAt = `${submittedAt.toISOString().split('.')[0]}Z`
-    return (submittedAt && `submission_${submission.id}_${submittedAt}`) || ''
+    const submittedAtDate = new Date(submission.submitted_at || submission.submittedAt)
+    const submittedAtString = `${submittedAtDate.toISOString().split('.')[0]}Z`
+    return submittedAtString ? `submission_${submission.id}_${submittedAtString}` : ''
   } catch (_error) {
     return ''
   }
 }
 
-export function getOriginalityData(submission, index) {
-  let data = null
+export function isOriginalityReportVisible(
+  originalityReportVisibility: string | null,
+  dueAt: string | null,
+  gradingStatus: string | null
+): boolean {
+  switch (originalityReportVisibility) {
+    case 'immediate':
+      return true
+    case 'never':
+      return false
+    case 'after_grading':
+      if (gradingStatus && ['graded', 'excused'].includes(gradingStatus)) {
+        return true
+      }
+      return false
+    case 'after_due_date':
+      if (!dueAt || new Date(dueAt) < new Date()) {
+        return true
+      }
+      return false
+    default:
+      return true
+  }
+}
+
+export function getOriginalityData(
+  submission: {
+    _id: string
+    submissionType: string
+    originalityData: {
+      [key: string]: SubmissionOriginalityData
+    }
+    attachments: any
+    submitted_at: string
+  },
+  index: number
+): false | OriginalityData {
+  let data: null | SubmissionOriginalityData = null
   if (submission.submissionType === 'online_text_entry') {
     data =
       submission.originalityData[
