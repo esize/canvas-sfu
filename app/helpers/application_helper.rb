@@ -337,62 +337,6 @@ module ApplicationHelper
     stylesheet_link_tag css_url_for(:common), media: "all"
   end
 
-  def quiz_lti_tab?(tab)
-    if tab[:id].is_a?(String) && tab[:id].start_with?("context_external_tool_") && tab[:args] &&
-       tab[:args][1]
-      return ContextExternalTool.find_by(id: tab[:args][1])&.quiz_lti?
-    end
-
-    false
-  end
-
-  def sortable_tabs
-    tabs =
-      @context.tabs_available(
-        @current_user,
-        for_reordering: true,
-        root_account: @domain_root_account,
-        course_subject_tabs: @context.try(:elementary_subject_course?)
-      )
-    tabs.select do |tab|
-      if begin
-        tab[:id] == @context.class::TAB_COLLABORATIONS
-      rescue
-        false
-      end
-        Collaboration.any_collaborations_configured?(@context) &&
-          !@context.feature_enabled?(:new_collaborations)
-      elsif begin
-        quiz_lti_tab?(tab)
-      rescue
-        false
-      end
-        new_quizzes_navigation_placements_enabled?(@context)
-      elsif begin
-        tab[:id] == @context.class::TAB_COLLABORATIONS_NEW
-      rescue
-        false
-      end
-        @context.feature_enabled?(:new_collaborations)
-      elsif begin
-        tab[:id] == @context.class::TAB_CONFERENCES
-      rescue
-        false
-      end
-        feature_enabled?(:web_conferences)
-      else
-        tab[:id] !=
-          (
-            begin
-              @context.class::TAB_SETTINGS
-            rescue
-              nil
-            end
-          )
-      end
-    end
-  end
-
   def embedded_chat_quicklaunch_params
     {
       user_id: @current_user.id,
@@ -493,7 +437,12 @@ module ApplicationHelper
   def show_user_create_course_button(user, account = nil)
     return true if account&.grants_any_right?(user, session, :manage_courses, :create_courses)
 
-    user&.sub_account_for_course_creation(@domain_root_account)&.grants_any_right?(user, session, :manage_courses, :create_courses)
+    @domain_root_account.manually_created_courses_account.grants_any_right?(
+      user,
+      session,
+      :manage_courses,
+      :create_courses
+    )
   end
 
   # Public: Create HTML for a sidebar button w/ icon.
@@ -555,13 +504,13 @@ module ApplicationHelper
           )
       end
     end
-
     {
       equellaEnabled: !!equella_enabled?,
       disableGooglePreviews: !service_enabled?(:google_docs_previews),
       logPageViews: !@body_class_no_headers,
       editorButtons: editor_buttons,
-      pandaPubSettings: CanvasPandaPub::Client.config.try(:slice, "push_url", "application_id")
+      pandaPubSettings: CanvasPandaPub::Client.config.try(:slice, "push_url", "application_id"),
+      unsplashEnabled: PluginSetting.settings_for_plugin(:unsplash)&.dig("access_key")&.present?
     }.each do |key, value|
       # dont worry about keys that are nil or false because in javascript: if (INST.featureThatIsUndefined ) { //won't happen }
       global_inst_object[key] = value if value
@@ -1189,7 +1138,7 @@ module ApplicationHelper
   def planner_enabled?
     !!@current_user&.has_student_enrollment? ||
       (@current_user&.roles(@domain_root_account)&.include?("observer") && k5_user?) ||
-      (!!@current_user&.roles(@domain_root_account)&.include?("observer") && Account.site_admin.feature_enabled?(:observer_picker)) # TODO: ensure observee is a student?
+      !!@current_user&.roles(@domain_root_account)&.include?("observer") # TODO: ensure observee is a student?
   end
 
   def will_paginate(collection, options = {})
@@ -1450,5 +1399,9 @@ module ApplicationHelper
 
   def append_default_due_time_js_env(context, hash)
     hash[:DEFAULT_DUE_TIME] = context.default_due_time if context&.default_due_time.present? && context.root_account.feature_enabled?(:default_due_time)
+  end
+
+  def find_heap_application_id
+    DynamicSettings.find(tree: :private)[:heap_app_id]
   end
 end
