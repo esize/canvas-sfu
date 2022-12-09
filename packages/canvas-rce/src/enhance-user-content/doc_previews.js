@@ -178,10 +178,12 @@ export function loadDocPreview($container, options) {
     // else if it's something google docs preview can handle and we can get a public url to this document.
     const loadGooglePreview = function () {
       // this handles both ssl and plain http.
-      const googleDocPreviewUrl = `//docs.google.com/viewer?${new URLSearchParams({
+      // SFU MOD CANVAS-205 Predoc: In-place Replacement for Google Doc Preview
+      const googleDocPreviewUrl = `//docview.sfu.ca/viewer?${new URLSearchParams({
         embedded: true,
         url: opts.public_url,
       }).toString()}`
+      // END SFU MOD
       if (!opts.ajax_valid || opts.ajax_valid()) {
         const iframe = document.createElement('iframe')
         iframe.addEventListener('load', () => {
