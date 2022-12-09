@@ -17,9 +17,43 @@
  */
 
 import {ok, strictEqual} from 'assert'
-import {downloadToWrap, fixupFileUrl, prepEmbedSrc, prepLinkedSrc} from '../../src/common/fileUrl'
+import {
+  absoluteToRelativeUrl,
+  downloadToWrap,
+  fixupFileUrl,
+  prepEmbedSrc,
+  prepLinkedSrc,
+} from '../../src/common/fileUrl'
 
 describe('Common file url utils', () => {
+  describe('absoluteToRelativeUrl', () => {
+    const canvasOrigin = 'http://mycanvas.com:3000'
+
+    it('turns an absolute URL into a relative URL', () => {
+      const absoluteUrl = 'https://mycanvas.com:3000/some/path/download?download_frd=1#hash_thing'
+      strictEqual(
+        absoluteToRelativeUrl(absoluteUrl, canvasOrigin),
+        '/some/path/download?download_frd=1#hash_thing'
+      )
+    })
+
+    it('leaves a relative URL as is', () => {
+      const relativeUrl = '/some/path/download?download_frd=1#hash_thing'
+      strictEqual(
+        absoluteToRelativeUrl(relativeUrl, canvasOrigin),
+        '/some/path/download?download_frd=1#hash_thing'
+      )
+    })
+
+    it('leaves non-Canvas absolute URLs as absolute', () => {
+      const absoluteUrl = 'https://yodawg.com:3001/some/path/download?download_frd=1#hash_thing'
+      strictEqual(
+        absoluteToRelativeUrl(absoluteUrl, canvasOrigin),
+        'https://yodawg.com:3001/some/path/download?download_frd=1#hash_thing'
+      )
+    })
+  })
+
   describe('downloadToWrap', () => {
     let url
 
@@ -78,6 +112,12 @@ describe('Common file url utils', () => {
         strictEqual(result.href, fileInfo.href)
       })
 
+      it('transforms urls if from the specified canvas origin', () => {
+        fileInfo.href = 'http://instructure.com/files/17/download?download_frd=1'
+        const result = fixupFileUrl('course', 2, fileInfo, 'http://instructure.com')
+        strictEqual(result.href, 'http://instructure.com/courses/2/files/17?wrap=1')
+      })
+
       it('transforms course file urls', () => {
         // removes download_frd and adds wrap
         const result = fixupFileUrl('course', 2, fileInfo)
@@ -123,7 +163,13 @@ describe('Common file url utils', () => {
     it('skips transforming the url if from a different host', () => {
       const url = 'http://instructure.com/some/path'
       const result = prepEmbedSrc(url)
-      strictEqual(url, result)
+      strictEqual(result, url)
+    })
+
+    it('transforms the url if from the current canvas host', () => {
+      const url = 'http://instructure.com/some/path'
+      const result = prepEmbedSrc(url, 'http://instructure.com')
+      strictEqual(result, 'http://instructure.com/some/path/preview')
     })
 
     it('replaces /download?some_params with /preview?some_params', () => {

@@ -333,12 +333,18 @@ function openDialogsWhenClicked() {
 
 let enhanceUserContentTimeout
 function enhanceUserContentWhenAsked() {
+  if (ENV?.SKIP_ENHANCING_USER_CONTENT) {
+    return
+  }
+
   clearTimeout(enhanceUserContentTimeout)
   enhanceUserContentTimeout = setTimeout(
     () =>
       enhanceUserContent(document, {
         customEnhanceFunc: enhanceUserJQueryWidgetContent,
         canvasOrigin: ENV?.DEEP_LINKING_POST_MESSAGE_ORIGIN || window.location?.origin,
+        kalturaSettings: INST.kalturaSettings,
+        disableGooglePreviews: !!INST.disableGooglePreviews,
       }),
     50
   )
@@ -619,13 +625,18 @@ function showFilePreviewInOverlayHandler({file_id, verifier}) {
 
 function wireUpFilePreview() {
   window.addEventListener('message', event => {
-    if (event.origin !== window.location.origin) {
-      return
-    }
     if (event.data.subject === 'preview_file') {
       showFilePreviewInOverlayHandler(event.data)
     }
   })
+}
+
+const setDialogCloseText = () => {
+  // This is done here since we need to translate the close text, but don't
+  // have access to I18n from packages/jqueryui. Since we're eventually moving
+  // away from jqueryui and only have the single string to translate, its not
+  // worth setting up a translation pipeline there.
+  $.ui.dialog.prototype.options.closeText = I18n.t('Close')
 }
 
 export default function enhanceTheEntireUniverse() {
@@ -651,6 +662,7 @@ export default function enhanceTheEntireUniverse() {
     confirmAndDeleteRightSideTodoItemsWhenClicked,
     makeAllExternalLinksExternalLinks,
     wireUpFilePreview,
+    setDialogCloseText,
   ]
     .map(isolate)
     .map(x => x())

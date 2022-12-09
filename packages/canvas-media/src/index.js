@@ -17,17 +17,19 @@
  */
 
 import UploadMedia from './UploadMedia'
-import ClosedCaptionPanel from './ClosedCaptionCreator'
+import ClosedCaptionCreator from './ClosedCaptionCreator'
 import RocketSVG from './RocketSVG'
 import useComputerPanelFocus from './useComputerPanelFocus'
 import {isAudio, isVideo, isPreviewable, sizeMediaPlayer} from './shared/utils'
 import LoadingIndicator from './shared/LoadingIndicator'
 import saveMediaRecording, {saveClosedCaptions} from './saveMediaRecording'
+import closedCaptionLanguages, {sortedClosedCaptionLanguageList} from './closedCaptionLanguages'
+import getTranslations from './getTranslations'
 import * as CONSTANTS from './shared/constants'
 
 export {
   UploadMedia as default,
-  ClosedCaptionPanel,
+  ClosedCaptionCreator as ClosedCaptionPanel,
   RocketSVG,
   useComputerPanelFocus,
   isAudio,
@@ -37,5 +39,8 @@ export {
   LoadingIndicator,
   saveMediaRecording,
   saveClosedCaptions,
-  CONSTANTS
+  closedCaptionLanguages,
+  sortedClosedCaptionLanguageList,
+  getTranslations,
+  CONSTANTS,
 }

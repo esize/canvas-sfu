@@ -48,14 +48,22 @@ class Loaders::OutcomeAlignmentLoader < GraphQL::Batch::Loader
                     .select("context_modules.id as module_id, context_modules.name as module_name, context_modules.workflow_state as module_workflow_state, content_tags.content_id as assignment_content_id, content_tags.content_type as assignment_content_type")
                     .where(context: @context)
                     .left_joins(:content_tags)
-                    .where(content_tags: { workflow_state: "active" })
+                    .where.not(content_tags: { workflow_state: "deleted" })
 
       # map alignment id to assignment/quiz/discussion ids
       alignments_sub = outcome
                        .alignments
-                       .select("content_tags.id, 'direct' as alignment_type, content_tags.content_id, content_tags.content_type, content_tags.context_id, content_tags.context_type, content_tags.title, content_tags.learning_outcome_id, content_tags.created_at, content_tags.updated_at, assignments.assignment_id, assignments.discussion_id, assignments.quiz_id")
+                       .select("
+                         content_tags.id, 'direct' as alignment_type, content_tags.content_id, content_tags.content_type, content_tags.context_id, content_tags.context_type,
+                           CASE
+                             WHEN content_tags.content_type = 'AssessmentQuestionBank' THEN question_banks.title
+                             ELSE content_tags.title
+                           END AS title,
+                         content_tags.learning_outcome_id, content_tags.created_at, content_tags.updated_at, assignments.assignment_id, assignments.discussion_id, assignments.quiz_id
+                       ")
                        .where(context: @context, content_type: %w[Rubric Assignment AssessmentQuestionBank])
                        .joins("LEFT OUTER JOIN (#{assignments_sub.to_sql}) AS assignments ON content_tags.content_id = assignments.assignment_id AND content_tags.content_type = 'Assignment'")
+                       .joins("LEFT OUTER JOIN (#{AssessmentQuestionBank.active.to_sql}) AS question_banks ON content_tags.content_id = question_banks.id AND content_tags.content_type = 'AssessmentQuestionBank'")
 
       direct_alignments = ContentTag
                           .select("alignments.*, modules.module_id, modules.module_name, modules.module_workflow_state")

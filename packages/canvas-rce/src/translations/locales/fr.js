@@ -109,9 +109,6 @@ const locale = {
     "message": "Choisir les droits d’utilisation..."
   },
   "circle_484abe63": { "message": "Cercle" },
-  "circle_unordered_list_9e3a0763": {
-    "message": "liste non ordonnée à puces rondes"
-  },
   "clear_2084585f": { "message": "Effacer" },
   "clear_image_3213fe62": { "message": "Effacer image" },
   "clear_selected_file_82388e50": {
@@ -197,12 +194,6 @@ const locale = {
   "decorative_type_upper_f2c95e3": { "message": "{ TYPE_UPPER } décoratif" },
   "decrease_indent_d9cf469d": { "message": "Diminuer le retrait" },
   "deep_purple_bb3e2907": { "message": "Violet foncé" },
-  "default_bulleted_unordered_list_47079da8": {
-    "message": "liste à puce non ordonnée par défaut"
-  },
-  "default_numerical_ordered_list_48dd3548": {
-    "message": "liste à puce ordonnée par défaut"
-  },
   "definite_integral_fe7ffed1": { "message": "Intégrale définie" },
   "degree_symbol_4a823d5f": { "message": "Symbole degré" },
   "delimiters_4db4840d": { "message": "Délimiteurs" },
@@ -240,6 +231,7 @@ const locale = {
   "down_and_right_diagonal_arrow_6ea0f460": {
     "message": "Flèche diagonale bas droit"
   },
+  "download_filename_2baae924": { "message": "Télécharger { filename }" },
   "downward_arrow_cca52012": { "message": "Flèche pointant vers le bas" },
   "downward_pointing_triangle_2a12a601": {
     "message": "Triangle pointant vers le bas"
@@ -256,6 +248,7 @@ const locale = {
   "edit_alt_text_for_this_icon_instance_9c6fc5fd": {
     "message": "Modifier le texte alternatif pour cette instance d''icône"
   },
+  "edit_c5fbea07": { "message": "Modifier" },
   "edit_course_link_5a5c3c59": { "message": "Modifier le lien du cours" },
   "edit_equation_f5279959": { "message": "Modifier l''équation" },
   "edit_existing_icon_maker_icon_5d0ebb3f": {
@@ -300,6 +293,9 @@ const locale = {
   "extra_small_9ae33252": { "message": "Très petit" },
   "extracurricular_icon_67c8ca42": { "message": "Icône extrascolaire" },
   "f_function_fe422d65": { "message": "F (fonction)" },
+  "failed_getting_file_contents_e9ea19f4": {
+    "message": "Échec de la récupération des contenus de fichiers"
+  },
   "file_storage_quota_exceeded_b7846cd1": {
     "message": "Quota de stockage de fichiers dépassé"
   },
@@ -386,6 +382,7 @@ const locale = {
   "icon_maker_icons_cc560f7e": { "message": "Icônes Icon Maker" },
   "icon_options_7e32746e": { "message": "Options d’icône" },
   "icon_options_tray_2b407977": { "message": "Bac des options d''icône" },
+  "icon_preview_1782a1d9": { "message": "Aperçu de l’icône" },
   "icon_shape_30b61e7": { "message": "Forme de l’icône" },
   "icon_size_9353edea": { "message": "Taille de l’icône" },
   "if_left_empty_link_text_will_display_as_course_lin_61087540": {
@@ -454,6 +451,9 @@ const locale = {
   "link_7262adec": { "message": "Lien" },
   "link_options_a16b758b": { "message": "Options de lien" },
   "links_14b70841": { "message": "Liens" },
+  "links_to_an_external_site_de74145d": {
+    "message": "Connexions vers un site externe."
+  },
   "load_more_35d33c7": { "message": "En charger plus" },
   "loading_25990131": { "message": "Chargement..." },
   "loading_bde52856": { "message": "Chargement" },
@@ -488,6 +488,10 @@ const locale = {
   },
   "medium_5a8e9ead": { "message": "Moyen" },
   "middle_27dc1d5": { "message": "Milieu" },
+  "minimize_file_preview_da911944": {
+    "message": "Réduire l’aperçu du fichier"
+  },
+  "minimize_video_20aa554b": { "message": "Réduire la vidéo" },
   "minus_fd961e2e": { "message": "Signe moins" },
   "minus_plus_3461f637": { "message": "Signe moins ou plus" },
   "misc_3b692ea7": { "message": "Divers" },
@@ -563,9 +567,6 @@ const locale = {
   "operators_a2ef9a93": { "message": "Opérateurs" },
   "or_9b70ccaa": { "message": "Ou" },
   "orange_81386a62": { "message": "Orange" },
-  "ordered_and_unordered_lists_cfadfc38": {
-    "message": "Listes ordonnées et non ordonnées"
-  },
   "other_editor_shortcuts_may_be_found_at_404aba4a": {
     "message": "D''autres raccourcis de l''éditeur peuvent être trouvés à l''adresse suivante"
   },
@@ -593,6 +594,12 @@ const locale = {
   "pi_variant_10f5f520": { "message": "Pi (variante)" },
   "pink_68ad45cb": { "message": "Rose" },
   "pixels_52ece7d1": { "message": "Pixels" },
+  "play_media_comment_35257210": {
+    "message": "Lancer le commentaire sur média."
+  },
+  "play_media_comment_by_name_from_createdat_c230123d": {
+    "message": "Lancer le commentaire sur média par { name } à partir de { createdAt }."
+  },
   "plus_d43cd4ec": { "message": "Plus" },
   "plus_minus_f8be2e83": { "message": "Signe Plus ou moins" },
   "posted_when_a578f5ab": { "message": "Posté : { when }" },
@@ -733,9 +740,6 @@ const locale = {
   "square_superset_strict_fa4262e4": {
     "message": "Original carré de (strict)"
   },
-  "square_unordered_list_b15ce93b": {
-    "message": "liste non ordonnée à puces carrées"
-  },
   "star_8d156e09": { "message": "Marquer d’un astérisque" },
   "steel_blue_14296f08": { "message": "Bleu métallisé" },
   "styles_2aa721ef": { "message": "Styles" },
@@ -753,6 +757,12 @@ const locale = {
   "supported_file_types_srt_or_webvtt_7d827ed": {
     "message": "Types de fichiers pris en charge : SRT ou WebVTT"
   },
+  "switch_to_pretty_html_editor_a3cee15f": {
+    "message": "Basculer vers l''éditeur HTML amélioré"
+  },
+  "switch_to_raw_html_editor_f970ae1a": {
+    "message": "Basculer vers l''éditeur HTML brut"
+  },
   "switch_to_the_html_editor_146dfffd": {
     "message": "Passer à l''éditeur html"
   },
@@ -769,6 +779,9 @@ const locale = {
   "text_optional_384f94f7": { "message": "Texte (facultatif)" },
   "text_position_8df8c162": { "message": "Position du texte" },
   "text_size_887c2f6": { "message": "Taille du texte" },
+  "the_document_preview_is_currently_being_processed__7d9ea135": {
+    "message": "Traitement en cours de l’aperçu du document. Veuillez réessayer plus tard."
+  },
   "the_material_is_in_the_public_domain_279c39a3": {
     "message": "Ce contenu appartient au domaine public"
   },
@@ -798,8 +811,14 @@ const locale = {
   "thick_upward_arrow_acd20328": {
     "message": "Flèche épaisse pointant vers le haut"
   },
+  "this_document_cannot_be_displayed_within_canvas_7aba77be": {
+    "message": "Ce document ne peut pas être affiché dans Canvas."
+  },
   "this_equation_cannot_be_rendered_in_basic_view_9b6c07ae": {
     "message": "Cette équation ne peut pas être affichée en mode simple."
+  },
+  "this_image_is_currently_unavailable_25c68857": {
+    "message": "Cette image n’est pas disponible pour le moment."
   },
   "though_your_video_will_have_the_correct_title_in_t_90e427f3": {
     "message": "Bien que votre vidéo aura le bon titre dans le navigateur, nous n''avons pas pu mettre ce dernier à jour dans la base de données."
@@ -845,9 +864,6 @@ const locale = {
     "message": "Envoyer/enregistrer un fichier multimédia"
   },
   "uploading_19e8a4e7": { "message": "En cours d’importation" },
-  "uppercase_alphabetic_ordered_list_3f5aa6b2": {
-    "message": "liste alphabétique ordonnée en majuscules"
-  },
   "uppercase_delta_d4f4bc41": { "message": "Delta majuscule" },
   "uppercase_gamma_86f492e9": { "message": "Gamma majuscule" },
   "uppercase_lambda_c78d8ed4": { "message": "Lambda majuscule" },
@@ -855,9 +871,6 @@ const locale = {
   "uppercase_phi_caa36724": { "message": "Phi majuscule" },
   "uppercase_pi_fcc70f5e": { "message": "Pi majuscule" },
   "uppercase_psi_6395acbe": { "message": "Psi majuscule" },
-  "uppercase_roman_numeral_ordered_list_853f292b": {
-    "message": "liste numérique ordonnée en chiffres romains majuscules"
-  },
   "uppercase_sigma_dbb70e92": { "message": "Sigma majuscule" },
   "uppercase_theta_49afc891": { "message": "Thêta majuscule" },
   "uppercase_upsilon_8c1e623e": { "message": "Upsilon majuscule" },

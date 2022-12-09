@@ -25,6 +25,13 @@ import {useScope} from '@canvas/i18n'
 
 const I18n = useScope('mentions')
 
+const addIgnoreAttributes = node => {
+  node.setAttribute('data-ignore-a11y-check', '')
+  if (node.tagName !== 'IMG') {
+    node.setAttribute('data-ignore-wordcount', 'chars-only')
+  }
+}
+
 const MentionDropdownOption = props => {
   const [isHover, setHover] = useState(false)
   const optionRef = useRef()
@@ -82,8 +89,7 @@ const MentionDropdownOption = props => {
             margin="0 small 0 0"
             size="x-small"
             elementRef={ref => {
-              const img = ref?.querySelector('img')
-              img?.setAttribute('data-ignore-a11y-check', '')
+              ref?.childNodes.forEach(addIgnoreAttributes)
             }}
           />
           <Text
@@ -92,6 +98,8 @@ const MentionDropdownOption = props => {
                 ? 'primary-inverse'
                 : null
             }
+            data-ignore-a11y-check=""
+            data-ignore-wordcount=""
           >
             {props.name}
           </Text>

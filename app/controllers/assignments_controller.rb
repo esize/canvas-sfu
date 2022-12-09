@@ -138,6 +138,7 @@ class AssignmentsController < ApplicationController
     peer_review_available = submission.present? && @assignment.submitted?(submission: submission) && current_user_submission.present? && @assignment.submitted?(submission: current_user_submission)
 
     js_env({
+             a2_student_view: render_a2_student_view?,
              peer_review_mode_enabled: submission.present? && peer_review_mode_enabled,
              peer_review_available: peer_review_available,
              peer_display_name: @assignment.anonymous_peer_reviews? ? I18n.t("Anonymous student") : submission&.user&.name,
@@ -413,8 +414,7 @@ class AssignmentsController < ApplicationController
         # this will set @user_has_google_drive
         user_has_google_drive
 
-        @can_direct_share = @context.grants_right?(@current_user, session, :manage_content) ||
-                            (@context.is_a?(Course) && @context.concluded? && @context.grants_right?(@current_user, session, :read_as_admin))
+        @can_direct_share = @context.grants_right?(@current_user, session, :direct_share)
         @assignment_menu_tools = external_tools_display_hashes(:assignment_menu)
 
         @mark_done = MarkDonePresenter.new(self, @context, params["module_item_id"], @current_user, @assignment)

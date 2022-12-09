@@ -1097,6 +1097,18 @@ class AccountsController < ApplicationController
           end
         end
 
+        # For each inheritable setting, if the value for the account is the same as the inheritable value,
+        # remove it from the settings hash on the account
+        Account.inheritable_settings.each do |setting|
+          next unless params.dig(:account, :settings)
+          next if !Account.account_settings_options[setting].key?(:boolean) && params.dig(:account, :settings, setting) != @account.parent_account&.send(setting)
+          next if value_to_boolean(params.dig(:account, :settings, setting, :locked))
+          next if value_to_boolean(params.dig(:account, :settings, setting, :value)) != @account.parent_account&.send(setting)&.[](:value)
+
+          params[:account][:settings].delete(setting)
+          @account.settings.delete(setting)
+        end
+
         if params[:account][:settings]&.key?(:trusted_referers) &&
            (trusted_referers = params[:account][:settings].delete(:trusted_referers)) &&
            @account.root_account?
@@ -1788,7 +1800,8 @@ class AccountsController < ApplicationController
                                    { sis_syncing: [:value, :locked] }.freeze,
                                    :strict_sis_check, :storage_quota, :students_can_create_courses,
                                    :sub_account_includes, :teachers_can_create_courses, :trusted_referers,
-                                   :turnitin_host, :turnitin_account_id, :users_can_edit_name,
+                                   :turnitin_host, :turnitin_account_id,
+                                   :users_can_edit_name, :users_can_edit_profile, :users_can_edit_comm_channels,
                                    { usage_rights_required: [:value, :locked] }.freeze,
                                    :app_center_access_token, :default_dashboard_view, :force_default_dashboard_view,
                                    :smart_alerts_threshold, :enable_fullstory,

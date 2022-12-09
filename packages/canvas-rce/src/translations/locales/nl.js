@@ -103,9 +103,6 @@ const locale = {
   "choose_caption_file_9c45bc4e": { "message": "Ondertitelingsbestand kiezen" },
   "choose_usage_rights_33683854": { "message": "Gebruiksrechten kiezen..." },
   "circle_484abe63": { "message": "Cirkel" },
-  "circle_unordered_list_9e3a0763": {
-    "message": "ongeordende lijst omcirkelen"
-  },
   "clear_2084585f": { "message": "Wissen" },
   "clear_image_3213fe62": { "message": "Afbeelding wissen" },
   "clear_selected_file_82388e50": {
@@ -191,12 +188,6 @@ const locale = {
   "decorative_type_upper_f2c95e3": { "message": "Decoratief { TYPE_UPPER }" },
   "decrease_indent_d9cf469d": { "message": "Inspringen verkleinen" },
   "deep_purple_bb3e2907": { "message": "Diep paars" },
-  "default_bulleted_unordered_list_47079da8": {
-    "message": "standaard ongeordende opsommingslijst"
-  },
-  "default_numerical_ordered_list_48dd3548": {
-    "message": "standaard geordende numerieke lijst"
-  },
   "definite_integral_fe7ffed1": { "message": "Bepaalde integraal" },
   "degree_symbol_4a823d5f": { "message": "Gradensymbool" },
   "delimiters_4db4840d": { "message": "Scheidingstekens" },
@@ -232,6 +223,7 @@ const locale = {
   "down_and_right_diagonal_arrow_6ea0f460": {
     "message": "Pijl omlaag en rechts diagonaal"
   },
+  "download_filename_2baae924": { "message": "{ filename } downloaden" },
   "downward_arrow_cca52012": { "message": "Pijl met punt omlaag" },
   "downward_pointing_triangle_2a12a601": {
     "message": "Driehoek met punt omlaag"
@@ -248,6 +240,7 @@ const locale = {
   "edit_alt_text_for_this_icon_instance_9c6fc5fd": {
     "message": "Bewerk de alt-tekst voor deze pictograminstantie"
   },
+  "edit_c5fbea07": { "message": "Bewerken" },
   "edit_course_link_5a5c3c59": { "message": "Cursuslink bewerken" },
   "edit_equation_f5279959": { "message": "Vergelijking bewerken" },
   "edit_existing_icon_maker_icon_5d0ebb3f": {
@@ -292,6 +285,9 @@ const locale = {
   "extra_small_9ae33252": { "message": "Extra klein" },
   "extracurricular_icon_67c8ca42": { "message": "Extracurriculair-pictogram" },
   "f_function_fe422d65": { "message": "F (functie)" },
+  "failed_getting_file_contents_e9ea19f4": {
+    "message": "Kan geen bestandsinhoud ophalen"
+  },
   "file_storage_quota_exceeded_b7846cd1": {
     "message": "Opslagquota voor bestanden overschreden"
   },
@@ -378,6 +374,7 @@ const locale = {
   "icon_maker_icons_cc560f7e": { "message": "Pictogrammaker-pictogrammen" },
   "icon_options_7e32746e": { "message": "Pictogramopties" },
   "icon_options_tray_2b407977": { "message": "Houder met pictogramopties" },
+  "icon_preview_1782a1d9": { "message": "Pictogramvoorbeeld" },
   "icon_shape_30b61e7": { "message": "Pictogramvorm" },
   "icon_size_9353edea": { "message": "Pictogramgrootte" },
   "if_left_empty_link_text_will_display_as_course_lin_61087540": {
@@ -448,6 +445,9 @@ const locale = {
   "link_7262adec": { "message": "Link" },
   "link_options_a16b758b": { "message": "Linkopties" },
   "links_14b70841": { "message": "Koppelingen" },
+  "links_to_an_external_site_de74145d": {
+    "message": "Koppelingen naar een externe site."
+  },
   "load_more_35d33c7": { "message": "Meer laden" },
   "loading_25990131": { "message": "Bezig met laden..." },
   "loading_bde52856": { "message": "Bezig met laden" },
@@ -482,6 +482,10 @@ const locale = {
   },
   "medium_5a8e9ead": { "message": "Medium" },
   "middle_27dc1d5": { "message": "Midden" },
+  "minimize_file_preview_da911944": {
+    "message": "Voorbeeld van bestand minimaliseren"
+  },
+  "minimize_video_20aa554b": { "message": "Video minimaliseren" },
   "minus_fd961e2e": { "message": "Min" },
   "minus_plus_3461f637": { "message": "Min/Plus" },
   "misc_3b692ea7": { "message": "Diversen" },
@@ -553,9 +557,6 @@ const locale = {
   "operators_a2ef9a93": { "message": "Operators" },
   "or_9b70ccaa": { "message": "Of" },
   "orange_81386a62": { "message": "Oranje" },
-  "ordered_and_unordered_lists_cfadfc38": {
-    "message": "Geordende en ongeordende lijsten"
-  },
   "other_editor_shortcuts_may_be_found_at_404aba4a": {
     "message": "Andere editorsnelkoppelingen zijn te vinden op"
   },
@@ -587,6 +588,10 @@ const locale = {
   "pi_variant_10f5f520": { "message": "Pi (variant)" },
   "pink_68ad45cb": { "message": "Roze" },
   "pixels_52ece7d1": { "message": "Pixels" },
+  "play_media_comment_35257210": { "message": "Media-opmerking afspelen." },
+  "play_media_comment_by_name_from_createdat_c230123d": {
+    "message": "Media-opmerking van { name } afspelen die gemaakt is op { createdAt }."
+  },
   "plus_d43cd4ec": { "message": "Plus" },
   "plus_minus_f8be2e83": { "message": "Plusminus" },
   "posted_when_a578f5ab": { "message": "Geplaatst: { when }" },
@@ -719,9 +724,6 @@ const locale = {
   "square_superset_strict_fa4262e4": {
     "message": "Superset van vierkantswortel (strikt)"
   },
-  "square_unordered_list_b15ce93b": {
-    "message": "vierkante ongeordende lijst"
-  },
   "star_8d156e09": { "message": "Ster" },
   "steel_blue_14296f08": { "message": "Staalblauw" },
   "styles_2aa721ef": { "message": "Stijlen" },
@@ -741,6 +743,12 @@ const locale = {
   "supported_file_types_srt_or_webvtt_7d827ed": {
     "message": "Ondersteunde bestandstypen: SRT of WebVTT"
   },
+  "switch_to_pretty_html_editor_a3cee15f": {
+    "message": "Overschakelen geavanceerde HTML-editor"
+  },
+  "switch_to_raw_html_editor_f970ae1a": {
+    "message": "Overschakelen naar basis HTML-editor"
+  },
   "switch_to_the_html_editor_146dfffd": {
     "message": "Overschakelen naar de HTML-editor"
   },
@@ -757,6 +765,9 @@ const locale = {
   "text_optional_384f94f7": { "message": "Tekst (optioneel)" },
   "text_position_8df8c162": { "message": "Tekstpositie" },
   "text_size_887c2f6": { "message": "Tekstgrootte" },
+  "the_document_preview_is_currently_being_processed__7d9ea135": {
+    "message": "Het voorbeeld van het document wordt momenteel verwerkt. Probeer het later opnieuw."
+  },
   "the_material_is_in_the_public_domain_279c39a3": {
     "message": "Het materiaal bevindt zich in het openbaar domein"
   },
@@ -782,8 +793,14 @@ const locale = {
     "message": "Dikke pijl wijzend naar rechts"
   },
   "thick_upward_arrow_acd20328": { "message": "Dikke pijl met punt omhoog" },
+  "this_document_cannot_be_displayed_within_canvas_7aba77be": {
+    "message": "Dit document kan niet in Canvas weergegeven worden."
+  },
   "this_equation_cannot_be_rendered_in_basic_view_9b6c07ae": {
     "message": "Deze vergelijking kan niet in basisweergave worden getoond."
+  },
+  "this_image_is_currently_unavailable_25c68857": {
+    "message": "Deze afbeelding is momenteel niet beschikbaar"
   },
   "though_your_video_will_have_the_correct_title_in_t_90e427f3": {
     "message": "Ook al krijgt je video de juiste titel in de browser, de video kon niet worden bijgewerkt in de database."
@@ -827,9 +844,6 @@ const locale = {
   "upload_media_ce31135a": { "message": "Media uploaden" },
   "upload_record_media_e4207d72": { "message": "Media uploaden/opnemen" },
   "uploading_19e8a4e7": { "message": "Bezig met uploaden" },
-  "uppercase_alphabetic_ordered_list_3f5aa6b2": {
-    "message": "geordende lijst op hoofdletters alfabet"
-  },
   "uppercase_delta_d4f4bc41": { "message": "Delta in kapitalen" },
   "uppercase_gamma_86f492e9": { "message": "Gamma in kapitalen" },
   "uppercase_lambda_c78d8ed4": { "message": "Lambda in kapitalen" },
@@ -837,9 +851,6 @@ const locale = {
   "uppercase_phi_caa36724": { "message": "Phi in kapitalen" },
   "uppercase_pi_fcc70f5e": { "message": "Pi in kapitalen" },
   "uppercase_psi_6395acbe": { "message": "Psi in kapitalen" },
-  "uppercase_roman_numeral_ordered_list_853f292b": {
-    "message": "geordende lijst op Romeinse cijfers in hoofdletters"
-  },
   "uppercase_sigma_dbb70e92": { "message": "Sigma in kapitalen" },
   "uppercase_theta_49afc891": { "message": "Theta in kapitalen" },
   "uppercase_upsilon_8c1e623e": { "message": "Ypsilon in kapitalen" },

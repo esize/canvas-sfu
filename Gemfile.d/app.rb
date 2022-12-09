@@ -30,7 +30,7 @@ end
 gem "bootsnap", "1.13.0", require: false
 gem "rails", CANVAS_RAILS == "6.1" ? "6.1.4.6" : "7.0.3"
   gem "tzinfo", "2.0.4"
-gem_override "switchman", "3.1.3"
+gem_override "switchman", "3.2.1"
   gem "guardrail", "3.0.2"
 gem_override "switchman-inst-jobs", "4.0.13"
   gem "irb", "1.4.1"
@@ -91,7 +91,7 @@ gem "inst_statsd", "2.2.0"
   gem "statsd-ruby", "1.4.0", require: false
   gem "aroi", "0.0.7", require: false
   gem "dogstatsd-ruby", "4.8.2"
-gem_override "inst-jobs", "3.1.5"
+gem_override "inst-jobs", "3.1.6"
   gem "fugit", "1.4.0", require: false
     gem "et-orbi", "1.2.4", require: false
 gem "inst-jobs-autoscaling", "2.1.1"

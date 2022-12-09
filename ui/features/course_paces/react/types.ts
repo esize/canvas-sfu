@@ -30,6 +30,7 @@ export interface Enrollment {
   readonly start_at?: string
   readonly completed_course_pace_at?: string
   readonly avatar_url?: string
+  readonly section_id?: string
 }
 
 export interface Enrollments {
@@ -152,13 +153,22 @@ export interface UIState {
   readonly editingBlackoutDates: boolean
 }
 
+export type SortableColumn = 'name' | null
+export type OrderType = 'asc' | 'desc'
+
 export interface PaceContextsState {
   readonly selectedContextType: APIPaceContextTypes
+  readonly selectedContext: PaceContext | null
   readonly entries: PaceContext[]
   readonly page: number
   readonly pageCount: number
   readonly entriesPerRequest: number
   readonly isLoading: boolean
+  readonly defaultPaceContext: PaceContext | null
+  readonly isLoadingDefault: false
+  readonly searchTerm: string
+  readonly sortBy: SortableColumn
+  readonly order: OrderType
 }
 
 export interface StoreState {
@@ -188,9 +198,17 @@ export interface PaceContext {
   applied_pace: Pace | null
 }
 
-export interface PaceContextApiresponse {
+export interface PaceContextsApiResponse {
   pace_contexts: PaceContext[]
   total_entries: number
+}
+
+export interface PaceContextsAsyncActionPayload {
+  result: PaceContextsApiResponse | PaceContext
+  page?: number
+  searchTerm?: string
+  sortBy?: SortableColumn
+  orderType?: OrderType
 }
 
 /* Random types  */

@@ -268,12 +268,8 @@ class ApplicationController < ActionController::Base
 
         cached_features = cached_js_env_account_features
 
-        direct_share_enabled = !@context.is_a?(Group) && @current_user&.can_content_share?
-        if @context.is_a?(Course)
-          direct_share_enabled = @context.grants_right?(@current_user, session, :manage_content) ||
-                                 (@context.concluded? && @context.grants_right?(@current_user, :read_as_admin))
-        end
-        @js_env[:DIRECT_SHARE_ENABLED] = direct_share_enabled
+        @js_env[:DIRECT_SHARE_ENABLED] = @context.respond_to?(:grants_right?) && @context.grants_right?(@current_user, session, :direct_share)
+        @js_env[:CAN_VIEW_CONTENT_SHARES] = @current_user&.can_view_content_shares?
         @js_env[:FEATURES] = cached_features.merge(
           canvas_k6_theme: @context.try(:feature_enabled?, :canvas_k6_theme)
         )
@@ -326,13 +322,13 @@ class ApplicationController < ActionController::Base
   JS_ENV_SITE_ADMIN_FEATURES = %i[
     featured_help_links lti_platform_storage scale_equation_images new_equation_editor buttons_and_icons_cropper
     calendar_series account_level_blackout_dates account_calendar_events rce_ux_improvements render_both_to_do_lists
-    course_paces_redesign course_paces_for_students
+    course_paces_redesign course_paces_for_students rce_better_paste
   ].freeze
   JS_ENV_ROOT_ACCOUNT_FEATURES = %i[
     product_tours files_dnd usage_rights_discussion_topics
     granular_permissions_manage_users create_course_subaccount_picker
     lti_deep_linking_module_index_menu_modal lti_multiple_assignment_deep_linking buttons_and_icons_root_account
-    extended_submission_state wrap_calendar_event_titles scheduled_page_publication
+    extended_submission_state scheduled_page_publication send_usage_metrics
   ].freeze
   JS_ENV_BRAND_ACCOUNT_FEATURES = [
     :embedded_release_notes
@@ -810,20 +806,19 @@ class ApplicationController < ActionController::Base
     require_user
   end
 
+  def csp_frame_ancestors
+    # Allow iframing on all vanity domains as well as the canonical one
+    unless @domain_root_account.nil?
+      HostUrl.context_hosts(@domain_root_account, request.host)
+    end
+  end
+
   def set_response_headers
     # we can't block frames on the files domain, since files domain requests
     # are typically embedded in an iframe in canvas, but the hostname is
     # different
     if !files_domain? && Setting.get("block_html_frames", "true") == "true" && !@embeddable
-      #
-      # Allow iframing on all vanity domains as well as the canonical one
-      #
-      equivalent_domains = []
-      unless @domain_root_account.nil?
-        equivalent_domains = HostUrl.context_hosts(@domain_root_account, request.host)
-      end
-
-      append_to_header("Content-Security-Policy", "frame-ancestors 'self' #{equivalent_domains.join(" ")};")
+      append_to_header("Content-Security-Policy", "frame-ancestors 'self' #{csp_frame_ancestors&.join(" ")};")
     end
     headers["Strict-Transport-Security"] = "max-age=31536000" if request.ssl?
     RequestContext::Generator.store_request_meta(request, @context, @sentry_trace)
@@ -951,7 +946,7 @@ class ApplicationController < ActionController::Base
         return redirect_to login_url(params.permit(:authentication_provider)) if !@files_domain && !@current_user
 
         if @context.is_a?(Course) && @context_enrollment
-          if @context_enrollment.inactive?
+          if @context_enrollment.enrollment_state&.pending?
             start_date = @context_enrollment.available_at
           end
           if @context.claimed?
@@ -2664,8 +2659,9 @@ class ApplicationController < ActionController::Base
     extend Api::V1::Group
     includes ||= []
     data = user_profile_json(profile, viewer, session, includes, profile)
-    data[:can_edit] = viewer == profile.user
-    data[:can_edit_name] = data[:can_edit] && profile.user.user_can_edit_name?
+    data[:can_edit] = viewer == profile.user && profile.user.user_can_edit_profile?
+    data[:can_edit_channels] = viewer == profile.user && profile.user.user_can_edit_comm_channels?
+    data[:can_edit_name] = viewer == profile.user && profile.user.user_can_edit_name?
     data[:can_edit_avatar] = data[:can_edit] && profile.user.avatar_state != :locked
     data[:known_user] = viewer.address_book.known_user(profile.user)
     if data[:known_user] && viewer != profile.user

@@ -248,7 +248,10 @@ module.exports = {
       {
         test: /\.js$/,
         type: 'javascript/auto',
-        include: [path.resolve(canvasDir, 'node_modules/@instructure')],
+        include: [
+          path.resolve(canvasDir, 'node_modules/@instructure'),
+          ...globPlugins('/node_modules/@instructure'),
+        ],
       },
       {
         test: /\.(js|ts|tsx)$/,
@@ -327,8 +330,6 @@ module.exports = {
         include: [
           path.resolve(canvasDir, 'ui'),
           path.resolve(canvasDir, 'spec/coffeescripts'),
-          path.resolve(canvasDir, 'packages/backbone-input-filter-view/src'),
-          path.resolve(canvasDir, 'packages/backbone-input-view/src'),
           ...globPlugins('{app,spec_canvas}/coffeescripts/'),
         ],
         use: ['coffee-loader'],

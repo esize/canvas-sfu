@@ -106,6 +106,16 @@ module CoursePacesCommonPageObject
     @course_pace_module
   end
 
+  def create_section_pace(section)
+    course_section_pace = section_pace_model(section: section)
+    course_section_pace.publish
+  end
+
+  def create_student_pace(student_enrollment)
+    student_pace = student_enrollment_pace_model(student_enrollment: student_enrollment)
+    student_pace.publish
+  end
+
   def disable_course_paces_in_course
     @course.update(enable_course_paces: false)
   end
@@ -142,7 +152,7 @@ module CoursePacesCommonPageObject
 
   def teacher_setup
     feature_setup
-    @course_name = "Course Paces Course"
+    @course_name = "course paces course"
     course_with_teacher(
       account: @account,
       active_course: 1,

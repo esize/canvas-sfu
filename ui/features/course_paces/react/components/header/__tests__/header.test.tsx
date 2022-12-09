@@ -22,6 +22,7 @@ import fetchMock from 'fetch-mock'
 import {renderConnected} from '../../../__tests__/utils'
 import {PRIMARY_PACE, HEADING_STATS_API_RESPONSE} from '../../../__tests__/fixtures'
 import {Header} from '../header'
+import {paceContextsActions} from '../../../actions/pace_contexts'
 
 const defaultProps = {
   context_type: 'Course',
@@ -29,6 +30,7 @@ const defaultProps = {
   newPace: false,
   isBlueprintLocked: false,
   setIsBlueprintLocked: () => {},
+  fetchDefaultPaceContext: paceContextsActions.fetchDefaultPaceContext,
 }
 
 describe('Course paces header', () => {
@@ -120,7 +122,7 @@ describe('Course paces header', () => {
 
     it('renders the proper button for preexisting pace', () => {
       const {getByRole} = renderConnected(<Header {...defaultProps} coursePace={PRIMARY_PACE} />)
-      const getStartedButton = getByRole('button', {name: 'Edit Default Pace'})
+      const getStartedButton = getByRole('button', {name: 'Edit Default Course Pace'})
       expect(getStartedButton).toBeInTheDocument()
     })
 
@@ -128,7 +130,7 @@ describe('Course paces header', () => {
       const {getByRole} = renderConnected(
         <Header {...defaultProps} coursePace={{id: undefined, context_type: 'Course'}} />
       )
-      const getStartedButton = getByRole('button', {name: 'Create Default Pace'})
+      const getStartedButton = getByRole('button', {name: 'Create Course Pace'})
       expect(getStartedButton).toBeInTheDocument()
     })
   })

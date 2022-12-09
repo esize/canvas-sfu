@@ -15,8 +15,8 @@
  * You should have received a copy of the GNU Affero General Public License along
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-import {arrayOf, bool, func, instanceOf, shape, string} from 'prop-types'
-import React, {Suspense} from 'react'
+import {bool, func, instanceOf, shape, string} from 'prop-types'
+import React, {Suspense, useEffect, useState} from 'react'
 import ReactDOM from 'react-dom'
 import {isEqual} from 'lodash'
 
@@ -28,35 +28,58 @@ import {px} from '@instructure/ui-utils'
 import {ProgressBar} from '@instructure/ui-progress'
 import {Text} from '@instructure/ui-text'
 
+import formatMessage from './format-message'
 import {ACCEPTED_FILE_TYPES} from './acceptedMediaFileTypes'
 import LoadingIndicator from './shared/LoadingIndicator'
 import saveMediaRecording, {saveClosedCaptions} from './saveMediaRecording'
 import translationShape from './translationShape'
+import getTranslations from './getTranslations'
 import {CC_FILE_MAX_BYTES} from './shared/constants'
+
+// This component will guarantee formatMessage is initialized with the user
+// locale's translations before rendering the actual UploadMedia component.
+// This lets clients simply import UploadMedia and render it w/o having to
+// remember to call something else to initalize canvas-media's i18n
+// TODO: convert UploadMedia to a function component and the getTranslations
+//       bit into a hook
+export default function UploadMedia(props) {
+  const [translationsLoaded, setTranslationsLoaded] = useState(false)
+
+  useEffect(() => {
+    getTranslations(props.userLocale)
+      .catch(() => {
+        // ignore and fallback to english
+      })
+      .finally(() => {
+        setTranslationsLoaded(true)
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  if (translationsLoaded) {
+    return <UploadMediaModal {...props} />
+  } else {
+    return <div>{formatMessage('Loading...')}</div>
+  }
+}
 
 const ComputerPanel = React.lazy(() => import('./ComputerPanel'))
 const MediaRecorder = React.lazy(() => import('./MediaRecorder'))
 
 export const PANELS = {
   COMPUTER: 0,
-  RECORD: 1
+  RECORD: 1,
 }
 
-export default class UploadMedia extends React.Component {
+export class UploadMediaModal extends React.Component {
   static propTypes = {
     disableSubmitWhileUploading: bool,
-    languages: arrayOf(
-      shape({
-        id: string,
-        label: string
-      })
-    ),
     liveRegion: func,
     rcsConfig: shape({
       contextId: string,
       contextType: string,
       origin: string,
-      headers: shape({Authorization: string})
+      headers: shape({Authorization: string}),
     }),
     onStartUpload: func,
     onUploadComplete: func,
@@ -64,15 +87,17 @@ export default class UploadMedia extends React.Component {
     open: bool,
     tabs: shape({
       record: bool,
-      upload: bool
+      upload: bool,
     }),
     uploadMediaTranslations: translationShape,
     // for testing
-    computerFile: instanceOf(File)
+    computerFile: instanceOf(File),
+    userLocale: string,
   }
 
   static defaultProps = {
-    disableSubmitWhileUploading: false
+    disableSubmitWhileUploading: false,
+    userLocale: 'en',
   }
 
   constructor(props) {
@@ -92,7 +117,7 @@ export default class UploadMedia extends React.Component {
       computerFile: props.computerFile || null,
       subtitles: [],
       recordedFile: null,
-      modalBodySize: {width: NaN, height: NaN}
+      modalBodySize: {width: NaN, height: NaN},
     }
 
     this.modalBodyRef = React.createRef()
@@ -207,6 +232,10 @@ export default class UploadMedia extends React.Component {
       // never set in the constructor, or the selectedPanel is invalid
       // given the available tabs. Attempt to infer the selected panel
       // based on the new tabs list
+      // ** This is an eslint error which I don't have the context
+      // ** to address working my current ticket. Ignore for now
+      // ** since it's been working for a while now.
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({selectedPanel: this.inferSelectedPanel(this.props.tabs)})
     }
   }
@@ -234,7 +263,7 @@ export default class UploadMedia extends React.Component {
       DRAG_FILE_TEXT,
       LOADING_MEDIA,
       RECORD_PANEL_TITLE,
-      MEDIA_RECORD_NOT_AVAILABLE
+      MEDIA_RECORD_NOT_AVAILABLE,
     } = this.props.uploadMediaTranslations.UploadMediaStrings
 
     if (!this.props.open) {
@@ -269,7 +298,7 @@ export default class UploadMedia extends React.Component {
                 label={DRAG_FILE_TEXT}
                 uploadMediaTranslations={this.props.uploadMediaTranslations}
                 accept={ACCEPTED_FILE_TYPES}
-                languages={this.props.languages}
+                userLocale={this.props.userLocale}
                 liveRegion={this.props.liveRegion}
                 updateSubtitles={subtitles => {
                   this.setState({subtitles})
@@ -302,7 +331,7 @@ export default class UploadMedia extends React.Component {
     this.setState({
       hasUploadedFile: false,
       selectedPanel: this.inferSelectedPanel(this.props.tabs),
-      computerFile: null
+      computerFile: null,
     })
     this.props.onDismiss()
   }

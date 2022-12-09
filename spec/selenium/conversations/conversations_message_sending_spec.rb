@@ -37,7 +37,7 @@ describe "conversations new" do
   end
 
   describe "message sending" do
-    context "when react_inbox feature flag is off" do
+    context "when react_inbox feature flag is off", ignore_js_errors: true do
       before do
         Account.default.set_feature_flag! :react_inbox, "off"
       end
@@ -325,6 +325,81 @@ describe "conversations new" do
         Account.default.enable_feature! :react_inbox
       end
 
+      context "date restricted courses" do
+        before do
+          @course.restrict_enrollments_to_course_dates = true
+          @course.restrict_student_past_view = true
+          @course.restrict_student_future_view = true
+          @course.save!
+        end
+
+        context "soft concluded course" do
+          before do
+            @course.conclude_at = 1.day.ago
+            @course.start_at = 2.days.ago
+            @course.save!
+          end
+
+          it "does not allow a student to create a new conversation when course is soft concluded" do
+            user_session(@s1)
+
+            get "/conversations"
+            f("button[data-testid='compose']").click
+            f("input[placeholder='Select Course']").click
+            fj("li:contains('#{@course.name}')").click
+            ff("input[aria-label='Address Book']")[1].click
+            wait_for_ajaximations
+            fj("li:contains('Teachers')").click
+            wait_for_ajaximations
+            fj("li:contains('#{@teacher.name}')").click
+            f("textarea[data-testid='message-body']").send_keys "Message to Teacher in soft concluded course"
+            fj("button:contains('Send')").click
+            wait_for_ajaximations
+
+            expect(fj("div:contains('Course concluded, unable to send messages')")).to be_present
+          end
+
+          it "does not allow a teacher to create a new conversation when course is soft concluded" do
+            user_session(@teacher)
+
+            get "/conversations"
+            f("button[data-testid='compose']").click
+            f("input[placeholder='Select Course']").click
+            fj("li:contains('#{@course.name}')").click
+            ff("input[aria-label='Address Book']")[1].click
+            wait_for_ajaximations
+            fj("li:contains('Students')").click
+            wait_for_ajaximations
+            fj("li:contains('#{@s1.name}')").click
+            f("textarea[data-testid='message-body']").send_keys "Message to Teacher in soft concluded course"
+            fj("button:contains('Send')").click
+            wait_for_ajaximations
+
+            expect(fj("div:contains('Course concluded, unable to send messages')")).to be_present
+          end
+
+          it "does not allow an observer to create a new conversation when course is soft concluded" do
+            observer_in_course(name: "Collins Ryan", active_all: true, associated_user_id: @s1).user
+
+            user_session(@observer)
+            get "/conversations"
+            f("button[data-testid='compose']").click
+            f("input[placeholder='Select Course']").click
+            fj("li:contains('#{@course.name}')").click
+            ff("input[aria-label='Address Book']")[1].click
+            wait_for_ajaximations
+            fj("li:contains('Students')").click
+            wait_for_ajaximations
+            fj("li:contains('#{@s1.name}')").click
+            f("textarea[data-testid='message-body']").send_keys "Message to Teacher in soft concluded course"
+            fj("button:contains('Send')").click
+            wait_for_ajaximations
+
+            expect(fj("div:contains('Course concluded, unable to send messages')")).to be_present
+          end
+        end
+      end
+
       context "when user_id and user_name url params exist" do
         it "properly sends a message based on url params" do
           site_admin_logged_in
@@ -348,17 +423,21 @@ describe "conversations new" do
         context "for teacher" do
           before do
             user_session(@teacher)
-            get "/conversations"
-            open_react_compose_modal_addressbook
           end
 
           it "correctly shows course options", priority: "1" do
+            get "/conversations"
+            open_react_compose_modal_addressbook
+
             # back, all in course, Teachers, Students, Student Groups
             expect(ff("div[data-testid='address-book-item']").count).to eq(5)
             expect(fj("div[data-testid='address-book-item']:contains('All in #{@course.name}')")).to be_present
           end
 
           it "correctly shows Teachers option", priority: "1" do
+            get "/conversations"
+            open_react_compose_modal_addressbook
+
             fj("div[data-testid='address-book-item']:contains('Teachers')").click
             wait_for_ajaximations
             # back, all in Teachers, @Teacher name, @t2 name
@@ -366,7 +445,32 @@ describe "conversations new" do
             expect(fj("div[data-testid='address-book-item']:contains('All in Teachers')")).to be_present
           end
 
+          it "correctly shows Observers option" do
+            observer_in_course(name: "Scott Summers", active_all: true, associated_user_id: @s1).user
+            o2 = observer_in_course(name: "Collins Ryan", active_all: true, associated_user_id: @s2).user
+
+            enrollment = @course.enroll_user(o2, "ObserverEnrollment")
+            enrollment.associated_user = @s3
+            enrollment.workflow_state = "active"
+            enrollment.save
+
+            get "/conversations"
+            open_react_compose_modal_addressbook
+
+            fj("div[data-testid='address-book-item']:contains('Observers')").click
+            wait_for_ajaximations
+            # back, all in Observers, @Observer1 Name, @Observer2 Name
+            expect(ff("div[data-testid='address-book-item']").count).to eq(4)
+            expect(fj("div[data-testid='address-book-item']:contains('Scott Summers')")).to be_present
+            expect(fj("div[data-testid='address-book-item']:contains('Observing: first student')")).to be_present
+            expect(fj("div[data-testid='address-book-item']:contains('Collins Ryan')")).to be_present
+            expect(fj("div[data-testid='address-book-item']:contains('Observing: second student, third student')")).to be_present
+          end
+
           it "correctly shows students option", priority: "1" do
+            get "/conversations"
+            open_react_compose_modal_addressbook
+
             fj("div[data-testid='address-book-item']:contains('Students')").click
             wait_for_ajaximations
             # back, all in Students, @s1 name, @s2 name, @s3 name
@@ -376,6 +480,9 @@ describe "conversations new" do
 
           # There is no option to send a message to all groups
           it "correctly shows student groups option", priority: "1" do
+            get "/conversations"
+            open_react_compose_modal_addressbook
+
             fj("div[data-testid='address-book-item']:contains('Student Groups')").click
             wait_for_ajaximations
 
@@ -384,6 +491,9 @@ describe "conversations new" do
           end
 
           it "correctly shows student group option", priority: "1" do
+            get "/conversations"
+            open_react_compose_modal_addressbook
+
             fj("div[data-testid='address-book-item']:contains('Student Groups')").click
             wait_for_ajaximations
             fj("div[data-testid='address-book-item']:contains('#{@group.name}')").click
@@ -538,6 +648,56 @@ describe "conversations new" do
         fj("button:contains('Send')").click
         wait_for_ajaximations
         expect(@s2.conversations.last.conversation.conversation_messages.last.body).to eq "sent to everyone in the account level group"
+      end
+
+      describe "include observers button" do
+        before do
+          @observer = user_factory(active_all: true, active_state: "active", name: "an observer")
+          observer_enrollment = @course.enroll_user(@observer, "ObserverEnrollment", enrollment_state: "active")
+          observer_enrollment.update_attribute(:associated_user_id, @s1.id)
+
+          @course.enroll_user(@observer, "ObserverEnrollment", section: @section2, enrollment_state: "active")
+          user_session(@teacher)
+          get "/conversations"
+          open_react_compose_modal_addressbook
+        end
+
+        it "includes correct observers when clicked" do
+          ff("input[aria-label='Address Book']")[1].click
+          fj("div[data-testid='address-book-item']:contains('All in #{@course.name}')").click
+          f("button[data-testid='include-observer-button']").click
+          wait_for_ajaximations
+
+          expect(fj("span[data-testid='address-book-tag'] button:contains(#{@observer.name})")).to be_present
+          expect(ff("[data-testid='address-book-tag']").count).to eq 2
+        end
+
+        it "does not include duplicate observers when clicked" do
+          ff("input[aria-label='Address Book']")[1].click
+          fj("div[data-testid='address-book-item']:contains('All in #{@course.name}')").click
+          f("button[data-testid='include-observer-button']").click
+          wait_for_ajaximations
+
+          expect(fj("span[data-testid='address-book-tag'] button:contains(#{@observer.name})")).to be_present
+          expect(ff("[data-testid='address-book-tag']").count).to eq 2
+
+          f("button[data-testid='include-observer-button']").click
+          wait_for_ajaximations
+
+          expect(ff("[data-testid='address-book-tag']").count).to eq 2
+        end
+
+        it "renders an alert when no observers are added" do
+          ff("input[aria-label='Address Book']")[1].click
+          fj("div[data-testid='address-book-item']:contains('Students')").click
+          wait_for_ajaximations
+          fj("div[data-testid='address-book-item']:contains('#{@s2.name}')").click
+          f("button[data-testid='include-observer-button']").click
+          wait_for_ajaximations
+          fj("div:contains('Selected recipient(s) do not have assigned Observers')").click
+
+          expect(ff("[data-testid='address-book-tag']").count).to eq 1
+        end
       end
 
       context "sent scope" do

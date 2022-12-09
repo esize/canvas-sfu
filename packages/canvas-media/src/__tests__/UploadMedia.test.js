@@ -16,9 +16,12 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import {render, fireEvent} from '@testing-library/react'
-import UploadMedia from '../index'
+import UploadMedia, {UploadMediaModal} from '../UploadMedia'
+import getTranslations from '../getTranslations'
+
+jest.mock('../getTranslations', () => jest.fn(locale => Promise.resolve({[locale]: {}})))
 
 const uploadMediaTranslations = {
   UploadMediaStrings: {
@@ -34,32 +37,42 @@ const uploadMediaTranslations = {
     UPLOADING_ERROR: 'Upload Error',
     UPLOAD_MEDIA_LABEL: 'Upload Media',
     MEDIA_RECORD_NOT_AVAILABLE: 'Record not available',
-    PROGRESS_LABEL: 'Making progress'
+    PROGRESS_LABEL: 'Making progress',
+  },
+}
+
+function makeProps(overrideProps = {}) {
+  return {
+    rcsConfig: {
+      contextType: 'course',
+      contextId: '17',
+      origin: 'http://host:port',
+      jwt: 'whocares',
+    },
+    open: true,
+    liveRegion: () => null,
+    onStartUpload: () => {},
+    onComplete: () => {},
+    onDismiss: () => {},
+    tabs: {record: false, upload: true},
+    uploadMediaTranslations,
+    userLocale: 'en',
+    ...overrideProps,
   }
 }
 
 function renderComponent(overrideProps = {}) {
-  return render(
-    <UploadMedia
-      rcsConfig={{
-        contextType: 'course',
-        contextId: '17',
-        origin: 'http://host:port',
-        jwt: 'whocares'
-      }}
-      open={true}
-      liveRegion={() => null}
-      onStartUpload={() => {}}
-      onComplete={() => {}}
-      onDismiss={() => {}}
-      tabs={{record: false, upload: true}}
-      uploadMediaTranslations={uploadMediaTranslations}
-      {...overrideProps}
-    />
-  )
+  return render(<UploadMediaModal {...makeProps(overrideProps)} />)
 }
 
 describe('Upload Media', () => {
+  describe('default export', () => {
+    it('loads translations', () => {
+      render(<UploadMedia {...makeProps({userLocale: 'es'})} />)
+      expect(getTranslations).toHaveBeenCalledWith('es')
+    })
+  })
+
   describe('renders the selected tabs', () => {
     it('renders Computer', () => {
       const {getByText} = renderComponent({tabs: {record: false, upload: true}})
@@ -82,7 +95,7 @@ describe('Upload Media', () => {
     it('does not change selectedPanel if there is only one tab visible', () => {
       const {getByRole} = renderComponent({tabs: {record: false, upload: true}})
       const tab = getByRole('tab', {name: 'Computer'})
-      const setStateSpy = jest.spyOn(UploadMedia.prototype, 'setState')
+      const setStateSpy = jest.spyOn(UploadMediaModal.prototype, 'setState')
       fireEvent.click(tab)
       expect(setStateSpy).not.toHaveBeenCalledWith(expect.objectContaining({selectedPanel: 0}))
       setStateSpy.mockRestore()
@@ -91,7 +104,7 @@ describe('Upload Media', () => {
     it('changes selectedPanel if there are multiple tabs visible', () => {
       const {getByRole} = renderComponent({tabs: {record: true, upload: true}})
       const tab = getByRole('tab', {name: 'Computer'})
-      const setStateSpy = jest.spyOn(UploadMedia.prototype, 'setState')
+      const setStateSpy = jest.spyOn(UploadMediaModal.prototype, 'setState')
       fireEvent.click(tab)
       expect(setStateSpy).toHaveBeenCalledWith(expect.objectContaining({selectedPanel: 0}))
       setStateSpy.mockRestore()
@@ -104,7 +117,7 @@ describe('Upload Media', () => {
     it('sets the selectedPanel to "Computer" when "Computer" is the only visible tab', () => {
       const {getAllByRole} = renderComponent({tabs: {record: false, upload: true}})
       const closeButton = getAllByRole('button', {name: 'Close'})[0]
-      const setStateSpy = jest.spyOn(UploadMedia.prototype, 'setState')
+      const setStateSpy = jest.spyOn(UploadMediaModal.prototype, 'setState')
       fireEvent.click(closeButton)
       expect(setStateSpy).toHaveBeenCalledWith(
         expect.objectContaining({selectedPanel: computerPanel})
@@ -115,7 +128,7 @@ describe('Upload Media', () => {
     it('sets the selectedPanel to "Computer" when both tabs are visible', () => {
       const {getAllByRole} = renderComponent({tabs: {record: true, upload: true}})
       const closeButton = getAllByRole('button', {name: 'Close'})[0]
-      const setStateSpy = jest.spyOn(UploadMedia.prototype, 'setState')
+      const setStateSpy = jest.spyOn(UploadMediaModal.prototype, 'setState')
       fireEvent.click(closeButton)
       expect(setStateSpy).toHaveBeenCalledWith(
         expect.objectContaining({selectedPanel: computerPanel})
@@ -126,16 +139,16 @@ describe('Upload Media', () => {
 
   describe('when the tabs prop changes', () => {
     it('recomputes the selected panel', () => {
-      const setStateSpy = jest.spyOn(UploadMedia.prototype, 'setState')
+      const setStateSpy = jest.spyOn(UploadMediaModal.prototype, 'setState')
 
       // Initial render with no tabs
       const {rerender} = render(
-        <UploadMedia
+        <UploadMediaModal
           rcsConfig={{
             contextType: 'course',
             contextId: '17',
             origin: 'http://host:port',
-            jwt: 'whocares'
+            jwt: 'whocares',
           }}
           open={true}
           liveRegion={() => null}
@@ -144,17 +157,18 @@ describe('Upload Media', () => {
           onDismiss={() => {}}
           tabs={{record: false, upload: false}}
           uploadMediaTranslations={uploadMediaTranslations}
+          userLocale="en"
         />
       )
 
       // rerender, setting the record tab to true
       rerender(
-        <UploadMedia
+        <UploadMediaModal
           rcsConfig={{
             contextType: 'course',
             contextId: '17',
             origin: 'http://host:port',
-            jwt: 'whocares'
+            jwt: 'whocares',
           }}
           open={true}
           liveRegion={() => null}
@@ -163,6 +177,7 @@ describe('Upload Media', () => {
           onDismiss={() => {}}
           tabs={{record: false, upload: true}}
           uploadMediaTranslations={uploadMediaTranslations}
+          userLocale="en"
         />
       )
 
@@ -172,16 +187,16 @@ describe('Upload Media', () => {
     })
 
     it('recomputes the selected panel when the current selected panel is no longer visible', () => {
-      const setStateSpy = jest.spyOn(UploadMedia.prototype, 'setState')
+      const setStateSpy = jest.spyOn(UploadMediaModal.prototype, 'setState')
 
       // Initial render with upload tab
       const {rerender} = render(
-        <UploadMedia
+        <UploadMediaModal
           rcsConfig={{
             contextType: 'course',
             contextId: '17',
             origin: 'http://host:port',
-            jwt: 'whocares'
+            jwt: 'whocares',
           }}
           open={true}
           liveRegion={() => null}
@@ -190,17 +205,18 @@ describe('Upload Media', () => {
           onDismiss={() => {}}
           tabs={{record: false, upload: true}}
           uploadMediaTranslations={uploadMediaTranslations}
+          userLocale="en"
         />
       )
 
       // rerender, showing the record tab and hiding the upload tab
       rerender(
-        <UploadMedia
+        <UploadMediaModal
           rcsConfig={{
             contextType: 'course',
             contextId: '17',
             origin: 'http://host:port',
-            jwt: 'whocares'
+            jwt: 'whocares',
           }}
           open={true}
           liveRegion={() => null}
@@ -209,6 +225,7 @@ describe('Upload Media', () => {
           onDismiss={() => {}}
           tabs={{record: true, upload: false}}
           uploadMediaTranslations={uploadMediaTranslations}
+          userLocale="en"
         />
       )
 
@@ -224,7 +241,7 @@ describe('Upload Media', () => {
     beforeEach(() => {
       computerFile = new File(['bits'], 'dummy-video.mp4', {
         lastModifiedDate: 1568991600840,
-        type: 'video/mp4'
+        type: 'video/mp4',
       })
     })
 
@@ -243,7 +260,7 @@ describe('Upload Media', () => {
         disableSubmitWhileUploading: false,
         onStartUpload: jest.fn(),
         tabs: {upload: true},
-        computerFile
+        computerFile,
       })
 
       fireEvent.click(getByText('Submit'))
@@ -255,7 +272,7 @@ describe('Upload Media', () => {
         disableSubmitWhileUploading: true,
         onStartUpload: jest.fn(),
         tabs: {upload: true},
-        computerFile
+        computerFile,
       })
 
       fireEvent.click(getByText('Submit'))
@@ -265,13 +282,13 @@ describe('Upload Media', () => {
     it('is disabled while uploading if file title is empty', () => {
       computerFile = new File(['bits'], 'dummy-video.mp4', {
         lastModifiedDate: 1568991600840,
-        type: 'video/mp4'
+        type: 'video/mp4',
       })
       const {getByPlaceholderText, getByText} = renderComponent({
         disableSubmitWhileUploading: false,
         onStartUpload: jest.fn(),
         tabs: {upload: true},
-        computerFile
+        computerFile,
       })
       const submitButton = getByText('Submit').closest('button')
       const titleInput = getByPlaceholderText('File name')
@@ -291,8 +308,8 @@ describe('Upload Media', () => {
         tabs: {upload: true},
         computerFile: new File(['bits'], 'dummy-video.mp4', {
           lastModifiedDate: 1568991600840,
-          type: 'video/mp4'
-        })
+          type: 'video/mp4',
+        }),
       })
 
       fireEvent.click(getByText('Submit'))

@@ -30,8 +30,9 @@ import {
   Sections,
   UIState,
   PaceContextsState,
-  PaceContextApiresponse,
+  PaceContextsApiResponse,
   StoreState,
+  PaceContext,
 } from '../types'
 
 window.ENV.TIMEZONE = 'America/Denver'
@@ -159,6 +160,7 @@ export const PACE_MODULE_2: Module = {
 
 export const PRIMARY_PACE: CoursePace = {
   id: '1',
+  name: 'Course 1',
   course_id: COURSE.id,
   course_section_id: undefined,
   user_id: undefined,
@@ -188,7 +190,21 @@ export const HEADING_STATS_API_RESPONSE = {
   ],
 }
 
-export const PACE_CONTEXTS_SECTIONS_RESPONSE: PaceContextApiresponse = {
+export const COURSE_PACE_CONTEXT: PaceContext = {
+  name: 'Course 1',
+  type: 'Course',
+  item_id: '78',
+  associated_section_count: 1,
+  associated_student_count: 31,
+  applied_pace: {
+    name: 'Course 1',
+    type: 'Course',
+    duration: 6,
+    last_modified: '2022-10-17T23:12:24Z',
+  },
+}
+
+export const PACE_CONTEXTS_SECTIONS_RESPONSE: PaceContextsApiResponse = {
   pace_contexts: [
     {
       name: 'A-C',
@@ -233,7 +249,26 @@ export const PACE_CONTEXTS_SECTIONS_RESPONSE: PaceContextApiresponse = {
   total_entries: 3,
 }
 
-export const PACE_CONTEXTS_STUDENTS_RESPONSE: PaceContextApiresponse = {
+export const PACE_CONTEXTS_SECTIONS_SEARCH_RESPONSE: PaceContextsApiResponse = {
+  pace_contexts: [
+    {
+      name: 'A-C',
+      type: 'CourseSection',
+      item_id: '78',
+      associated_section_count: 1,
+      associated_student_count: 21,
+      applied_pace: {
+        name: 'Main',
+        type: 'Course',
+        duration: 6,
+        last_modified: '2022-10-17T23:12:24Z',
+      },
+    },
+  ],
+  total_entries: 1,
+}
+
+export const PACE_CONTEXTS_STUDENTS_RESPONSE: PaceContextsApiResponse = {
   pace_contexts: [
     {
       name: 'Jon',
@@ -333,11 +368,17 @@ export const STUDENT_PACE: CoursePace = {
 
 export const PACE_CONTEXTS_DEFAULT_STATE: PaceContextsState = {
   selectedContextType: 'section',
+  selectedContext: PACE_CONTEXTS_SECTIONS_RESPONSE.pace_contexts[0],
   entries: PACE_CONTEXTS_SECTIONS_RESPONSE.pace_contexts,
   pageCount: 1,
   page: 1,
   entriesPerRequest: 10,
   isLoading: true,
+  searchTerm: '',
+  order: 'asc',
+  sortBy: 'name',
+  isLoadingDefault: false,
+  defaultPaceContext: COURSE_PACE_CONTEXT,
 }
 
 export const PROGRESS_RUNNING = {

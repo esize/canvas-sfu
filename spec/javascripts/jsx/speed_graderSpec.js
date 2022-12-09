@@ -19,12 +19,12 @@
 import $ from 'jquery'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import _ from 'underscore'
 
 import SpeedGrader from 'ui/features/speed_grader/jquery/speed_grader'
 import SpeedGraderAlerts from 'ui/features/speed_grader/react/SpeedGraderAlerts'
 import SpeedGraderHelpers from 'ui/features/speed_grader/jquery/speed_grader_helpers'
 import JQuerySelectorCache from 'ui/features/speed_grader/JQuerySelectorCache'
+import QuizzesNextSpeedGrading from 'ui/features/speed_grader/QuizzesNextSpeedGrading'
 import moxios from 'moxios'
 import fakeENV from 'helpers/fakeENV'
 import numberHelper from '@canvas/i18n/numberHelper'
@@ -49,6 +49,16 @@ const requiredDOMFixtures = `
   <div id="speed_grader_hidden_submission_pill_mount_point"></div>
   <div id="grades-loading-spinner"></div>
   <div id="grading"></div>
+  <div id="settings_form">
+    <select id="eg_sort_by" name="eg_sort_by">
+      <option value="alphabetically"></option>
+      <option value="submitted_at"></option>
+      <option value="submission_status"></option>
+    </select>
+    <input id="hide_student_names" type="checkbox" name="hide_student_names">
+    <input id="enable_speedgrader_grade_by_question" type="checkbox" name="enable_speedgrader_grade_by_question">
+    <button type="submit" class="submit_button"></button>
+  </div>
 `
 
 let $div
@@ -67,6 +77,8 @@ function teardownFixtures() {
   // fast remove
   while (fixtures.firstChild) fixtures.removeChild(fixtures.firstChild)
 }
+
+const awhile = () => new Promise(resolve => setTimeout(resolve, 2))
 
 QUnit.module('SpeedGrader', rootHooks => {
   let history
@@ -99,6 +111,101 @@ QUnit.module('SpeedGrader', rootHooks => {
   rootHooks.afterEach(() => {
     teardownFixtures()
     fakeENV.teardown()
+  })
+
+  QUnit.module('SpeedGrader options menu', hooks => {
+    let saveUserSettings
+
+    hooks.beforeEach(() => {
+      window.ENV = {
+        ...window.ENV,
+        settings_url: 'user-settings-url',
+        assignment_id: '123',
+        course_id: '456',
+        help_url: 'example.com',
+        show_help_menu_item: false,
+        force_anonymous_grading: false,
+        GRADE_BY_QUESTION: false,
+      }
+      sandbox.stub(userSettings, 'get')
+      userSettings.get.withArgs('eg_hide_student_names').returns(false)
+      userSettings.get.withArgs('eg_sort_by').returns('alphabetically')
+      saveUserSettings = Promise.resolve()
+      sandbox.stub($, 'post').withArgs('user-settings-url').returns(saveUserSettings)
+      sandbox.stub(window, 'addEventListener')
+      SpeedGrader.setup()
+      window.jsonData.context = {}
+    })
+
+    hooks.afterEach(() => {
+      document.getElementById('hide_student_names').checked = false
+      document.getElementById('eg_sort_by').selectedIndex = 0
+      document.getElementById('enable_speedgrader_grade_by_question').checked = false
+      delete window.jsonData
+    })
+
+    test('refreshes the page on submit for classic quizzes', () => {
+      window.jsonData.context.quiz = {anonymous_submissions: false}
+      $('#settings_form').submit()
+      return saveUserSettings.then(() => {
+        ok(SpeedGraderHelpers.reloadPage.calledOnce)
+      })
+    })
+
+    test('refreshes the page on submit when "hide names" changes', () => {
+      document.getElementById('hide_student_names').checked = true
+      $('#settings_form').submit()
+      return saveUserSettings.then(() => {
+        ok(SpeedGraderHelpers.reloadPage.calledOnce)
+      })
+    })
+
+    test('refreshes the page on submit when "sort by" changes', () => {
+      document.getElementById('eg_sort_by').selectedIndex = 1
+      $('#settings_form').submit()
+      return saveUserSettings.then(() => {
+        ok(SpeedGraderHelpers.reloadPage.calledOnce)
+      })
+    })
+
+    test('does not refresh the page on submit when "grade by question" changes', () => {
+      document.getElementById('enable_speedgrader_grade_by_question').checked = true
+      $('#settings_form').submit()
+      return saveUserSettings.then(() => {
+        ok(SpeedGraderHelpers.reloadPage.notCalled)
+      })
+    })
+
+    test('does not consider "sort by" changed if it has never been stored in localStorage', () => {
+      userSettings.get.withArgs('eg_sort_by').returns(undefined)
+      document.getElementById('enable_speedgrader_grade_by_question').checked = true
+      $('#settings_form').submit()
+      return saveUserSettings.then(() => {
+        ok(SpeedGraderHelpers.reloadPage.notCalled)
+      })
+    })
+
+    test('sends a postMessage only when "grade_by_question" changes', () => {
+      const postMessageStub = sandbox.stub(
+        QuizzesNextSpeedGrading,
+        'postGradeByQuestionChangeMessage'
+      )
+      const checkbox = document.getElementById('enable_speedgrader_grade_by_question')
+      const form = $('#settings_form')
+
+      checkbox.checked = true
+      form.submit()
+      ok(postMessageStub.calledOnceWithExactly(sinon.match.any, true))
+
+      postMessageStub.resetHistory()
+      checkbox.checked = false
+      form.submit()
+      ok(postMessageStub.calledOnceWithExactly(sinon.match.any, false))
+
+      postMessageStub.resetHistory()
+      form.submit()
+      ok(postMessageStub.notCalled)
+    })
   })
 
   QUnit.module('SpeedGrader#showDiscussion', {
@@ -188,46 +295,37 @@ QUnit.module('SpeedGrader', rootHooks => {
     },
   })
 
-  test('showDiscussion should not show private comments for a group assignment', () => {
+  test('showDiscussion should not show private comments for a group assignment', async () => {
     const originalKalturaSettings = INST.kalturaSettings
     INST.kalturaSettings = {resource_domain: 'example.com', partner_id: 'asdf'}
-    const deferFake = sinon.stub(_, 'defer').callsFake((func, elem, size, keepOriginalText) => {
-      func(elem, size, keepOriginalText)
-    })
     window.jsonData.GROUP_GRADING_MODE = true
     SpeedGrader.EG.currentStudent.submission.submission_comments[0].group_comment_id = null
     SpeedGrader.EG.showDiscussion()
+    await awhile()
     sinon.assert.notCalled($.fn.append)
-    deferFake.restore()
     INST.kalturaSettings = originalKalturaSettings
   })
 
-  test('showDiscussion should show group comments for group assignments', () => {
+  test('showDiscussion should show group comments for group assignments', async () => {
     const originalKalturaSettings = INST.kalturaSettings
     INST.kalturaSettings = {resource_domain: 'example.com', partner_id: 'asdf'}
-    const deferFake = sinon.stub(_, 'defer').callsFake((func, elem, size, keepOriginalText) => {
-      func(elem, size, keepOriginalText)
-    })
     window.jsonData.GROUP_GRADING_MODE = true
     SpeedGrader.EG.currentStudent.submission.submission_comments[0].group_comment_id = 'hippo'
     SpeedGrader.EG.showDiscussion()
+    await awhile()
     strictEqual(document.querySelector('.comment').innerText, 'a comment!')
-    deferFake.restore()
     INST.kalturaSettings = originalKalturaSettings
   })
 
-  test('thumbnails of media comments have screenreader text', () => {
+  test('thumbnails of media comments have screenreader text', async () => {
     const originalKalturaSettings = INST.kalturaSettings
     INST.kalturaSettings = {resource_domain: 'example.com', partner_id: 'asdf'}
-    const deferFake = sinon.stub(_, 'defer').callsFake((func, elem, size, keepOriginalText) => {
-      func(elem, size, keepOriginalText)
-    })
     SpeedGrader.EG.showDiscussion()
-    const screenreaderText = document.querySelector(
-      '.play_comment_link .screenreader-only'
-    ).innerText
+    await awhile()
+    const screenreaderText = document
+      .querySelector('.play_comment_link .screenreader-only')
+      .textContent.trim()
     strictEqual(screenreaderText, 'Play media comment by An Author from Jul 12, 2016 at 11:47pm.')
-    deferFake.restore()
     INST.kalturaSettings = originalKalturaSettings
   })
 
@@ -1311,7 +1409,7 @@ QUnit.module('SpeedGrader', rootHooks => {
 
   test('contains iframe with the escaped student submission url', () => {
     let retrieveUrl = '/course/1/external_tools/retrieve?display=borderless&assignment_id=22'
-    const url = 'www.example.com/lti/launch/user/4'
+    const url = 'http://www.example.com/lti/launch/user/4'
     const buildIframeStub = sinon.stub(SpeedGraderHelpers, 'buildIframe')
     const submission = {
       external_tool_url: url,
@@ -1325,10 +1423,30 @@ QUnit.module('SpeedGrader', rootHooks => {
     buildIframeStub.restore()
   })
 
+  test('includes the grade_by_question query param when a new quiz and flag + setting are enabled', () => {
+    ENV.NQ_GRADE_BY_QUESTION_ENABLED = true
+    ENV.GRADE_BY_QUESTION = true
+    const originalJsonData = window.jsonData
+    window.jsonData = {quiz_lti: true}
+    const retrieveUrl = '/course/1/external_tools/retrieve?display=borderless&assignment_id=22'
+    const url = 'http://www.example.com/lti/launch/user/4'
+    const buildIframeStub = sinon.stub(SpeedGraderHelpers, 'buildIframe')
+    const submission = {
+      external_tool_url: url,
+      resource_link_lookup_uuid: '0b8fbc86-fdd7-4950-852d-ffa789b37ff2',
+    }
+    SpeedGrader.EG.renderLtiLaunch($div, retrieveUrl, submission)
+    const [srcUrl] = buildIframeStub.firstCall.args
+    const {searchParams} = new URL(decodeURIComponent(unescape(srcUrl).match(/http.*/)[0]))
+    strictEqual(searchParams.get('grade_by_question_enabled'), 'true')
+    buildIframeStub.restore()
+    window.jsonData = originalJsonData
+  })
+
   test('can be fullscreened', () => {
     const retrieveUrl =
       'canvas.com/course/1/external_tools/retrieve?display=borderless&assignment_id=22'
-    const url = 'www.example.com/lti/launch/user/4'
+    const url = 'http://www.example.com/lti/launch/user/4'
     const buildIframeStub = sinon.stub(SpeedGraderHelpers, 'buildIframe')
     const submission = {
       url,
@@ -1343,7 +1461,7 @@ QUnit.module('SpeedGrader', rootHooks => {
   test('allows options defined in iframeAllowances()', () => {
     const retrieveUrl =
       'canvas.com/course/1/external_tools/retrieve?display=borderless&assignment_id=22'
-    const url = 'www.example.com/lti/launch/user/4'
+    const url = 'http://www.example.com/lti/launch/user/4'
     const buildIframeStub = sinon.stub(SpeedGraderHelpers, 'buildIframe')
     const submission = {
       url,
@@ -2365,7 +2483,7 @@ QUnit.module('SpeedGrader', rootHooks => {
     notOk(result)
   })
 
-  QUnit.module('SpeedGrader#shouldParseGrade', {
+  QUnit.module('SpeedGrader#shouldParseGrade 2', {
     setup() {
       fakeENV.setup()
     },
@@ -4492,24 +4610,26 @@ QUnit.module('SpeedGrader', rootHooks => {
           test('Students are listed anonymously', () => {
             SpeedGrader.EG.jsonReady()
             const entries = []
-            fixtures.querySelectorAll('option').forEach(el => entries.push(el.innerText.trim()))
+            fixtures
+              .querySelectorAll('#combo_box_container option')
+              .forEach(el => entries.push(el.innerText.trim()))
             deepEqual(entries, ['Student 1 – graded', 'Student 2 – not graded'])
           })
 
           test('Students are sorted by anonymous id when out of order in the select menu', () => {
             window.jsonData.context.students = unsortedPair
             SpeedGrader.EG.jsonReady()
-            const anonymousIds = Object.values(fixtures.querySelectorAll('option')).map(
-              el => el.value
-            )
+            const anonymousIds = Object.values(
+              fixtures.querySelectorAll('#combo_box_container option')
+            ).map(el => el.value)
             deepEqual(anonymousIds, studentAnonymousIds)
           })
 
           test('Students are sorted by anonymous id when in order in the select menu', () => {
             SpeedGrader.EG.jsonReady()
-            const anonymousIds = Object.values(fixtures.querySelectorAll('option')).map(
-              el => el.value
-            )
+            const anonymousIds = Object.values(
+              fixtures.querySelectorAll('#combo_box_container option')
+            ).map(el => el.value)
             deepEqual(anonymousIds, studentAnonymousIds)
           })
         })
@@ -8036,7 +8156,7 @@ QUnit.module('SpeedGrader', rootHooks => {
         <div id="combo_box_container"></div>
       `)
 
-        userSettingsStub = sinon.stub(userSettings, 'get')
+        userSettingsStub = sandbox.stub(userSettings, 'get')
         userSettingsStub.returns(false)
         SpeedGrader.setup()
       })

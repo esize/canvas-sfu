@@ -94,8 +94,16 @@ class CoursePace < ActiveRecord::Base
     end
   end
 
+  # We need to add one day to the sum of durations here to
+  # account for the oddity of the first item's set due date.
+  # If a user is enrolled via a pace item with a duration of
+  # one day on Jan 1 at 11:58pm, their due date would be on
+  # Jan 2 at 11:59pm. If that same user were enrolled on Jan
+  # 2 at 12:00am, their due date would be Jan 3 at 11:59pm.
+  # While this oddity of finishing out the current day exists,
+  # we will always need to add one to the sum of durations.
   def duration
-    course_pace_module_items.sum(:duration)
+    course_pace_module_items.sum(:duration) + 1
   end
 
   def valid_secondary_context
@@ -129,7 +137,7 @@ class CoursePace < ActiveRecord::Base
     progress = Progress.create!(context: self, tag: "course_pace_publish")
     progress.process_job(self, :publish, {
                            run_at: run_at,
-                           singleton: "course_pace_publish:#{id}",
+                           singleton: "course_pace_publish:#{global_id}",
                            on_conflict: :overwrite
                          }, { enrollment_ids: enrollment_ids })
     progress

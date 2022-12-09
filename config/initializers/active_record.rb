@@ -65,10 +65,6 @@ class ActiveRecord::Base
       end
     end
 
-    def default_scope(*)
-      raise "please don't ever use default_scope. it may seem like a great solution, but I promise, it isn't"
-    end
-
     def vacuum
       # can't vacuum in a transaction
       return if Rails.env.test?
@@ -2093,7 +2089,7 @@ module VersionAgnosticPreloader
     if Rails.version < "7.0"
       ActiveRecord::Associations::Preloader.new.preload(records, associations, preload_scope)
     else
-      ActiveRecord::Associations::Preloader.new(records: Array.wrap(records), associations: associations, scope: preload_scope).call
+      ActiveRecord::Associations::Preloader.new(records: Array.wrap(records).compact, associations: associations, scope: preload_scope).call
     end
   end
 end

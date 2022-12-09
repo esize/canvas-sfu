@@ -25,7 +25,7 @@ import {Checkbox} from '@instructure/ui-checkbox'
 import {IconCheckMarkLine} from '@instructure/ui-icons'
 import {Responsive} from '@instructure/ui-responsive'
 import {Text} from '@instructure/ui-text'
-import {responsiveQuerySizes} from '../../utils'
+import {responsiveQuerySizes, showErrorWhenMessageTooLong} from '../../utils'
 import {View} from '@instructure/ui-view'
 import {nanoid} from 'nanoid'
 import PropTypes from 'prop-types'
@@ -52,6 +52,7 @@ export const DiscussionEdit = props => {
   )
 
   const [attachment, setAttachment] = useState(null)
+  const [attachmentToUpload, setAttachmentToUpload] = useState(false)
 
   const rceMentionsIsEnabled = () => {
     return !!ENV.rce_mentions_in_discussions
@@ -214,6 +215,9 @@ export const DiscussionEdit = props => {
                   <Button
                     onClick={() => {
                       if (props.onSubmit) {
+                        if (showErrorWhenMessageTooLong(rceContent)) {
+                          return
+                        }
                         props.onSubmit(
                           rceContent,
                           includeReplyPreview,
@@ -226,6 +230,7 @@ export const DiscussionEdit = props => {
                     color="primary"
                     data-testid="DiscussionEdit-submit"
                     key="rce-reply-button"
+                    interaction={attachmentToUpload ? 'disabled' : 'enabled'}
                   >
                     <Text size="medium">{props.isEdit ? I18n.t('Save') : I18n.t('Reply')}</Text>
                   </Button>
@@ -235,7 +240,12 @@ export const DiscussionEdit = props => {
             return matches.includes('mobile') ? (
               <View as="div" padding={undefined} key="mobileButtons">
                 <View as={responsiveProps.viewAs} padding={responsiveProps.paddingAttachment}>
-                  <AttachmentDisplay attachment={attachment} setAttachment={setAttachment} />
+                  <AttachmentDisplay
+                    attachment={attachment}
+                    setAttachment={setAttachment}
+                    setAttachmentToUpload={setAttachmentToUpload}
+                    attachmentToUpload={attachmentToUpload}
+                  />
                 </View>
                 {rceButtons.reverse()}
               </View>
@@ -243,7 +253,12 @@ export const DiscussionEdit = props => {
               <Flex key="nonMobileButtons">
                 <Flex.Item shouldGrow={true} textAlign="start">
                   <View as={responsiveProps.viewAs} padding={responsiveProps.paddingAttachment}>
-                    <AttachmentDisplay attachment={attachment} setAttachment={setAttachment} />
+                    <AttachmentDisplay
+                      attachment={attachment}
+                      setAttachment={setAttachment}
+                      setAttachmentToUpload={setAttachmentToUpload}
+                      attachmentToUpload={attachmentToUpload}
+                    />
                   </View>
                 </Flex.Item>
                 {ENV.draft_discussions && (

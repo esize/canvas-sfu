@@ -208,4 +208,62 @@ describe Loaders::OutcomeAlignmentLoader do
       end
     end
   end
+
+  context "when aligned assignment, graded discussion or quiz are unpublished" do
+    before do
+      @assignment.unpublish
+      @discussion_assignment.unpublish
+      @quiz1_assignment.unpublish
+      @quiz2_assignment.unpublish
+    end
+
+    it "resolves module name properly" do
+      GraphQL::Batch.batch do
+        Loaders::OutcomeAlignmentLoader.for(
+          @course
+        ).load(@outcome).then do |alignments|
+          alignments.each do |alignment|
+            next unless alignment[:content_type] == "Assignment"
+
+            module_id = @module1.id
+            module_name = @module1.name
+            module_url = [base_url, "modules", alignment[:module_id]].join("/") if alignment[:module_id]
+            module_workflow_state = "active"
+
+            if alignment[:title] == @quiz1.title
+              module_id = @module2.id
+              module_name = @module2.name
+              module_workflow_state = "unpublished"
+            end
+
+            expect(alignment[:module_id]).to eq module_id
+            expect(alignment[:module_name]).to eq module_name
+            expect(alignment[:module_url]).to eq module_url
+            expect(alignment[:module_workflow_state]).to eq module_workflow_state
+          end
+        end
+      end
+    end
+  end
+
+  context "when outcome is aligned to a question bank and the bank name is updated" do
+    before do
+      @bank.title = "Updated bank name"
+      @bank.save!
+    end
+
+    it "resolves the title of the question bank alignment to the updated bank name" do
+      GraphQL::Batch.batch do
+        Loaders::OutcomeAlignmentLoader.for(
+          @course
+        ).load(@outcome).then do |alignments|
+          alignments.each do |alignment|
+            next unless alignment[:content_type] == "AssessmentQuestionBank"
+
+            expect(alignment[:title]).to eq "Updated bank name"
+          end
+        end
+      end
+    end
+  end
 end

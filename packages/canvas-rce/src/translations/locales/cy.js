@@ -105,9 +105,6 @@ const locale = {
     "message": "Dewiswch hawliau defnyddio..."
   },
   "circle_484abe63": { "message": "Cylch" },
-  "circle_unordered_list_9e3a0763": {
-    "message": "rhestr cylchoedd sydd ddim mewn trefn"
-  },
   "clear_2084585f": { "message": "Clirio" },
   "clear_image_3213fe62": { "message": "Clirio’r ddelwedd" },
   "clear_selected_file_82388e50": { "message": "Clirio''r ffeil dan sylw" },
@@ -191,12 +188,6 @@ const locale = {
   "decorative_type_upper_f2c95e3": { "message": "Addurniadol { TYPE_UPPER }" },
   "decrease_indent_d9cf469d": { "message": "Lleihau Mewnoliad" },
   "deep_purple_bb3e2907": { "message": "Porffor Tywyll" },
-  "default_bulleted_unordered_list_47079da8": {
-    "message": "rhestr ddiofyn o bwyntiau bwled sydd ddim mewn trefn"
-  },
-  "default_numerical_ordered_list_48dd3548": {
-    "message": "rhestr ddiofyn o rifau sydd mewn trefn"
-  },
   "definite_integral_fe7ffed1": { "message": "Integryn Pendant" },
   "degree_symbol_4a823d5f": { "message": "Symbol Gradd" },
   "delimiters_4db4840d": { "message": "Amffinyddion" },
@@ -232,6 +223,7 @@ const locale = {
   "down_and_right_diagonal_arrow_6ea0f460": {
     "message": "Saeth Croeslinol i lawr ac i’r dde"
   },
+  "download_filename_2baae924": { "message": "Llwytho { filename } i Lawr" },
   "downward_arrow_cca52012": { "message": "Saeth i lawr" },
   "downward_pointing_triangle_2a12a601": {
     "message": "Triongl yn pwyntio i lawr"
@@ -248,6 +240,7 @@ const locale = {
   "edit_alt_text_for_this_icon_instance_9c6fc5fd": {
     "message": "Golygu’r testun amgen ar gyfer y fersiwn hwn o’r eicon"
   },
+  "edit_c5fbea07": { "message": "Golygu" },
   "edit_course_link_5a5c3c59": { "message": "Golygu Dolen Cwrs" },
   "edit_equation_f5279959": { "message": "Golygu Hafaliad" },
   "edit_existing_icon_maker_icon_5d0ebb3f": {
@@ -290,6 +283,9 @@ const locale = {
   "extra_small_9ae33252": { "message": "Bach Iawn" },
   "extracurricular_icon_67c8ca42": { "message": "Eicon Allgwricwlar" },
   "f_function_fe422d65": { "message": "F (nodwedd)" },
+  "failed_getting_file_contents_e9ea19f4": {
+    "message": "Wedi methu cael cynnwys ffeil"
+  },
   "file_storage_quota_exceeded_b7846cd1": {
     "message": "Wedi cyrraedd cwota storio ffeil"
   },
@@ -372,6 +368,7 @@ const locale = {
   "icon_maker_icons_cc560f7e": { "message": "Eiconau’r Gwneuthurwr Eiconau" },
   "icon_options_7e32746e": { "message": "Opsiynau Eicon" },
   "icon_options_tray_2b407977": { "message": "Ardal Opsiynau Eicon" },
+  "icon_preview_1782a1d9": { "message": "Rhagolwg o’r Eicon" },
   "icon_shape_30b61e7": { "message": "Siâp yr Eicon" },
   "icon_size_9353edea": { "message": "Maint yr Eicon" },
   "if_left_empty_link_text_will_display_as_course_lin_61087540": {
@@ -442,6 +439,9 @@ const locale = {
   "link_7262adec": { "message": "Dolen" },
   "link_options_a16b758b": { "message": "Opsiynau Dolen" },
   "links_14b70841": { "message": "Dolenni" },
+  "links_to_an_external_site_de74145d": {
+    "message": "Dolenni at safle allanol."
+  },
   "load_more_35d33c7": { "message": "Llwytho Mwy" },
   "loading_25990131": { "message": "Wrthi’n llwytho..." },
   "loading_bde52856": { "message": "Wrthi’n llwytho" },
@@ -476,6 +476,10 @@ const locale = {
   },
   "medium_5a8e9ead": { "message": "Cyfrwng" },
   "middle_27dc1d5": { "message": "Canol" },
+  "minimize_file_preview_da911944": {
+    "message": "Lleihau’r Rhagolwg o’r Ffeil"
+  },
+  "minimize_video_20aa554b": { "message": "Lleihau Fideo" },
   "minus_fd961e2e": { "message": "Minws" },
   "minus_plus_3461f637": { "message": "Minws/Plws" },
   "misc_3b692ea7": { "message": "Amrywiol" },
@@ -543,9 +547,6 @@ const locale = {
   "operators_a2ef9a93": { "message": "Gweithredyddion" },
   "or_9b70ccaa": { "message": "Neu" },
   "orange_81386a62": { "message": "Oren" },
-  "ordered_and_unordered_lists_cfadfc38": {
-    "message": "Rhestrau Mewn Trefn a Rhestrau Ddim Mewn Trefn"
-  },
   "other_editor_shortcuts_may_be_found_at_404aba4a": {
     "message": "Mae bysellau hwylus golygu eraill i''w cael yn"
   },
@@ -575,6 +576,10 @@ const locale = {
   "pi_variant_10f5f520": { "message": "Pi (Amrywiad)" },
   "pink_68ad45cb": { "message": "Pinc" },
   "pixels_52ece7d1": { "message": "Picseli" },
+  "play_media_comment_35257210": { "message": "Chwarae sylw ar gyfryngau." },
+  "play_media_comment_by_name_from_createdat_c230123d": {
+    "message": "Chwarae sylw ar gyfryngau gan { name } o { createdAt }."
+  },
   "plus_d43cd4ec": { "message": "Plws" },
   "plus_minus_f8be2e83": { "message": "Plws/Minws" },
   "posted_when_a578f5ab": { "message": "Wedi postio: { when }" },
@@ -701,9 +706,6 @@ const locale = {
   "square_subset_strict_7044e84f": { "message": "Is-set Sgwâr (Strict)" },
   "square_superset_3be8dae1": { "message": "Uwch-set Sgwâr" },
   "square_superset_strict_fa4262e4": { "message": "Uwch-set Sgwâr (Strict)" },
-  "square_unordered_list_b15ce93b": {
-    "message": "rhestr sgwariau sydd ddim mewn trefn"
-  },
   "star_8d156e09": { "message": "Seren" },
   "steel_blue_14296f08": { "message": "Durlas" },
   "styles_2aa721ef": { "message": "Arddulliau" },
@@ -723,6 +725,12 @@ const locale = {
   "supported_file_types_srt_or_webvtt_7d827ed": {
     "message": "Mathau o ffeiliau y mae modd delio â nhw: SRT neu WebVTT"
   },
+  "switch_to_pretty_html_editor_a3cee15f": {
+    "message": "Newid i’r golygydd HTML hardd"
+  },
+  "switch_to_raw_html_editor_f970ae1a": {
+    "message": "Newid i’r golygydd HTML crai"
+  },
   "switch_to_the_html_editor_146dfffd": {
     "message": "Newid i’r golygydd html "
   },
@@ -739,6 +747,9 @@ const locale = {
   "text_optional_384f94f7": { "message": "Testun (dewisol)" },
   "text_position_8df8c162": { "message": "Lleoliad y Testun" },
   "text_size_887c2f6": { "message": "Maint y Testun" },
+  "the_document_preview_is_currently_being_processed__7d9ea135": {
+    "message": "Mae’r rhagolwg o’r ddogfen wrthi’n cael ei brosesu ar hyn o bryd. Rhowch gynnig arall arni rywbryd eto."
+  },
   "the_material_is_in_the_public_domain_279c39a3": {
     "message": "Mae’r deunydd yn y parth cyhoeddus"
   },
@@ -760,8 +771,14 @@ const locale = {
   "thick_right_arrow_3ed5e8f7": { "message": "Saeth Trwchus i’r Dde" },
   "thick_rightward_arrow_a2e1839e": { "message": "Saeth Trwchus i’r Dde" },
   "thick_upward_arrow_acd20328": { "message": "Saeth Trwchus i Fyny" },
+  "this_document_cannot_be_displayed_within_canvas_7aba77be": {
+    "message": "Does dim modd dangos y ddogfen hon yn Canvas."
+  },
   "this_equation_cannot_be_rendered_in_basic_view_9b6c07ae": {
     "message": "Does dim modd rendro’r hafaliad hwn yn y Wedd Syml."
+  },
+  "this_image_is_currently_unavailable_25c68857": {
+    "message": "Dydy''r ddelwedd hon ddim ar gael ar hyn o bryd."
   },
   "though_your_video_will_have_the_correct_title_in_t_90e427f3": {
     "message": "Er y bydd gan eich fideo y teitl cywir yn y porwr, nid ydym ni wedi gallu ei ddiweddaru yn y gronfa ddata."
@@ -805,9 +822,6 @@ const locale = {
     "message": "Llwytho i Fyny/Recordio Cyfryngau"
   },
   "uploading_19e8a4e7": { "message": "Llwytho i fyny" },
-  "uppercase_alphabetic_ordered_list_3f5aa6b2": {
-    "message": "rhestr mewn trefn, mewn priflythrennau, yn nhrefn yr wyddor"
-  },
   "uppercase_delta_d4f4bc41": { "message": "Delta Fawr" },
   "uppercase_gamma_86f492e9": { "message": "Gamma Fawr" },
   "uppercase_lambda_c78d8ed4": { "message": "Lambda Fawr" },
@@ -815,9 +829,6 @@ const locale = {
   "uppercase_phi_caa36724": { "message": "Phi Fawr" },
   "uppercase_pi_fcc70f5e": { "message": "Pi Fawr" },
   "uppercase_psi_6395acbe": { "message": "Psi Fawr" },
-  "uppercase_roman_numeral_ordered_list_853f292b": {
-    "message": "rhestr mewn trefn o rifolion Rhufeinig mewn priflythrennau"
-  },
   "uppercase_sigma_dbb70e92": { "message": "Sigma Fawr" },
   "uppercase_theta_49afc891": { "message": "Theta Fawr" },
   "uppercase_upsilon_8c1e623e": { "message": "Upsilon Fawr" },

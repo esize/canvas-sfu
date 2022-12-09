@@ -55,6 +55,11 @@ describe('DiscussionsSplitScreenView', () => {
           'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==',
         display_name: 'Hank Mccoy',
       },
+      DISCUSSION: {
+        preferences: {
+          discussions_splitscreen_view: true,
+        },
+      },
     }
 
     window.matchMedia = jest.fn().mockImplementation(() => {
@@ -77,7 +82,7 @@ describe('DiscussionsSplitScreenView', () => {
     return render(
       <MockedProvider mocks={mocks}>
         <AlertManagerContext.Provider value={{setOnFailure, setOnSuccess}}>
-          <DiscussionTopicManager discussionTopicId="1" />
+          <DiscussionTopicManager discussionTopicId="Discussion-default-mock" />
         </AlertManagerContext.Provider>
       </MockedProvider>
     )

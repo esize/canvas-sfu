@@ -93,11 +93,12 @@
     <%= t "calendar_feed_instructions", "Copy the link below and paste it into any calendar app that takes iCal feeds (Google Calendar, iCal, Outlook, etc.)" %>
   </p>
   <p id="calendar-feed-box-lower">
-    <input value="<%= @feed_url%>.ics"><br>
+    <label for="calendar-feed-url-input" class="screenreader-only"><%= t('Calendar Feed Url') %></label>
+    <input id="calendar-feed-url-input" value="<%= @feed_url%>.ics"><br>
     <a href="<%= @feed_url%>.ics"><%= t "Click to view Calendar Feed" %></a>
   </p>
 </div>
 
 <div id="calendar_header"></div>
-<div id="calendar-app" role="tabpanel" class="<%= 'inline-calendar-event-titles' if @inline_titles %>"></div>
+<div id="calendar-app" role="tabpanel" class="<%= 'inline-calendar-event-titles' %>"></div>
 <div id="calendar-drag-and-drop-container"></div>
