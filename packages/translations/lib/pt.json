@@ -41,9 +41,6 @@
     "aleph_f4ffd155": {
         "message": "Alef"
     },
-    "align_11050992": {
-        "message": "Alinhar"
-    },
     "alignment_and_lists_5cebcb69": {
         "message": "Alinhamento e Listas"
     },
@@ -269,9 +266,6 @@
     "catalan_16f6b78f": {
         "message": "Catalão"
     },
-    "center_align_e68d9997": {
-        "message": "Alinhamento ao centro"
-    },
     "centered_dot_64d5e378": {
         "message": "Ponto centrado"
     },
@@ -419,9 +413,6 @@
     "course_images_f8511d04": {
         "message": "Imagens da disciplina"
     },
-    "course_link_b369426": {
-        "message": "Ligação da disciplina"
-    },
     "course_links_b56959b9": {
         "message": "Ligações da disciplina"
     },
@@ -436,9 +427,6 @@
     },
     "create_icon_110d6463": {
         "message": "Criar Ícone"
-    },
-    "create_icon_maker_icon_c716bffe": {
-        "message": "Criar Ícone Criador de Ícones"
     },
     "creative_commons_license_725584ae": {
         "message": "Licença Creative Commons:"
@@ -496,9 +484,6 @@
     },
     "decorative_type_upper_f2c95e3": {
         "message": "Decorativo { TYPE_UPPER }"
-    },
-    "decrease_indent_d9cf469d": {
-        "message": "Diminuir Avanço"
     },
     "deep_purple_bb3e2907": {
         "message": "Roxo Escuro"
@@ -593,9 +578,6 @@
     "division_sign_72190870": {
         "message": "Sinal de divisão"
     },
-    "document_678cd7bf": {
-        "message": "Documento"
-    },
     "documents_81393201": {
         "message": "Documentos"
     },
@@ -652,9 +634,6 @@
     },
     "edit_course_link_5a5c3c59": {
         "message": "Editar ligação da disciplina"
-    },
-    "edit_equation_f5279959": {
-        "message": "Editar Equação"
     },
     "edit_existing_icon_maker_icon_5d0ebb3f": {
         "message": "Editar Ícone do Criador de Ícones Existente"
@@ -731,9 +710,6 @@
     "equals_sign_c51bdc58": {
         "message": "Sinal de igualdade"
     },
-    "equation_1c5ac93c": {
-        "message": "Equação"
-    },
     "equation_editor_39fbc3f1": {
         "message": "Editor de equações"
     },
@@ -770,6 +746,9 @@
     "exists_2e62bdaa": {
         "message": "Existe"
     },
+    "exit_fullscreen_b7eb0aa4": {
+        "message": "Sair em ecrã inteiro"
+    },
     "expand_preview_by_default_2abbf9f8": {
         "message": "Expandir pré-visualização por defeito"
     },
@@ -778,9 +757,6 @@
     },
     "extended_9a58dcb6": {
         "message": "Alargado"
-    },
-    "external_link_d3f9e62a": {
-        "message": "Ligação externa"
     },
     "external_tools_6e77821": {
         "message": "Ferramentas externas"
@@ -974,9 +950,6 @@
     "group_isomorphism_45b1458c": {
         "message": "Isomorfismo de grupo"
     },
-    "group_link_63e626b3": {
-        "message": "Ligação de grupo"
-    },
     "group_links_9493129e": {
         "message": "Ligações do grupo"
     },
@@ -1033,9 +1006,6 @@
     },
     "html_code_editor_fd967a44": {
         "message": "editor de código html"
-    },
-    "html_editor_fb2ab713": {
-        "message": "Editor HTML"
     },
     "hungarian_fc7d30c9": {
         "message": "Húngaro"
@@ -1106,9 +1076,6 @@
     "in_element_of_19ca2f33": {
         "message": "Em (Elemento De)"
     },
-    "increase_indent_6af90f7c": {
-        "message": "Aumentar Avanço"
-    },
     "indefinite_integral_6623307e": {
         "message": "Integral Indefinido"
     },
@@ -1127,14 +1094,8 @@
     "insert_593145ef": {
         "message": "Inserir"
     },
-    "insert_equella_links_49a8dacd": {
-        "message": "Inserir ligações do Equella"
-    },
     "insert_link_6dc23cae": {
         "message": "Inserir ligação"
-    },
-    "insert_math_equation_57c6e767": {
-        "message": "Inserir Equação Matemática"
     },
     "integers_336344e1": {
         "message": "Inteiros"
@@ -1216,9 +1177,6 @@
     },
     "latvian_2bbb6aab": {
         "message": "Letão"
-    },
-    "left_align_43d95491": {
-        "message": "Alinhamento à esquerda"
     },
     "left_angle_bracket_c87a6d07": {
         "message": "Suporte de ângulo esquerdo"
@@ -1643,6 +1601,9 @@
     "partial_derivative_4a9159df": {
         "message": "Parcial (Derivado)"
     },
+    "paste_5963d1c1": {
+        "message": "Colar"
+    },
     "peer_review_74f26a13": {
         "message": "Revisão por colegas"
     },
@@ -1799,9 +1760,6 @@
     "record_7c9448b": {
         "message": "Gravar"
     },
-    "record_upload_media_5fdce166": {
-        "message": "Gravar/Carregar Mídia"
-    },
     "red_8258edf3": {
         "message": "Encarnado"
     },
@@ -1816,9 +1774,6 @@
     },
     "reminder_date_4564d12d": {
         "message": "Lembrete: { date }"
-    },
-    "remove_link_d1f2f4d0": {
-        "message": "Remover ligação"
     },
     "replace_e61834a7": {
         "message": "Substituir"
@@ -1849,9 +1804,6 @@
     },
     "rich_text_area_press_alt_0_for_rich_content_editor_9d23437f": {
         "message": "Área de Rich Text. Prima ALT+0 para obter atalhos do Editor de Conteúdo Rico."
-    },
-    "right_align_39e7a32a": {
-        "message": "Alinhamento à direita"
     },
     "right_angle_bracket_d704e2d6": {
         "message": "Suporte de ângulo reto"
@@ -1907,9 +1859,6 @@
     "save_11a80ec3": {
         "message": "Guardar"
     },
-    "saved_icon_maker_icons_df86e2a1": {
-        "message": "Ícones salvos do Criador de Ícones"
-    },
     "schedule_preview_3bcda153": {
         "message": "Pré-visualização do horário"
     },
@@ -1958,20 +1907,8 @@
     "show_all_ae37d610": {
         "message": "Mostrar tudo"
     },
-    "show_audio_options_b489926b": {
-        "message": "Mostrar opções de áudio"
-    },
-    "show_image_options_1e2ecc6b": {
-        "message": "Mostrar opções de imagem"
-    },
-    "show_link_options_545338fd": {
-        "message": "Mostrar opções de ligação"
-    },
     "show_my_grades_ebd08684": {
         "message": "Mostrar minhas classificações"
-    },
-    "show_video_options_6ed3721a": {
-        "message": "Mostrar opções de vídeo"
     },
     "sigma_5c35e553": {
         "message": "Sigma"
@@ -2107,9 +2044,6 @@
     },
     "superscript_8cb349a2": {
         "message": "Superescrito"
-    },
-    "superscript_and_subscript_37f94a50": {
-        "message": "Super-escrito e Assinatura"
     },
     "superset_c4db8a7a": {
         "message": "Superconjunto"
@@ -2336,9 +2270,6 @@
     "up_and_right_diagonal_arrow_935b902e": {
         "message": "Seta diagonal para cima e direita"
     },
-    "upload_document_253f0478": {
-        "message": "Carregar documento"
-    },
     "upload_file_fd2361b8": {
         "message": "Carregar ficheiro"
     },
@@ -2347,9 +2278,6 @@
     },
     "upload_media_ce31135a": {
         "message": "Carregar Multimédia"
-    },
-    "upload_record_media_e4207d72": {
-        "message": "Carregar/Gravar Mídia"
     },
     "uploading_19e8a4e7": {
         "message": "A realizar carregamento"
@@ -2491,6 +2419,9 @@
     },
     "view_title_description_67940918": {
         "message": "Ver descrição { title }"
+    },
+    "view_word_and_character_counts_a743dd0c": {
+        "message": "Ver contagem de palavras e caracteres"
     },
     "weekly_schedule_navigation_6b042645": {
         "message": "Programação semanal de navegação"

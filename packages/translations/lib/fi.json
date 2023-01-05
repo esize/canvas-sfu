@@ -41,9 +41,6 @@
     "aleph_f4ffd155": {
         "message": "Aleph"
     },
-    "align_11050992": {
-        "message": "Tasaa"
-    },
     "alignment_and_lists_5cebcb69": {
         "message": "Kohdistukset ja luettelot"
     },
@@ -269,9 +266,6 @@
     "catalan_16f6b78f": {
         "message": "katalaani"
     },
-    "center_align_e68d9997": {
-        "message": "Keskuksen linjaus"
-    },
     "centered_dot_64d5e378": {
         "message": "Keskitetty piste"
     },
@@ -419,9 +413,6 @@
     "course_images_f8511d04": {
         "message": "Kurssin kuvat"
     },
-    "course_link_b369426": {
-        "message": "Kurssilinkki"
-    },
     "course_links_b56959b9": {
         "message": "Kurssin linkit"
     },
@@ -436,9 +427,6 @@
     },
     "create_icon_110d6463": {
         "message": "Luo kuvake"
-    },
-    "create_icon_maker_icon_c716bffe": {
-        "message": "Luo kuvakkeen tekijän kuvake"
     },
     "creative_commons_license_725584ae": {
         "message": "Creative Commons -lisenssi:"
@@ -496,9 +484,6 @@
     },
     "decorative_type_upper_f2c95e3": {
         "message": "Koriste { TYPE_UPPER }"
-    },
-    "decrease_indent_d9cf469d": {
-        "message": "Pienennä sisennystä"
     },
     "deep_purple_bb3e2907": {
         "message": "Tumman violetti"
@@ -593,9 +578,6 @@
     "division_sign_72190870": {
         "message": "Jakomerkki"
     },
-    "document_678cd7bf": {
-        "message": "Asiakirja"
-    },
     "documents_81393201": {
         "message": "Asiakirjat"
     },
@@ -652,9 +634,6 @@
     },
     "edit_course_link_5a5c3c59": {
         "message": "Muokkaa kurssilinkkiä"
-    },
-    "edit_equation_f5279959": {
-        "message": "Muokkaa kaavaa"
     },
     "edit_existing_icon_maker_icon_5d0ebb3f": {
         "message": "Muokkaa olemassa olevaa kuvakkeen tekijän kuvaketta"
@@ -731,9 +710,6 @@
     "equals_sign_c51bdc58": {
         "message": "Yhtä kuin -merkki"
     },
-    "equation_1c5ac93c": {
-        "message": "Yhtälö"
-    },
     "equation_editor_39fbc3f1": {
         "message": "Yhtälöeditori"
     },
@@ -770,6 +746,9 @@
     "exists_2e62bdaa": {
         "message": "On olemassa"
     },
+    "exit_fullscreen_b7eb0aa4": {
+        "message": "Poistu koko näytöstä"
+    },
     "expand_preview_by_default_2abbf9f8": {
         "message": "Laajenna esikatselu oletuksena"
     },
@@ -778,9 +757,6 @@
     },
     "extended_9a58dcb6": {
         "message": "Laajennettu"
-    },
-    "external_link_d3f9e62a": {
-        "message": "Ulkoinen linkki"
     },
     "external_tools_6e77821": {
         "message": "Ulkoiset työkalut"
@@ -974,9 +950,6 @@
     "group_isomorphism_45b1458c": {
         "message": "Ryhmän isomorfismi"
     },
-    "group_link_63e626b3": {
-        "message": "Ryhmälinkki"
-    },
     "group_links_9493129e": {
         "message": "Ryhmälinkit"
     },
@@ -1033,9 +1006,6 @@
     },
     "html_code_editor_fd967a44": {
         "message": "html-koodieditori"
-    },
-    "html_editor_fb2ab713": {
-        "message": "HTML-editori"
     },
     "hungarian_fc7d30c9": {
         "message": "unkari"
@@ -1106,9 +1076,6 @@
     "in_element_of_19ca2f33": {
         "message": "(/elementti)"
     },
-    "increase_indent_6af90f7c": {
-        "message": "Suurenna sisennystä"
-    },
     "indefinite_integral_6623307e": {
         "message": "Epämääräinen integraali"
     },
@@ -1127,14 +1094,8 @@
     "insert_593145ef": {
         "message": "Aseta"
     },
-    "insert_equella_links_49a8dacd": {
-        "message": "Lisää Equella-linkit"
-    },
     "insert_link_6dc23cae": {
         "message": "Lisää linkki"
-    },
-    "insert_math_equation_57c6e767": {
-        "message": "Lisää matemaattinen kaava"
     },
     "integers_336344e1": {
         "message": "Kokonaisluvut"
@@ -1216,9 +1177,6 @@
     },
     "latvian_2bbb6aab": {
         "message": "latvia"
-    },
-    "left_align_43d95491": {
-        "message": "Vasen linjaus"
     },
     "left_angle_bracket_c87a6d07": {
         "message": "Vasen kulmakiinnike"
@@ -1643,6 +1601,9 @@
     "partial_derivative_4a9159df": {
         "message": "Osittainen (johdannainen)"
     },
+    "paste_5963d1c1": {
+        "message": "Liitä"
+    },
     "peer_review_74f26a13": {
         "message": "Vertaisarviointi"
     },
@@ -1799,9 +1760,6 @@
     "record_7c9448b": {
         "message": "Nauhoita"
     },
-    "record_upload_media_5fdce166": {
-        "message": "Nauhoita/lataa mediaa"
-    },
     "red_8258edf3": {
         "message": "Punainen"
     },
@@ -1816,9 +1774,6 @@
     },
     "reminder_date_4564d12d": {
         "message": "Muistutus: { date }"
-    },
-    "remove_link_d1f2f4d0": {
-        "message": "Poista linkki"
     },
     "replace_e61834a7": {
         "message": "Korvaa"
@@ -1849,9 +1804,6 @@
     },
     "rich_text_area_press_alt_0_for_rich_content_editor_9d23437f": {
         "message": "Monipuolisen tekstieditorin sisältökenttä Paina ALT+0, jos haluat nähdä tekstimuotoilueditorin pikakuvakkeita."
-    },
-    "right_align_39e7a32a": {
-        "message": "Oikea linjaus"
     },
     "right_angle_bracket_d704e2d6": {
         "message": "Oikea kulmakiinnike"
@@ -1907,9 +1859,6 @@
     "save_11a80ec3": {
         "message": "Tallenna"
     },
-    "saved_icon_maker_icons_df86e2a1": {
-        "message": "Tallennetut kuvakkeen tekijän kuvakkeet"
-    },
     "schedule_preview_3bcda153": {
         "message": "Aikataulun esikatselu"
     },
@@ -1958,20 +1907,8 @@
     "show_all_ae37d610": {
         "message": "Näytä kaikki"
     },
-    "show_audio_options_b489926b": {
-        "message": "Näytä ääniasetukset"
-    },
-    "show_image_options_1e2ecc6b": {
-        "message": "Näytä kuva-asetukset"
-    },
-    "show_link_options_545338fd": {
-        "message": "Näytä linkin asetukset"
-    },
     "show_my_grades_ebd08684": {
         "message": "Näytä omat arvosanat"
-    },
-    "show_video_options_6ed3721a": {
-        "message": "Näytä videoasetukset"
     },
     "sigma_5c35e553": {
         "message": "Sigma"
@@ -2107,9 +2044,6 @@
     },
     "superscript_8cb349a2": {
         "message": "Yläindeksi"
-    },
-    "superscript_and_subscript_37f94a50": {
-        "message": "Ylä- ja alaindeksi"
     },
     "superset_c4db8a7a": {
         "message": "Osajoukko"
@@ -2336,9 +2270,6 @@
     "up_and_right_diagonal_arrow_935b902e": {
         "message": "Diagonaalinen nuoli ylös ja oikealle"
     },
-    "upload_document_253f0478": {
-        "message": "Lataa asiakirja"
-    },
     "upload_file_fd2361b8": {
         "message": "Lataa tiedosto"
     },
@@ -2347,9 +2278,6 @@
     },
     "upload_media_ce31135a": {
         "message": "Lataa mediaa"
-    },
-    "upload_record_media_e4207d72": {
-        "message": "Lataa/Tallennusväline"
     },
     "uploading_19e8a4e7": {
         "message": "Ladataan"
@@ -2491,6 +2419,9 @@
     },
     "view_title_description_67940918": {
         "message": "Näytä kohteen { title } kuvaus"
+    },
+    "view_word_and_character_counts_a743dd0c": {
+        "message": "Tarkastele sanamäärää ja merkkien määrää"
     },
     "weekly_schedule_navigation_6b042645": {
         "message": "Viikkoaikataulun selaus"

@@ -18,6 +18,7 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 require_relative "../../../lti_1_3_spec_helper"
+require_relative "../concerns/parent_frame_shared_examples"
 
 describe Lti::IMS::AuthenticationController do
   include Lti::RedisMessageClient
@@ -230,7 +231,23 @@ describe Lti::IMS::AuthenticationController do
 
       it "sends the state" do
         subject
-        expect(assigns.dig(:id_token, :state)).to eq state
+        expect(assigns.dig(:launch_parameters, :state)).to eq state
+      end
+
+      it "sends the default lti_storage_target" do
+        subject
+        expect(assigns.dig(:launch_parameters, :lti_storage_target)).to eq Lti::PlatformStorage::DEFAULT_TARGET
+      end
+
+      context "when platform storage flag is enabled" do
+        before do
+          Account.site_admin.enable_feature! :lti_platform_storage
+        end
+
+        it "sends the actual lti_storage_target" do
+          subject
+          expect(assigns.dig(:launch_parameters, :lti_storage_target)).to eq Lti::PlatformStorage::FORWARDING_TARGET
+        end
       end
 
       context "when there are additional query params on the redirect_uri" do
@@ -280,6 +297,28 @@ describe Lti::IMS::AuthenticationController do
             subject
             expect(id_token.except("nonce")).to eq lti_launch.except("nonce")
           end
+        end
+      end
+
+      it_behaves_like "an endpoint which uses parent_frame_context to set the CSP header" do
+        # The shared examples require `subject` to make the request -- this is
+        # already set up above in the parent rspec context
+
+        # Make sure user has access in the PFC tool (enrollment in tool's course)
+        let(:enrollment) { course_with_teacher(user: user, active_all: true) }
+        let(:pfc_tool_context) { enrollment.course }
+
+        let(:lti_message_hint) do
+          Canvas::Security.create_jwt(
+            {
+              verifier: verifier,
+              canvas_domain: redirect_domain,
+              context_id: context.global_id,
+              context_type: context.class.to_s,
+              parent_frame_context: pfc_tool.id.to_s
+            },
+            1.year.from_now
+          )
         end
       end
     end
@@ -352,7 +391,7 @@ describe Lti::IMS::AuthenticationController do
       end
     end
 
-    context "when the developer key reidrect uri contains a query string" do
+    context "when the developer key redirect uri contains a query string" do
       let(:redirect_uris) { ["https://redirect.tool.com?must_be_present=true"] }
 
       it_behaves_like "redirect_uri errors" do

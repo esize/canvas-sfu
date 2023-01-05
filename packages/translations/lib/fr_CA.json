@@ -41,9 +41,6 @@
     "aleph_f4ffd155": {
         "message": "Aleph"
     },
-    "align_11050992": {
-        "message": "Aligner"
-    },
     "alignment_and_lists_5cebcb69": {
         "message": "Alignement et listes"
     },
@@ -269,9 +266,6 @@
     "catalan_16f6b78f": {
         "message": "Catalan"
     },
-    "center_align_e68d9997": {
-        "message": "Aligner au centre"
-    },
     "centered_dot_64d5e378": {
         "message": "Point centré"
     },
@@ -419,9 +413,6 @@
     "course_images_f8511d04": {
         "message": "Images du cours"
     },
-    "course_link_b369426": {
-        "message": "Lien vers le cours"
-    },
     "course_links_b56959b9": {
         "message": "Liens du cours"
     },
@@ -436,9 +427,6 @@
     },
     "create_icon_110d6463": {
         "message": "Créer une icône"
-    },
-    "create_icon_maker_icon_c716bffe": {
-        "message": "Créer icône de Créateur d’icône"
     },
     "creative_commons_license_725584ae": {
         "message": "Licence Creative Commons :"
@@ -496,9 +484,6 @@
     },
     "decorative_type_upper_f2c95e3": {
         "message": "Décoratif { TYPE_UPPER }"
-    },
-    "decrease_indent_d9cf469d": {
-        "message": "Diminuer le retrait"
     },
     "deep_purple_bb3e2907": {
         "message": "Violet foncé"
@@ -593,9 +578,6 @@
     "division_sign_72190870": {
         "message": "Signe de division"
     },
-    "document_678cd7bf": {
-        "message": "Document"
-    },
     "documents_81393201": {
         "message": "Documents"
     },
@@ -652,9 +634,6 @@
     },
     "edit_course_link_5a5c3c59": {
         "message": "Modifier le lien du cours"
-    },
-    "edit_equation_f5279959": {
-        "message": "Modifier l’équation"
     },
     "edit_existing_icon_maker_icon_5d0ebb3f": {
         "message": "Modifier l’icône Maker Icon existante"
@@ -731,9 +710,6 @@
     "equals_sign_c51bdc58": {
         "message": "Signe égal"
     },
-    "equation_1c5ac93c": {
-        "message": "Équation"
-    },
     "equation_editor_39fbc3f1": {
         "message": "Editeur d''équation"
     },
@@ -770,6 +746,9 @@
     "exists_2e62bdaa": {
         "message": "Existe"
     },
+    "exit_fullscreen_b7eb0aa4": {
+        "message": "Sortie de plein écran"
+    },
     "expand_preview_by_default_2abbf9f8": {
         "message": "Développer l’aperçu par défaut"
     },
@@ -778,9 +757,6 @@
     },
     "extended_9a58dcb6": {
         "message": "Étendu"
-    },
-    "external_link_d3f9e62a": {
-        "message": "Lien externe"
     },
     "external_tools_6e77821": {
         "message": "Outils externes"
@@ -974,9 +950,6 @@
     "group_isomorphism_45b1458c": {
         "message": "Isomorphisme de groupe"
     },
-    "group_link_63e626b3": {
-        "message": "Lien du groupe"
-    },
     "group_links_9493129e": {
         "message": "Liens de groupe"
     },
@@ -1033,9 +1006,6 @@
     },
     "html_code_editor_fd967a44": {
         "message": "éditeur de code HTML"
-    },
-    "html_editor_fb2ab713": {
-        "message": "Éditeur HTML"
     },
     "hungarian_fc7d30c9": {
         "message": "Hongrois"
@@ -1106,9 +1076,6 @@
     "in_element_of_19ca2f33": {
         "message": "Dans (élément de)"
     },
-    "increase_indent_6af90f7c": {
-        "message": "Augmenter le retrait"
-    },
     "indefinite_integral_6623307e": {
         "message": "Intégrale indéfinie"
     },
@@ -1127,14 +1094,8 @@
     "insert_593145ef": {
         "message": "Insérer"
     },
-    "insert_equella_links_49a8dacd": {
-        "message": "Insérer les liens Equella"
-    },
     "insert_link_6dc23cae": {
         "message": "Insérer un lien"
-    },
-    "insert_math_equation_57c6e767": {
-        "message": "Insérer une équation mathématique"
     },
     "integers_336344e1": {
         "message": "Nombre entier"
@@ -1216,9 +1177,6 @@
     },
     "latvian_2bbb6aab": {
         "message": "Letton"
-    },
-    "left_align_43d95491": {
-        "message": "Alignement à gauche"
     },
     "left_angle_bracket_c87a6d07": {
         "message": "Support d''angle gauche"
@@ -1643,6 +1601,9 @@
     "partial_derivative_4a9159df": {
         "message": "Partiel (dérivé)"
     },
+    "paste_5963d1c1": {
+        "message": "Coller"
+    },
     "peer_review_74f26a13": {
         "message": "Révision par les pairs"
     },
@@ -1799,9 +1760,6 @@
     "record_7c9448b": {
         "message": "Enregistrer"
     },
-    "record_upload_media_5fdce166": {
-        "message": "Enregistrer/téléverser support média"
-    },
     "red_8258edf3": {
         "message": "Rouge"
     },
@@ -1816,9 +1774,6 @@
     },
     "reminder_date_4564d12d": {
         "message": "Rappel : { date }"
-    },
-    "remove_link_d1f2f4d0": {
-        "message": "Retirer le lien"
     },
     "replace_e61834a7": {
         "message": "Remplacer"
@@ -1849,9 +1804,6 @@
     },
     "rich_text_area_press_alt_0_for_rich_content_editor_9d23437f": {
         "message": "Zone de texte enrichi. Appuyez sur ALT+0 pour les raccourcis de l’éditeur de texte enrichi."
-    },
-    "right_align_39e7a32a": {
-        "message": "Alignement à droite"
     },
     "right_angle_bracket_d704e2d6": {
         "message": "Support à angle droit"
@@ -1907,9 +1859,6 @@
     "save_11a80ec3": {
         "message": "Enregistrer"
     },
-    "saved_icon_maker_icons_df86e2a1": {
-        "message": "Icônes enregistrées de Créateur d’icône"
-    },
     "schedule_preview_3bcda153": {
         "message": "Aperçu de l’horaire"
     },
@@ -1958,20 +1907,8 @@
     "show_all_ae37d610": {
         "message": "Tout afficher"
     },
-    "show_audio_options_b489926b": {
-        "message": "Afficher les options audio"
-    },
-    "show_image_options_1e2ecc6b": {
-        "message": "Afficher les options d’image"
-    },
-    "show_link_options_545338fd": {
-        "message": "Afficher les options de lien"
-    },
     "show_my_grades_ebd08684": {
         "message": "Afficher Mes Notes"
-    },
-    "show_video_options_6ed3721a": {
-        "message": "Afficher les options de vidéo"
     },
     "sigma_5c35e553": {
         "message": "Sigma"
@@ -2107,9 +2044,6 @@
     },
     "superscript_8cb349a2": {
         "message": "Description"
-    },
-    "superscript_and_subscript_37f94a50": {
-        "message": "Exposant et indice"
     },
     "superset_c4db8a7a": {
         "message": "Sur-ensemble"
@@ -2336,9 +2270,6 @@
     "up_and_right_diagonal_arrow_935b902e": {
         "message": "Flèche diagonale vers le haut et vers la droite"
     },
-    "upload_document_253f0478": {
-        "message": "Téléverser le document"
-    },
     "upload_file_fd2361b8": {
         "message": "Téléverser le fichier"
     },
@@ -2347,9 +2278,6 @@
     },
     "upload_media_ce31135a": {
         "message": "Téléverser un fichier multimédia"
-    },
-    "upload_record_media_e4207d72": {
-        "message": "Téléverser/enregistrer un support média"
     },
     "uploading_19e8a4e7": {
         "message": "Téléversement"
@@ -2491,6 +2419,9 @@
     },
     "view_title_description_67940918": {
         "message": "Visualiser la description de { title }"
+    },
+    "view_word_and_character_counts_a743dd0c": {
+        "message": "Afficher le nombre de mots et de caractères"
     },
     "weekly_schedule_navigation_6b042645": {
         "message": "Navigation hebdomadaire du calendrier"

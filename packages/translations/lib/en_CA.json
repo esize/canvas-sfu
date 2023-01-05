@@ -41,9 +41,6 @@
     "aleph_f4ffd155": {
         "message": "Aleph"
     },
-    "align_11050992": {
-        "message": "Align"
-    },
     "alignment_and_lists_5cebcb69": {
         "message": "Alignment and Lists"
     },
@@ -269,9 +266,6 @@
     "catalan_16f6b78f": {
         "message": "Catalan"
     },
-    "center_align_e68d9997": {
-        "message": "Center Align"
-    },
     "centered_dot_64d5e378": {
         "message": "Centered Dot"
     },
@@ -419,9 +413,6 @@
     "course_images_f8511d04": {
         "message": "Course Images"
     },
-    "course_link_b369426": {
-        "message": "Course Link"
-    },
     "course_links_b56959b9": {
         "message": "Course Links"
     },
@@ -436,9 +427,6 @@
     },
     "create_icon_110d6463": {
         "message": "Create Icon"
-    },
-    "create_icon_maker_icon_c716bffe": {
-        "message": "Create Icon Maker Icon"
     },
     "creative_commons_license_725584ae": {
         "message": "Creative Commons License:"
@@ -496,9 +484,6 @@
     },
     "decorative_type_upper_f2c95e3": {
         "message": "Decorative { TYPE_UPPER }"
-    },
-    "decrease_indent_d9cf469d": {
-        "message": "Decrease Indent"
     },
     "deep_purple_bb3e2907": {
         "message": "Deep Purple"
@@ -593,9 +578,6 @@
     "division_sign_72190870": {
         "message": "Division Sign"
     },
-    "document_678cd7bf": {
-        "message": "Document"
-    },
     "documents_81393201": {
         "message": "Documents"
     },
@@ -652,9 +634,6 @@
     },
     "edit_course_link_5a5c3c59": {
         "message": "Edit Course Link"
-    },
-    "edit_equation_f5279959": {
-        "message": "Edit Equation"
     },
     "edit_existing_icon_maker_icon_5d0ebb3f": {
         "message": "Edit Existing Icon Maker Icon"
@@ -731,9 +710,6 @@
     "equals_sign_c51bdc58": {
         "message": "Equals Sign"
     },
-    "equation_1c5ac93c": {
-        "message": "Equation"
-    },
     "equation_editor_39fbc3f1": {
         "message": "Equation Editor"
     },
@@ -770,6 +746,9 @@
     "exists_2e62bdaa": {
         "message": "Exists"
     },
+    "exit_fullscreen_b7eb0aa4": {
+        "message": "Exit Fullscreen"
+    },
     "expand_preview_by_default_2abbf9f8": {
         "message": "Expand preview by Default"
     },
@@ -778,9 +757,6 @@
     },
     "extended_9a58dcb6": {
         "message": "Extended"
-    },
-    "external_link_d3f9e62a": {
-        "message": "External Link"
     },
     "external_tools_6e77821": {
         "message": "External Tools"
@@ -974,9 +950,6 @@
     "group_isomorphism_45b1458c": {
         "message": "Group Isomorphism"
     },
-    "group_link_63e626b3": {
-        "message": "Group Link"
-    },
     "group_links_9493129e": {
         "message": "Group Links"
     },
@@ -1033,9 +1006,6 @@
     },
     "html_code_editor_fd967a44": {
         "message": "html code editor"
-    },
-    "html_editor_fb2ab713": {
-        "message": "HTML Editor"
     },
     "hungarian_fc7d30c9": {
         "message": "Hungarian"
@@ -1106,9 +1076,6 @@
     "in_element_of_19ca2f33": {
         "message": "In (Element Of)"
     },
-    "increase_indent_6af90f7c": {
-        "message": "Increase Indent"
-    },
     "indefinite_integral_6623307e": {
         "message": "Indefinite Integral"
     },
@@ -1127,14 +1094,8 @@
     "insert_593145ef": {
         "message": "Insert"
     },
-    "insert_equella_links_49a8dacd": {
-        "message": "Insert Equella Links"
-    },
     "insert_link_6dc23cae": {
         "message": "Insert Link"
-    },
-    "insert_math_equation_57c6e767": {
-        "message": "Insert Math Equation"
     },
     "integers_336344e1": {
         "message": "Integers"
@@ -1216,9 +1177,6 @@
     },
     "latvian_2bbb6aab": {
         "message": "Latvian"
-    },
-    "left_align_43d95491": {
-        "message": "Left Align"
     },
     "left_angle_bracket_c87a6d07": {
         "message": "Left Angle Bracket"
@@ -1643,6 +1601,9 @@
     "partial_derivative_4a9159df": {
         "message": "Partial (Derivative)"
     },
+    "paste_5963d1c1": {
+        "message": "Paste"
+    },
     "peer_review_74f26a13": {
         "message": "Peer Review"
     },
@@ -1799,9 +1760,6 @@
     "record_7c9448b": {
         "message": "Record"
     },
-    "record_upload_media_5fdce166": {
-        "message": "Record/Upload Media"
-    },
     "red_8258edf3": {
         "message": "Red"
     },
@@ -1816,9 +1774,6 @@
     },
     "reminder_date_4564d12d": {
         "message": "Reminder: { date }"
-    },
-    "remove_link_d1f2f4d0": {
-        "message": "Remove Link"
     },
     "replace_e61834a7": {
         "message": "Replace"
@@ -1849,9 +1804,6 @@
     },
     "rich_text_area_press_alt_0_for_rich_content_editor_9d23437f": {
         "message": "Rich Text Area. Press ALT+0 for Rich Content Editor shortcuts."
-    },
-    "right_align_39e7a32a": {
-        "message": "Right Align"
     },
     "right_angle_bracket_d704e2d6": {
         "message": "Right Angle Bracket"
@@ -1907,9 +1859,6 @@
     "save_11a80ec3": {
         "message": "Save"
     },
-    "saved_icon_maker_icons_df86e2a1": {
-        "message": "Saved Icon Maker Icons"
-    },
     "schedule_preview_3bcda153": {
         "message": "Schedule Preview"
     },
@@ -1958,20 +1907,8 @@
     "show_all_ae37d610": {
         "message": "Show All"
     },
-    "show_audio_options_b489926b": {
-        "message": "Show audio options"
-    },
-    "show_image_options_1e2ecc6b": {
-        "message": "Show image options"
-    },
-    "show_link_options_545338fd": {
-        "message": "Show link options"
-    },
     "show_my_grades_ebd08684": {
         "message": "Show My Grades"
-    },
-    "show_video_options_6ed3721a": {
-        "message": "Show video options"
     },
     "sigma_5c35e553": {
         "message": "Sigma"
@@ -2107,9 +2044,6 @@
     },
     "superscript_8cb349a2": {
         "message": "Superscript"
-    },
-    "superscript_and_subscript_37f94a50": {
-        "message": "Superscript and Subscript"
     },
     "superset_c4db8a7a": {
         "message": "Superset"
@@ -2336,9 +2270,6 @@
     "up_and_right_diagonal_arrow_935b902e": {
         "message": "Up And Right Diagonal Arrow"
     },
-    "upload_document_253f0478": {
-        "message": "Upload Document"
-    },
     "upload_file_fd2361b8": {
         "message": "Upload File"
     },
@@ -2347,9 +2278,6 @@
     },
     "upload_media_ce31135a": {
         "message": "Upload Media"
-    },
-    "upload_record_media_e4207d72": {
-        "message": "Upload/Record Media"
     },
     "uploading_19e8a4e7": {
         "message": "Uploading"
@@ -2491,6 +2419,9 @@
     },
     "view_title_description_67940918": {
         "message": "View { title } description"
+    },
+    "view_word_and_character_counts_a743dd0c": {
+        "message": "View word and character counts"
     },
     "weekly_schedule_navigation_6b042645": {
         "message": "Weekly schedule navigation"

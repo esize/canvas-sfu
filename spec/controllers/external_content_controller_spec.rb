@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU Affero General Public License along
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
+require_relative "lti/concerns/parent_frame_shared_examples"
+
 describe ExternalContentController do
   describe "GET success" do
     it "doesn't require a context" do
@@ -102,6 +104,22 @@ describe ExternalContentController do
         )
       end
 
+      it_behaves_like "an endpoint which uses parent_frame_context to set the CSP header" do
+        subject do
+          user_session(account_admin_user(account: Account.site_admin))
+          post(
+            :success,
+            params: {
+              service: "external_tool_dialog",
+              course_id: c.id,
+              parent_frame_context: pfc_tool.id
+            }
+          )
+        end
+
+        let(:pfc_tool_context) { c }
+      end
+
       describe "DEEP_LINKING_POST_MESSAGE_ORIGIN" do
         subject do
           post(
@@ -145,6 +163,7 @@ describe ExternalContentController do
 
         context "when returning from an internal service" do
           before do
+            user_session(account_admin_user(account: Account.site_admin))
             developer_key.update!(internal_service: true)
           end
 

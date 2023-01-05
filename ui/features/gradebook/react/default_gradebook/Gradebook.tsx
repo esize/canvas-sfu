@@ -89,8 +89,6 @@ import KeyboardNavDialog from '@canvas/keyboard-nav-dialog'
 // @ts-ignore
 import KeyboardNavTemplate from '@canvas/keyboard-nav-dialog/jst/KeyboardNavDialog.handlebars'
 import GradingPeriodSetsApi from '@canvas/grading/jquery/gradingPeriodSetsApi'
-// @ts-ignore
-import InputFilterView from '@canvas/backbone-input-filter-view'
 import {useScope as useI18nScope} from '@canvas/i18n'
 import CourseGradeCalculator from '@canvas/grading/CourseGradeCalculator'
 import * as EffectiveDueDates from '@canvas/grading/EffectiveDueDates'
@@ -251,6 +249,8 @@ export type GradebookProps = {
   isGradingPeriodAssignmentsLoading: boolean
   isModulesLoading: boolean
   isStudentIdsLoading: boolean
+  isStudentDataLoaded: boolean
+  isSubmissionDataLoaded: boolean
   locale: string
   modules: Module[]
   performanceControls: PerformanceControls
@@ -258,6 +258,9 @@ export type GradebookProps = {
     assignmentGroups: AssignmentGroup[]
     gradingPeriodIds?: string[]
   }
+  recentlyLoadedStudents: Student[]
+  recentlyLoadedSubmissions: UserSubmissionGroup[]
+  reloadStudentData: () => void
   settingsModalButtonContainer: HTMLElement
   sisOverrides: AssignmentGroup[]
   studentIds: string[]
@@ -284,8 +287,6 @@ class Gradebook extends React.Component<GradebookProps, GradebookState> {
   kbDialog: KeyboardNavDialog
 
   anonymousSpeedGraderAlert?: any
-
-  userFilter: InputFilterView
 
   assignmentStudentVisibility: AssignmentStudentMap = {}
 
@@ -832,7 +833,9 @@ class Gradebook extends React.Component<GradebookProps, GradebookState> {
     this.initGrid()
     this.initHeader()
     this.gridReady.resolve(null)
-    this.addOverridesToPostGradesStore(this.props.sisOverrides)
+    if (this.options.post_grades_feature) {
+      this.addOverridesToPostGradesStore(this.props.sisOverrides)
+    }
   }
 
   setupGrading = (students: GradebookStudent[]): void => {
@@ -1518,7 +1521,7 @@ class Gradebook extends React.Component<GradebookProps, GradebookState> {
       this.postGradesStore.setSelectedSection(sectionId)
       return this.saveSettings({}).then(() => {
         this.updateSectionFilterVisibility()
-        return this.dataLoader.reloadStudentData()
+        return this.props.reloadStudentData()
       })
     }
   }
@@ -1565,7 +1568,7 @@ class Gradebook extends React.Component<GradebookProps, GradebookState> {
       this.setFilterRowsBySetting('studentGroupId', groupId)
       return this.saveSettings({}).then(() => {
         this.updateStudentGroupFilterVisibility()
-        this.dataLoader.reloadStudentData()
+        this.props.reloadStudentData()
       })
     }
   }
@@ -1960,7 +1963,7 @@ class Gradebook extends React.Component<GradebookProps, GradebookState> {
       gradebookExportUrl: this.options.export_gradebook_csv_url,
       postGradesLtis: this.postGradesLtis,
       postGradesFeature: {
-        enabled: this.options.post_grades_feature != null && !this.disablePostGradesFeature,
+        enabled: this.options.post_grades_feature && !this.disablePostGradesFeature,
         returnFocusTo: focusReturnPoint,
         label: this.options.sis_name,
         store: this.postGradesStore,
@@ -4006,7 +4009,7 @@ class Gradebook extends React.Component<GradebookProps, GradebookState> {
 
   updateStudentHeadersAndReloadData = () => {
     this.updateStudentColumnHeaders()
-    this.dataLoader.reloadStudentData()
+    this.props.reloadStudentData()
     this.props.fetchGradingPeriodAssignments()
   }
 
@@ -4346,6 +4349,11 @@ class Gradebook extends React.Component<GradebookProps, GradebookState> {
         }
         if (gradeInfo.excused) {
           submissionData.excuse = true
+        } else if (
+          ENV.GRADEBOOK_OPTIONS.assignment_missing_shortcut &&
+          gradeInfo.late_policy_status === 'missing'
+        ) {
+          submissionData.late_policy_status = gradeInfo.late_policy_status
         } else if (gradeInfo.enteredAs === null) {
           submissionData.posted_grade = ''
         } else if (['passFail', 'gradingScheme'].includes(gradeInfo.enteredAs)) {
@@ -4602,6 +4610,26 @@ class Gradebook extends React.Component<GradebookProps, GradebookState> {
       )
     }
 
+    // students
+    if (prevProps.recentlyLoadedStudents !== this.props.recentlyLoadedStudents) {
+      this.gotChunkOfStudents(this.props.recentlyLoadedStudents)
+    }
+
+    // submissions
+    if (prevProps.recentlyLoadedSubmissions !== this.props.recentlyLoadedSubmissions) {
+      this.gotSubmissionsChunk(this.props.recentlyLoadedSubmissions)
+    }
+
+    // students are done loading
+    if (prevProps.isStudentDataLoaded !== this.props.isStudentDataLoaded) {
+      this.updateStudentsLoaded(this.props.isStudentDataLoaded)
+    }
+
+    // updateSubmissionsLoaded
+    if (prevProps.isSubmissionDataLoaded !== this.props.isSubmissionDataLoaded) {
+      this.updateSubmissionsLoaded(this.props.isSubmissionDataLoaded)
+    }
+
     // final grade overrides
     if (
       prevProps.finalGradeOverrides !== this.props.finalGradeOverrides &&
@@ -4624,11 +4652,21 @@ class Gradebook extends React.Component<GradebookProps, GradebookState> {
     }
 
     // custom columns
+    // two scenarios in which to build custom column state:
+    //   1. custom columns finished loading; student data already loaded
+    //   2. student data stopped loading; custom columns already loaded
     if (
-      prevProps.isCustomColumnsLoading !== this.props.isCustomColumnsLoading &&
-      !this.props.isCustomColumnsLoading
+      (prevProps.isCustomColumnsLoading !== this.props.isCustomColumnsLoading &&
+        !this.props.isCustomColumnsLoading &&
+        this.props.isStudentDataLoaded) ||
+      (prevProps.isStudentDataLoaded !== this.props.isStudentDataLoaded &&
+        this.props.isStudentDataLoaded &&
+        !this.props.isCustomColumnsLoading)
     ) {
       this.gotCustomColumns(this.props.customColumns)
+      this.dataLoader.loadInitialData().catch(() => {
+        FlashAlert.showFlashError(I18n.t('There was an error fetching data for Gradebook'))
+      })
     }
 
     const didAppliedFilterValuesChange =
@@ -4737,10 +4775,6 @@ class Gradebook extends React.Component<GradebookProps, GradebookState> {
     this.bindGridEvents()
 
     this.setState({isGridLoaded: true})
-
-    this.dataLoader.loadInitialData().catch(() => {
-      FlashAlert.showFlashError(I18n.t('There was an error fetching data for Gradebook'))
-    })
 
     // eslint-disable-next-line promise/catch-or-return
     this.gridReady.promise.then(() => {

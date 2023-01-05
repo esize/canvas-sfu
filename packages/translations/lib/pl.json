@@ -41,9 +41,6 @@
     "aleph_f4ffd155": {
         "message": "Alef"
     },
-    "align_11050992": {
-        "message": "Dostosuj"
-    },
     "alignment_and_lists_5cebcb69": {
         "message": "Wyrównanie i listy"
     },
@@ -269,9 +266,6 @@
     "catalan_16f6b78f": {
         "message": "Kataloński"
     },
-    "center_align_e68d9997": {
-        "message": "Wyśrodkuj"
-    },
     "centered_dot_64d5e378": {
         "message": "Kropka wyśrodkowana"
     },
@@ -419,9 +413,6 @@
     "course_images_f8511d04": {
         "message": "Obrazy kursu"
     },
-    "course_link_b369426": {
-        "message": "Łącze kursu"
-    },
     "course_links_b56959b9": {
         "message": "Łącza kursu"
     },
@@ -436,9 +427,6 @@
     },
     "create_icon_110d6463": {
         "message": "Utwórz ikonę"
-    },
-    "create_icon_maker_icon_c716bffe": {
-        "message": "Utwórz ikonę Icon Maker"
     },
     "creative_commons_license_725584ae": {
         "message": "Licencja Creative Commons:"
@@ -496,9 +484,6 @@
     },
     "decorative_type_upper_f2c95e3": {
         "message": "Dekoracyjny { TYPE_UPPER }"
-    },
-    "decrease_indent_d9cf469d": {
-        "message": "Zmniejsz wcięcie"
     },
     "deep_purple_bb3e2907": {
         "message": "Głęboki fiolet"
@@ -593,9 +578,6 @@
     "division_sign_72190870": {
         "message": "Znak dzielenia"
     },
-    "document_678cd7bf": {
-        "message": "Dokument"
-    },
     "documents_81393201": {
         "message": "Dokumenty"
     },
@@ -652,9 +634,6 @@
     },
     "edit_course_link_5a5c3c59": {
         "message": "Edytuj łącze do kursu"
-    },
-    "edit_equation_f5279959": {
-        "message": "Edytuj równanie"
     },
     "edit_existing_icon_maker_icon_5d0ebb3f": {
         "message": "Edytuj istniejącą ikonę Icon Maker"
@@ -731,9 +710,6 @@
     "equals_sign_c51bdc58": {
         "message": "Znak równości"
     },
-    "equation_1c5ac93c": {
-        "message": "Równanie"
-    },
     "equation_editor_39fbc3f1": {
         "message": "Edytor równań"
     },
@@ -770,6 +746,9 @@
     "exists_2e62bdaa": {
         "message": "Istnieje"
     },
+    "exit_fullscreen_b7eb0aa4": {
+        "message": "Zamknij tryb pełnoekranowy"
+    },
     "expand_preview_by_default_2abbf9f8": {
         "message": "Domyślnie rozwiń podgląd"
     },
@@ -778,9 +757,6 @@
     },
     "extended_9a58dcb6": {
         "message": "Rozszerzone"
-    },
-    "external_link_d3f9e62a": {
-        "message": "Łącze zewnętrzne"
     },
     "external_tools_6e77821": {
         "message": "Narzędzia zewnętrzne"
@@ -974,9 +950,6 @@
     "group_isomorphism_45b1458c": {
         "message": "Izomorfizm grup"
     },
-    "group_link_63e626b3": {
-        "message": "Łącze grupowe"
-    },
     "group_links_9493129e": {
         "message": "Łącza grupowe"
     },
@@ -1033,9 +1006,6 @@
     },
     "html_code_editor_fd967a44": {
         "message": "edytor kodu html"
-    },
-    "html_editor_fb2ab713": {
-        "message": "Edytor HTML"
     },
     "hungarian_fc7d30c9": {
         "message": "Węgierski"
@@ -1106,9 +1076,6 @@
     "in_element_of_19ca2f33": {
         "message": "W (element)"
     },
-    "increase_indent_6af90f7c": {
-        "message": "Zwiększ wcięcie"
-    },
     "indefinite_integral_6623307e": {
         "message": "Całka nieoznaczona"
     },
@@ -1127,14 +1094,8 @@
     "insert_593145ef": {
         "message": "Wstaw"
     },
-    "insert_equella_links_49a8dacd": {
-        "message": "Wstaw łącza Equella"
-    },
     "insert_link_6dc23cae": {
         "message": "Umieść Łącze"
-    },
-    "insert_math_equation_57c6e767": {
-        "message": "Wpisz równanie matematyczne"
     },
     "integers_336344e1": {
         "message": "Liczby całkowite"
@@ -1216,9 +1177,6 @@
     },
     "latvian_2bbb6aab": {
         "message": "Łotewski"
-    },
-    "left_align_43d95491": {
-        "message": "Wyrównaj do lewej"
     },
     "left_angle_bracket_c87a6d07": {
         "message": "Lewy nawias ostrokątny"
@@ -1643,6 +1601,9 @@
     "partial_derivative_4a9159df": {
         "message": "Pochodna cząstkowa"
     },
+    "paste_5963d1c1": {
+        "message": "Wklej"
+    },
     "peer_review_74f26a13": {
         "message": "Recenzja drugiego uczestnika"
     },
@@ -1799,9 +1760,6 @@
     "record_7c9448b": {
         "message": "Nagraj"
     },
-    "record_upload_media_5fdce166": {
-        "message": "Utwórz/prześlij pliki multimedialne"
-    },
     "red_8258edf3": {
         "message": "Czerwony"
     },
@@ -1816,9 +1774,6 @@
     },
     "reminder_date_4564d12d": {
         "message": "Przypomnienie: { date }"
-    },
-    "remove_link_d1f2f4d0": {
-        "message": "Usuń łącze"
     },
     "replace_e61834a7": {
         "message": "Zastąp"
@@ -1849,9 +1804,6 @@
     },
     "rich_text_area_press_alt_0_for_rich_content_editor_9d23437f": {
         "message": "Obszar tekstu sformatowanego Naciśnij ALT+0, aby wyświetlić skróty edytora tekstu sformatowanego."
-    },
-    "right_align_39e7a32a": {
-        "message": "Wyrównaj do prawej"
     },
     "right_angle_bracket_d704e2d6": {
         "message": "Prawy nawias ostrokątny"
@@ -1907,9 +1859,6 @@
     "save_11a80ec3": {
         "message": "Zapisz"
     },
-    "saved_icon_maker_icons_df86e2a1": {
-        "message": "Zapisane ikony Icon Maker"
-    },
     "schedule_preview_3bcda153": {
         "message": "Zaplanuj podgląd"
     },
@@ -1958,20 +1907,8 @@
     "show_all_ae37d610": {
         "message": "Pokaż wszystko"
     },
-    "show_audio_options_b489926b": {
-        "message": "Pokaż opcje audio"
-    },
-    "show_image_options_1e2ecc6b": {
-        "message": "Pokaż opcje obrazów"
-    },
-    "show_link_options_545338fd": {
-        "message": "Pokaż opcje łącza"
-    },
     "show_my_grades_ebd08684": {
         "message": "Pokaż moje oceny"
-    },
-    "show_video_options_6ed3721a": {
-        "message": "Pokaż opcje wideo"
     },
     "sigma_5c35e553": {
         "message": "Sigma"
@@ -2107,9 +2044,6 @@
     },
     "superscript_8cb349a2": {
         "message": "Indeks górny"
-    },
-    "superscript_and_subscript_37f94a50": {
-        "message": "Indeks górny i dolny"
     },
     "superset_c4db8a7a": {
         "message": "Nadzbiór"
@@ -2336,9 +2270,6 @@
     "up_and_right_diagonal_arrow_935b902e": {
         "message": "Strzałka po przekątnej do góry i w prawo"
     },
-    "upload_document_253f0478": {
-        "message": "Prześlij dokument"
-    },
     "upload_file_fd2361b8": {
         "message": "Prześlij plik"
     },
@@ -2347,9 +2278,6 @@
     },
     "upload_media_ce31135a": {
         "message": "Przekaż pliki multimedialne"
-    },
-    "upload_record_media_e4207d72": {
-        "message": "Przekaż/zapisz pliki multimedialne"
     },
     "uploading_19e8a4e7": {
         "message": "Przekazywanie"
@@ -2491,6 +2419,9 @@
     },
     "view_title_description_67940918": {
         "message": "Wyświetl opis { title }"
+    },
+    "view_word_and_character_counts_a743dd0c": {
+        "message": "Wyświetl liczbę słów i znaków"
     },
     "weekly_schedule_navigation_6b042645": {
         "message": "Nawigacja po harmonogramie tygodnia"

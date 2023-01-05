@@ -41,9 +41,6 @@
     "aleph_f4ffd155": {
         "message": "アレフ"
     },
-    "align_11050992": {
-        "message": "位置調整"
-    },
     "alignment_and_lists_5cebcb69": {
         "message": "配置とリスト"
     },
@@ -269,9 +266,6 @@
     "catalan_16f6b78f": {
         "message": "カタロニア語"
     },
-    "center_align_e68d9997": {
-        "message": "センターアライン"
-    },
     "centered_dot_64d5e378": {
         "message": "中央の点"
     },
@@ -419,9 +413,6 @@
     "course_images_f8511d04": {
         "message": "コース画像"
     },
-    "course_link_b369426": {
-        "message": "コースリンク"
-    },
     "course_links_b56959b9": {
         "message": "コースリンク"
     },
@@ -436,9 +427,6 @@
     },
     "create_icon_110d6463": {
         "message": "アイコンを作成する"
-    },
-    "create_icon_maker_icon_c716bffe": {
-        "message": "アイコンメーカーのアイコンを作成する"
     },
     "creative_commons_license_725584ae": {
         "message": "クリエイティブ コモンズ ライセンス:"
@@ -496,9 +484,6 @@
     },
     "decorative_type_upper_f2c95e3": {
         "message": "装飾的{ TYPE_UPPER }"
-    },
-    "decrease_indent_d9cf469d": {
-        "message": "インデントを減らす"
     },
     "deep_purple_bb3e2907": {
         "message": "ディープパープル"
@@ -593,9 +578,6 @@
     "division_sign_72190870": {
         "message": "分割サイン"
     },
-    "document_678cd7bf": {
-        "message": "ドキュメント"
-    },
     "documents_81393201": {
         "message": "ドキュメント"
     },
@@ -652,9 +634,6 @@
     },
     "edit_course_link_5a5c3c59": {
         "message": "コースリンクを編集"
-    },
-    "edit_equation_f5279959": {
-        "message": "方程式を編集する"
     },
     "edit_existing_icon_maker_icon_5d0ebb3f": {
         "message": "既存のアイコンメーカーのアイコンを編集する"
@@ -731,9 +710,6 @@
     "equals_sign_c51bdc58": {
         "message": "等記号"
     },
-    "equation_1c5ac93c": {
-        "message": "方程式"
-    },
     "equation_editor_39fbc3f1": {
         "message": "方程式エディタ"
     },
@@ -770,6 +746,9 @@
     "exists_2e62bdaa": {
         "message": "存在する"
     },
+    "exit_fullscreen_b7eb0aa4": {
+        "message": "全画面表示終了"
+    },
     "expand_preview_by_default_2abbf9f8": {
         "message": "デフォルトによるプレビューの拡大"
     },
@@ -778,9 +757,6 @@
     },
     "extended_9a58dcb6": {
         "message": "拡大された"
-    },
-    "external_link_d3f9e62a": {
-        "message": "外部リンク"
     },
     "external_tools_6e77821": {
         "message": "外部ツール"
@@ -974,9 +950,6 @@
     "group_isomorphism_45b1458c": {
         "message": "グループ同型"
     },
-    "group_link_63e626b3": {
-        "message": "グループリンク"
-    },
     "group_links_9493129e": {
         "message": "グループリンク"
     },
@@ -1033,9 +1006,6 @@
     },
     "html_code_editor_fd967a44": {
         "message": "Html コードエディタ"
-    },
-    "html_editor_fb2ab713": {
-        "message": "HTML エディタ"
     },
     "hungarian_fc7d30c9": {
         "message": "ハンガリー語"
@@ -1106,9 +1076,6 @@
     "in_element_of_19ca2f33": {
         "message": "（）内（の要素）"
     },
-    "increase_indent_6af90f7c": {
-        "message": "インデントを増やす"
-    },
     "indefinite_integral_6623307e": {
         "message": "不定積分"
     },
@@ -1127,14 +1094,8 @@
     "insert_593145ef": {
         "message": "挿入"
     },
-    "insert_equella_links_49a8dacd": {
-        "message": "Equella リンクを挿入してください"
-    },
     "insert_link_6dc23cae": {
         "message": "リンクの挿入"
-    },
-    "insert_math_equation_57c6e767": {
-        "message": "数学数式を挿入"
     },
     "integers_336344e1": {
         "message": "整数"
@@ -1216,9 +1177,6 @@
     },
     "latvian_2bbb6aab": {
         "message": "ラトビア語"
-    },
-    "left_align_43d95491": {
-        "message": "左揃え"
     },
     "left_angle_bracket_c87a6d07": {
         "message": "左傾きブラケット"
@@ -1643,6 +1601,9 @@
     "partial_derivative_4a9159df": {
         "message": "部分(微分)"
     },
+    "paste_5963d1c1": {
+        "message": "貼り付け"
+    },
     "peer_review_74f26a13": {
         "message": "ピア レビュー"
     },
@@ -1799,9 +1760,6 @@
     "record_7c9448b": {
         "message": "記録"
     },
-    "record_upload_media_5fdce166": {
-        "message": "メディアの記録/アップロード"
-    },
     "red_8258edf3": {
         "message": "レッド"
     },
@@ -1816,9 +1774,6 @@
     },
     "reminder_date_4564d12d": {
         "message": "リマインダ（お知らせ）：{ date }"
-    },
-    "remove_link_d1f2f4d0": {
-        "message": "リンクの削除"
     },
     "replace_e61834a7": {
         "message": "置換"
@@ -1849,9 +1804,6 @@
     },
     "rich_text_area_press_alt_0_for_rich_content_editor_9d23437f": {
         "message": "リッチテキストエリアリッチコンテンツエディターのショートカットは、ALT+0を押してください。"
-    },
-    "right_align_39e7a32a": {
-        "message": "右揃え"
     },
     "right_angle_bracket_d704e2d6": {
         "message": "直角ブラケット"
@@ -1907,9 +1859,6 @@
     "save_11a80ec3": {
         "message": "保存"
     },
-    "saved_icon_maker_icons_df86e2a1": {
-        "message": "保存したアイコンメーカーのアイコン"
-    },
     "schedule_preview_3bcda153": {
         "message": "スケジュールプレビュー"
     },
@@ -1958,20 +1907,8 @@
     "show_all_ae37d610": {
         "message": "すべて表示する"
     },
-    "show_audio_options_b489926b": {
-        "message": "オーディオオプションを表示する"
-    },
-    "show_image_options_1e2ecc6b": {
-        "message": "画像オプションを表示"
-    },
-    "show_link_options_545338fd": {
-        "message": "リンクオプションを表示する"
-    },
     "show_my_grades_ebd08684": {
         "message": "私の評定を表示"
-    },
-    "show_video_options_6ed3721a": {
-        "message": "ビデオオプションを表示する"
     },
     "sigma_5c35e553": {
         "message": "シグマ"
@@ -2107,9 +2044,6 @@
     },
     "superscript_8cb349a2": {
         "message": "上付き"
-    },
-    "superscript_and_subscript_37f94a50": {
-        "message": "上付き文字と下付き文字"
     },
     "superset_c4db8a7a": {
         "message": "部分集合"
@@ -2336,9 +2270,6 @@
     "up_and_right_diagonal_arrow_935b902e": {
         "message": "上・右の対角線矢印"
     },
-    "upload_document_253f0478": {
-        "message": "ドキュメントをアップロードする"
-    },
     "upload_file_fd2361b8": {
         "message": "ファイルアップロード"
     },
@@ -2347,9 +2278,6 @@
     },
     "upload_media_ce31135a": {
         "message": "メディアを読み込む"
-    },
-    "upload_record_media_e4207d72": {
-        "message": "メディアをアップロード/記録する"
     },
     "uploading_19e8a4e7": {
         "message": "アップロードしています"
@@ -2491,6 +2419,9 @@
     },
     "view_title_description_67940918": {
         "message": "{ title }説明の表示"
+    },
+    "view_word_and_character_counts_a743dd0c": {
+        "message": "語数・文字数を表示"
     },
     "weekly_schedule_navigation_6b042645": {
         "message": "週間スケジュールのナビゲーション"

@@ -21,8 +21,8 @@ import {svgSettings as svgSettingsReducer, defaultState} from '../reducers/svgSe
 import {ICON_MAKER_ATTRIBUTE, ICON_MAKER_DOWNLOAD_URL_ATTR} from './constants'
 import {modes} from '../reducers/imageSection'
 import iconsLabels from '../utils/iconsLabels'
-import {createCroppedImageSvg} from '../components/CreateIconMakerForm/ImageCropper/imageCropUtils'
-import {convertFileToBase64} from './utils'
+import {createCroppedImageSvg} from '../../shared/ImageCropper/imageCropUtils'
+import {convertFileToBase64} from '../../shared/fileUtils'
 
 export const statuses = {
   ERROR: 'error',
@@ -176,5 +176,12 @@ function processMetadataForBackwardCompatibility(metadataJson) {
   const imageSettingsIcon = metadataJson?.imageSettings?.icon
   if (!imageSettingsImage && !imageSettingsIcon) {
     metadataJson.imageSettings = null
+  }
+
+  // Replaces cropper settings' shape using icon's shape
+  const cropperSettingsShape = metadataJson?.imageSettings?.cropperSettings?.shape
+  const shape = metadataJson?.shape
+  if (shape && cropperSettingsShape && shape !== cropperSettingsShape) {
+    metadataJson.imageSettings.cropperSettings.shape = shape
   }
 }

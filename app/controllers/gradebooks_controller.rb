@@ -494,7 +494,8 @@ class GradebooksController < ApplicationController
       student_groups: group_categories_json(@context.group_categories.active, @current_user, session, { include: ["groups"] }),
       teacher_notes: teacher_notes && custom_gradebook_column_json(teacher_notes, @current_user, session),
       user_asset_string: @current_user&.asset_string,
-      version: params.fetch(:version, nil)
+      version: params.fetch(:version, nil),
+      assignment_missing_shortcut: Account.site_admin.feature_enabled?(:assignment_missing_shortcut),
     }
 
     js_env({
@@ -931,7 +932,8 @@ class GradebooksController < ApplicationController
           can_delete_attachments: @domain_root_account.grants_right?(@current_user, session, :become_user),
           media_comment_asset_string: @current_user.asset_string,
           late_policy: @context.late_policy&.as_json(include_root: false),
-          speedgrader_grade_sync_max_attempts: Setting.get("speedgrader.grade_sync_max_attempts", "20").to_i
+          speedgrader_grade_sync_max_attempts: Setting.get("speedgrader.grade_sync_max_attempts", "20").to_i,
+          assignment_missing_shortcut: Account.site_admin.feature_enabled?(:assignment_missing_shortcut),
         }
         if grading_role_for_user == :moderator
           env[:provisional_select_url] = api_v1_select_provisional_grade_path(@context.id, @assignment.id, "{{provisional_grade_id}}")
@@ -1559,12 +1561,10 @@ class GradebooksController < ApplicationController
   end
 
   def mark_grades_read_a2
-    if @context.feature_enabled?(:assignments_2_student)
-      set_badge_counts_for(@context, @current_user)
-      course_submissions = @context.submissions.where(user_id: @current_user.id).except(:order).preload(:content_participations, :visible_submission_comments)
-      course_submissions.find_each do |submission|
-        submission.mark_read(@current_user)
-      end
+    return unless @context.feature_enabled?(:assignments_2_student)
+
+    @presenter.submissions.each do |submission|
+      submission.mark_read(@current_user)
     end
   end
   helper_method :mark_grades_read_a2

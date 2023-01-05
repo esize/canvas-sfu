@@ -965,7 +965,7 @@ module ApplicationHelper
     js_env(csp: csp_iframe_attribute) if csp_enforced?
 
     output = []
-    output = @meta_tags.map { |meta_attrs| tag.meta(meta_attrs) } if @meta_tags.present?
+    output = @meta_tags.map { |meta_attrs| tag.meta(**meta_attrs) } if @meta_tags.present?
 
     # set this if you want android users of your site to be prompted to install an android app
     # you can see an example of the one that instructure uses in InfoController#web_app_manifest
@@ -1403,10 +1403,10 @@ module ApplicationHelper
   end
 
   def find_heap_application_id
-    DynamicSettings.find(tree: :private)[:heap_app_id]
+    DynamicSettings.find(tree: :private)&.fetch([:heap_app_id])
   end
 
   def load_heap?
-    find_heap_application_id && @domain_root_account.feature_enabled?(:send_usage_metrics)
+    find_heap_application_id && @domain_root_account&.feature_enabled?(:send_usage_metrics)
   end
 end

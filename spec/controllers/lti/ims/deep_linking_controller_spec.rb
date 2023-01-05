@@ -18,6 +18,7 @@
 # with this program. If not, see <http://www.gnu.org/licenses/>.
 
 require_relative "./concerns/deep_linking_spec_helper"
+require_relative "../concerns/parent_frame_shared_examples"
 
 module Lti
   module IMS
@@ -52,27 +53,27 @@ module Lti
         end
 
         it "sets the JS ENV" do
-          expect(controller).to receive(:js_env).with(
-            deep_link_response: {
-              placement: placement,
-              content_items: content_items,
-              msg: msg,
-              log: log,
-              errormsg: errormsg,
-              errorlog: errorlog,
-              ltiEndpoint: Rails.application.routes.url_helpers.polymorphic_url(
-                [:retrieve, account, :external_tools],
-                host: "test.host"
-              ),
-              reloadpage: false,
-              moduleCreated: false
-            }
-          )
+          expect(controller).to receive(:js_env).with({ deep_linking_use_window_parent: true })
+          expect(controller).to receive(:js_env).with({
+                                                        deep_link_response: {
+                                                          placement: placement,
+                                                          content_items: content_items,
+                                                          msg: msg,
+                                                          log: log,
+                                                          errormsg: errormsg,
+                                                          errorlog: errorlog,
+                                                          ltiEndpoint: Rails.application.routes.url_helpers.polymorphic_url(
+                                                            [:retrieve, account, :external_tools],
+                                                            host: "test.host"
+                                                          ),
+                                                          reloadpage: false,
+                                                          moduleCreated: false
+                                                        }
+                                                      })
 
           subject
         end
 
-        # TODO: update all these with hash_including()
         context "when returning from a non-internal service" do
           let(:return_url_params) { { placement: placement, parent_frame_context: context_external_tool.id } }
 
@@ -86,6 +87,8 @@ module Lti
         context "when returning from an internal service" do
           before do
             developer_key.update!(internal_service: true)
+            u = course_with_teacher(course: course, user: user_model, active_all: true).user
+            user_session(u)
           end
 
           let(:return_url_params) { { placement: placement, parent_frame_context: context_external_tool.id } }
@@ -96,6 +99,16 @@ module Lti
           end
         end
 
+        it_behaves_like "an endpoint which uses parent_frame_context to set the CSP header" do
+          let(:return_url_params) { { placement: placement, parent_frame_context: pfc_tool.id } }
+          let(:pfc_tool_context) do
+            # Need to enroll user to make sure user can access pfc tool
+            enrollment = course_with_teacher(course: course, user: user_model, active_all: true)
+            user_session(enrollment.user)
+            enrollment.course
+          end
+        end
+
         context "when the messages/logs passed in are not strings" do
           let(:msg) { { html: "some message" } }
           let(:errormsg) { { html: "some error message" } }
@@ -103,13 +116,15 @@ module Lti
           let(:errorlog) { { html: "some error log" } }
 
           it "turns them into strings before calling js_env to prevent HTML injection" do
-            expect(controller).to receive(:js_env).with(deep_link_response:
-              hash_including(
-                msg: '{"html"=>"some message"}',
-                log: '{"html"=>"some log"}',
-                errormsg: '{"html"=>"some error message"}',
-                errorlog: '{"html"=>"some error log"}'
-              ))
+            expect(controller).to receive(:js_env).with({ deep_linking_use_window_parent: true })
+            expect(controller).to receive(:js_env).with({
+                                                          deep_link_response: hash_including(
+                                                            msg: '{"html"=>"some message"}',
+                                                            log: '{"html"=>"some log"}',
+                                                            errormsg: '{"html"=>"some error message"}',
+                                                            errorlog: '{"html"=>"some error log"}'
+                                                          )
+                                                        })
             subject
           end
         end

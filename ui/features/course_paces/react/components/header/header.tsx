@@ -34,11 +34,12 @@ import ProjectedDates from './projected_dates/projected_dates'
 import Settings from './settings/settings'
 import BlueprintLock from './blueprint_lock'
 import UnpublishedChangesIndicator from '../unpublished_changes_indicator'
-import {getSelectedContextId, getSelectedContextType} from '../../reducers/ui'
+import {getBlueprintLocked, getSelectedContextId, getSelectedContextType} from '../../reducers/ui'
 import {getCoursePace, isNewPace} from '../../reducers/course_paces'
 import {PaceContext, CoursePace, StoreState, ResponsiveSizes} from '../../types'
 import {actions} from '../../actions/ui'
 import {paceContextsActions} from '../../actions/pace_contexts'
+import {generateModalLauncherId} from '../../utils/utils'
 
 const I18n = useI18nScope('course_paces_header')
 
@@ -56,13 +57,12 @@ type StoreProps = {
   readonly context_type: string
   readonly context_id: string
   readonly newPace: boolean
+  readonly blueprintLocked: boolean | undefined
 }
 
 type PassedProps = {
   handleDrawerToggle?: () => void
-  setIsBlueprintLocked: (arg) => void
   readonly responsiveSize: ResponsiveSizes
-  readonly isBlueprintLocked: boolean
 }
 
 export type HeaderProps = PassedProps & StoreProps & DispatchProps
@@ -132,11 +132,11 @@ export const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
         <View as="div" margin="small 0" borderRadius="medium" borderWidth="small" padding="medium">
           <Flex
             justifyItems="space-between"
-            direction={props.responsiveSize === 'large' ? 'row' : 'column'}
+            direction={props.responsiveSize !== 'small' ? 'row' : 'column'}
           >
             <FlexItem>
-              <Flex justifyItems={props.responsiveSize === 'large' ? 'start' : 'center'}>
-                {props.responsiveSize === 'large' ? (
+              <Flex justifyItems={props.responsiveSize !== 'small' ? 'start' : 'center'}>
+                {props.responsiveSize !== 'small' ? (
                   <FlexItem padding="0 medium 0 0">
                     <IconCoursesLine size="small" />
                   </FlexItem>
@@ -178,9 +178,13 @@ export const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
             <FlexItem
               fontSize="0.875rem"
               textAlign="center"
-              margin={props.responsiveSize === 'large' ? '0' : 'small 0 0'}
+              margin={props.responsiveSize !== 'small' ? '0' : 'small 0 0'}
             >
               <Link
+                id={generateModalLauncherId({
+                  type: 'Course',
+                  item_id: window.ENV.COURSE_ID,
+                } as PaceContext)}
                 isWithinText={false}
                 data-testid="go-to-default-pace"
                 onClick={() => {
@@ -220,15 +224,8 @@ export const Header: React.FC<HeaderProps> = (props: HeaderProps) => {
             <PacePicker />
           </FlexItem>
           <FlexItem margin="0 0 small" shouldGrow={true}>
-            <Settings
-              isBlueprintLocked={props.isBlueprintLocked && props.context_type === 'Course'}
-              margin="0 0 0 small"
-            />
-            <BlueprintLock
-              newPace={props.newPace}
-              contextIsCoursePace={props.context_type === 'Course'}
-              setIsBlueprintLocked={props.setIsBlueprintLocked}
-            />
+            <Settings isBlueprintLocked={props.blueprintLocked} margin="0 0 0 small" />
+            <BlueprintLock newPace={props.newPace} />
           </FlexItem>
           <FlexItem textAlign="end" margin="0 0 small small">
             {(props.context_type !== 'Enrollment' ||
@@ -253,6 +250,7 @@ const mapStateToProps = (state: StoreState) => {
     context_type: getSelectedContextType(state),
     context_id: getSelectedContextId(state),
     newPace: isNewPace(state),
+    blueprintLocked: getBlueprintLocked(state),
   }
 }
 

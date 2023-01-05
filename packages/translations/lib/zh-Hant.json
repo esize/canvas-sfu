@@ -41,9 +41,6 @@
     "aleph_f4ffd155": {
         "message": "Aleph"
     },
-    "align_11050992": {
-        "message": "對齊"
-    },
     "alignment_and_lists_5cebcb69": {
         "message": "對齊及清單"
     },
@@ -269,9 +266,6 @@
     "catalan_16f6b78f": {
         "message": "加泰隆尼亞語"
     },
-    "center_align_e68d9997": {
-        "message": "置中對齊"
-    },
     "centered_dot_64d5e378": {
         "message": "中心點"
     },
@@ -419,9 +413,6 @@
     "course_images_f8511d04": {
         "message": "課程影像"
     },
-    "course_link_b369426": {
-        "message": "課程連結"
-    },
     "course_links_b56959b9": {
         "message": "課程連結"
     },
@@ -436,9 +427,6 @@
     },
     "create_icon_110d6463": {
         "message": "建立圖示"
-    },
-    "create_icon_maker_icon_c716bffe": {
-        "message": "建立圖示 製作者圖示"
     },
     "creative_commons_license_725584ae": {
         "message": "創意共享授權："
@@ -496,9 +484,6 @@
     },
     "decorative_type_upper_f2c95e3": {
         "message": "裝飾 { TYPE_UPPER }"
-    },
-    "decrease_indent_d9cf469d": {
-        "message": "減少縮排"
     },
     "deep_purple_bb3e2907": {
         "message": "深紫色"
@@ -593,9 +578,6 @@
     "division_sign_72190870": {
         "message": "除號"
     },
-    "document_678cd7bf": {
-        "message": "文件"
-    },
     "documents_81393201": {
         "message": "文件"
     },
@@ -652,9 +634,6 @@
     },
     "edit_course_link_5a5c3c59": {
         "message": "編輯課程連結"
-    },
-    "edit_equation_f5279959": {
-        "message": "編輯方程式"
     },
     "edit_existing_icon_maker_icon_5d0ebb3f": {
         "message": "編輯現有的圖示製作者圖示"
@@ -731,9 +710,6 @@
     "equals_sign_c51bdc58": {
         "message": "等號"
     },
-    "equation_1c5ac93c": {
-        "message": "方程式"
-    },
     "equation_editor_39fbc3f1": {
         "message": "方程式編輯器"
     },
@@ -770,6 +746,9 @@
     "exists_2e62bdaa": {
         "message": "存在"
     },
+    "exit_fullscreen_b7eb0aa4": {
+        "message": "退出全螢幕"
+    },
     "expand_preview_by_default_2abbf9f8": {
         "message": "預設為展開預覽"
     },
@@ -778,9 +757,6 @@
     },
     "extended_9a58dcb6": {
         "message": "延伸"
-    },
-    "external_link_d3f9e62a": {
-        "message": "外部連結"
     },
     "external_tools_6e77821": {
         "message": "外部工具"
@@ -974,9 +950,6 @@
     "group_isomorphism_45b1458c": {
         "message": "揚抑符號"
     },
-    "group_link_63e626b3": {
-        "message": "群組連結"
-    },
     "group_links_9493129e": {
         "message": "群組連結"
     },
@@ -1033,9 +1006,6 @@
     },
     "html_code_editor_fd967a44": {
         "message": "Html 代碼編輯器"
-    },
-    "html_editor_fb2ab713": {
-        "message": "HTML 編輯器"
     },
     "hungarian_fc7d30c9": {
         "message": "匈牙利語"
@@ -1106,9 +1076,6 @@
     "in_element_of_19ca2f33": {
         "message": "在（某個元素）"
     },
-    "increase_indent_6af90f7c": {
-        "message": "增加縮進"
-    },
     "indefinite_integral_6623307e": {
         "message": "無限積分"
     },
@@ -1127,14 +1094,8 @@
     "insert_593145ef": {
         "message": "插入"
     },
-    "insert_equella_links_49a8dacd": {
-        "message": "插入 Equella 連結"
-    },
     "insert_link_6dc23cae": {
         "message": "插入連結"
-    },
-    "insert_math_equation_57c6e767": {
-        "message": "插入數學方程式"
     },
     "integers_336344e1": {
         "message": "整數"
@@ -1216,9 +1177,6 @@
     },
     "latvian_2bbb6aab": {
         "message": "拉脫維亞語"
-    },
-    "left_align_43d95491": {
-        "message": "靠左對齊"
     },
     "left_angle_bracket_c87a6d07": {
         "message": "左角括號"
@@ -1643,6 +1601,9 @@
     "partial_derivative_4a9159df": {
         "message": "部份（導數）"
     },
+    "paste_5963d1c1": {
+        "message": "貼上"
+    },
     "peer_review_74f26a13": {
         "message": "同儕互評"
     },
@@ -1799,9 +1760,6 @@
     "record_7c9448b": {
         "message": "錄製"
     },
-    "record_upload_media_5fdce166": {
-        "message": "錄製/上傳媒體"
-    },
     "red_8258edf3": {
         "message": "紅色"
     },
@@ -1816,9 +1774,6 @@
     },
     "reminder_date_4564d12d": {
         "message": "提醒：{ date }"
-    },
-    "remove_link_d1f2f4d0": {
-        "message": "移除連結"
     },
     "replace_e61834a7": {
         "message": "替換"
@@ -1849,9 +1804,6 @@
     },
     "rich_text_area_press_alt_0_for_rich_content_editor_9d23437f": {
         "message": "多種格式的文字區。請按 ALT+0 使用多種格式的內容編輯器捷徑。"
-    },
-    "right_align_39e7a32a": {
-        "message": "靠右對齊"
     },
     "right_angle_bracket_d704e2d6": {
         "message": "右角括號"
@@ -1907,9 +1859,6 @@
     "save_11a80ec3": {
         "message": "儲存"
     },
-    "saved_icon_maker_icons_df86e2a1": {
-        "message": "儲存的圖示製作者圖示"
-    },
     "schedule_preview_3bcda153": {
         "message": "排程預覽"
     },
@@ -1958,20 +1907,8 @@
     "show_all_ae37d610": {
         "message": "全部顯示"
     },
-    "show_audio_options_b489926b": {
-        "message": "顯示音訊選項"
-    },
-    "show_image_options_1e2ecc6b": {
-        "message": "顯示影像選項"
-    },
-    "show_link_options_545338fd": {
-        "message": "顯示連結選項"
-    },
     "show_my_grades_ebd08684": {
         "message": "顯示我的成績"
-    },
-    "show_video_options_6ed3721a": {
-        "message": "顯示影片選項"
     },
     "sigma_5c35e553": {
         "message": "σ"
@@ -2107,9 +2044,6 @@
     },
     "superscript_8cb349a2": {
         "message": "上標"
-    },
-    "superscript_and_subscript_37f94a50": {
-        "message": "上標和下標"
     },
     "superset_c4db8a7a": {
         "message": "母集合"
@@ -2336,9 +2270,6 @@
     "up_and_right_diagonal_arrow_935b902e": {
         "message": "向上和向右對角箭頭"
     },
-    "upload_document_253f0478": {
-        "message": "上傳文件"
-    },
     "upload_file_fd2361b8": {
         "message": "上傳檔案"
     },
@@ -2347,9 +2278,6 @@
     },
     "upload_media_ce31135a": {
         "message": "上傳媒體"
-    },
-    "upload_record_media_e4207d72": {
-        "message": "上傳/錄製媒體"
     },
     "uploading_19e8a4e7": {
         "message": "正在上傳"
@@ -2491,6 +2419,9 @@
     },
     "view_title_description_67940918": {
         "message": "檢視 { title } 描述"
+    },
+    "view_word_and_character_counts_a743dd0c": {
+        "message": "檢視文字和字元計數"
     },
     "weekly_schedule_navigation_6b042645": {
         "message": "每週排程導航工具"

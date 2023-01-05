@@ -41,9 +41,6 @@
     "aleph_f4ffd155": {
         "message": "Arepa"
     },
-    "align_11050992": {
-        "message": "Whakarārangi"
-    },
     "alignment_and_lists_5cebcb69": {
         "message": "Whakahurihuri me ngā Rārangi"
     },
@@ -269,9 +266,6 @@
     "catalan_16f6b78f": {
         "message": "Catalan"
     },
-    "center_align_e68d9997": {
-        "message": "Tiaro Pokapū"
-    },
     "centered_dot_64d5e378": {
         "message": "Pokapū Ira"
     },
@@ -419,9 +413,6 @@
     "course_images_f8511d04": {
         "message": "Ngā Akoranga Āhua"
     },
-    "course_link_b369426": {
-        "message": "Hononga Akoranga"
-    },
     "course_links_b56959b9": {
         "message": "Ngā Akoranga Hononga"
     },
@@ -436,9 +427,6 @@
     },
     "create_icon_110d6463": {
         "message": "Waihanga Tohu"
-    },
-    "create_icon_maker_icon_c716bffe": {
-        "message": "Waihangahia Tohu Kaihanga Tohu"
     },
     "creative_commons_license_725584ae": {
         "message": "Auaha ngā Raihana Noa:"
@@ -496,9 +484,6 @@
     },
     "decorative_type_upper_f2c95e3": {
         "message": "Whakapaipai { TYPE_UPPER }"
-    },
-    "decrease_indent_d9cf469d": {
-        "message": "Nuku Whakaiti"
     },
     "deep_purple_bb3e2907": {
         "message": "Hohonu Waiporoporo"
@@ -593,9 +578,6 @@
     "division_sign_72190870": {
         "message": "Waitohu wehewehe"
     },
-    "document_678cd7bf": {
-        "message": "Tuhinga"
-    },
     "documents_81393201": {
         "message": "Ngā tuhinga"
     },
@@ -652,9 +634,6 @@
     },
     "edit_course_link_5a5c3c59": {
         "message": "Whakatika Hononga Akoranga"
-    },
-    "edit_equation_f5279959": {
-        "message": "Whakatika Tatauranga"
     },
     "edit_existing_icon_maker_icon_5d0ebb3f": {
         "message": "Whakatika Kei te noho Tohu Kaihanga Tohu"
@@ -731,9 +710,6 @@
     "equals_sign_c51bdc58": {
         "message": "Waitohu Ōrite"
     },
-    "equation_1c5ac93c": {
-        "message": "Whārite"
-    },
     "equation_editor_39fbc3f1": {
         "message": "Whārite Etita"
     },
@@ -770,6 +746,9 @@
     "exists_2e62bdaa": {
         "message": "Kei te noho"
     },
+    "exit_fullscreen_b7eb0aa4": {
+        "message": "Mono te Mata Katoa"
+    },
     "expand_preview_by_default_2abbf9f8": {
         "message": "Whakawhānui arokite ma te Aunoa"
     },
@@ -778,9 +757,6 @@
     },
     "extended_9a58dcb6": {
         "message": "Whakaroa"
-    },
-    "external_link_d3f9e62a": {
-        "message": "Hononga a Waho"
     },
     "external_tools_6e77821": {
         "message": "Taputapu o waho"
@@ -974,9 +950,6 @@
     "group_isomorphism_45b1458c": {
         "message": "Rōpū Isomorphism"
     },
-    "group_link_63e626b3": {
-        "message": "Hononga Rōpū"
-    },
     "group_links_9493129e": {
         "message": "Ngā Hono Ropu"
     },
@@ -1033,9 +1006,6 @@
     },
     "html_code_editor_fd967a44": {
         "message": "html waehere editor"
-    },
-    "html_editor_fb2ab713": {
-        "message": "Editor HTML"
     },
     "hungarian_fc7d30c9": {
         "message": "Hungarian"
@@ -1106,9 +1076,6 @@
     "in_element_of_19ca2f33": {
         "message": "Kei roto (Huahanga o)"
     },
-    "increase_indent_6af90f7c": {
-        "message": "Nuku Whakanui"
-    },
     "indefinite_integral_6623307e": {
         "message": "Noa Tautoko"
     },
@@ -1127,14 +1094,8 @@
     "insert_593145ef": {
         "message": "Whakauru"
     },
-    "insert_equella_links_49a8dacd": {
-        "message": "Whakauru ngā hononga Equella"
-    },
     "insert_link_6dc23cae": {
         "message": "Whakauru hono"
-    },
-    "insert_math_equation_57c6e767": {
-        "message": "Whakauru Math Whārite"
     },
     "integers_336344e1": {
         "message": "Tauoti"
@@ -1216,9 +1177,6 @@
     },
     "latvian_2bbb6aab": {
         "message": "Latvian"
-    },
-    "left_align_43d95491": {
-        "message": "Tiaro Mauī"
     },
     "left_angle_bracket_c87a6d07": {
         "message": "Taiapa Koki Mauī"
@@ -1643,6 +1601,9 @@
     "partial_derivative_4a9159df": {
         "message": "Wāhanga (Tautake)"
     },
+    "paste_5963d1c1": {
+        "message": "Whakapiri"
+    },
     "peer_review_74f26a13": {
         "message": "Hoa arotake"
     },
@@ -1799,9 +1760,6 @@
     "record_7c9448b": {
         "message": "Tāhopu"
     },
-    "record_upload_media_5fdce166": {
-        "message": "Tāhopu/Kaweake Pāpāho"
-    },
     "red_8258edf3": {
         "message": "Whero"
     },
@@ -1816,9 +1774,6 @@
     },
     "reminder_date_4564d12d": {
         "message": "Maumahara: { date }"
-    },
-    "remove_link_d1f2f4d0": {
-        "message": "Tango Hononga"
     },
     "replace_e61834a7": {
         "message": "Whakakapi"
@@ -1849,9 +1804,6 @@
     },
     "rich_text_area_press_alt_0_for_rich_content_editor_9d23437f": {
         "message": "Horahanga Kupu Taunaki. Pēhia te ALT+0 mo Taonga Ihirangi Etita pokatata."
-    },
-    "right_align_39e7a32a": {
-        "message": "Tiaro Matau"
     },
     "right_angle_bracket_d704e2d6": {
         "message": "Taiapa Koki Matau"
@@ -1907,9 +1859,6 @@
     "save_11a80ec3": {
         "message": "Tiaki"
     },
-    "saved_icon_maker_icons_df86e2a1": {
-        "message": "Kua tiakina Tohu Kaihanga Tohu"
-    },
     "schedule_preview_3bcda153": {
         "message": "Pūwhakarite Arokite"
     },
@@ -1958,20 +1907,8 @@
     "show_all_ae37d610": {
         "message": "Whakātu katoa"
     },
-    "show_audio_options_b489926b": {
-        "message": "Whakaatutia ororongo kōwhiringa"
-    },
-    "show_image_options_1e2ecc6b": {
-        "message": "Whakātu wāhanga āhua"
-    },
-    "show_link_options_545338fd": {
-        "message": "Whakātu Hono Kōwhiringa"
-    },
     "show_my_grades_ebd08684": {
         "message": "Whakātuhia aku Kōeke"
-    },
-    "show_video_options_6ed3721a": {
-        "message": "Whakātu ataata kōwhiringa"
     },
     "sigma_5c35e553": {
         "message": "Sigma"
@@ -2107,9 +2044,6 @@
     },
     "superscript_8cb349a2": {
         "message": "Tuhinga nui"
-    },
-    "superscript_and_subscript_37f94a50": {
-        "message": "Tuhituhi me te Tuhituhi"
     },
     "superset_c4db8a7a": {
         "message": "Hupiripiri"
@@ -2336,9 +2270,6 @@
     "up_and_right_diagonal_arrow_935b902e": {
         "message": "Ki runga Na Matau Hauroki Pere"
     },
-    "upload_document_253f0478": {
-        "message": "Tikiake Tuhinga"
-    },
     "upload_file_fd2361b8": {
         "message": "Tukuake kōnae"
     },
@@ -2347,9 +2278,6 @@
     },
     "upload_media_ce31135a": {
         "message": "Tukuatu pāpāho"
-    },
-    "upload_record_media_e4207d72": {
-        "message": "Tukuatu/Tāhopu Pāpāpho"
     },
     "uploading_19e8a4e7": {
         "message": "E tikiake ana"
@@ -2491,6 +2419,9 @@
     },
     "view_title_description_67940918": {
         "message": "Tirohia { title } te whakāturanga"
+    },
+    "view_word_and_character_counts_a743dd0c": {
+        "message": "Tatauhia nga kupu me nga tohu."
     },
     "weekly_schedule_navigation_6b042645": {
         "message": "Ia wiki pūwhakarite whakaterenga"

@@ -41,9 +41,6 @@
     "aleph_f4ffd155": {
         "message": "Alef"
     },
-    "align_11050992": {
-        "message": "Uitlijnen"
-    },
     "alignment_and_lists_5cebcb69": {
         "message": "Koppeling en lijsten"
     },
@@ -269,9 +266,6 @@
     "catalan_16f6b78f": {
         "message": "Catalaans"
     },
-    "center_align_e68d9997": {
-        "message": "Gecentreerd uitlijnen"
-    },
     "centered_dot_64d5e378": {
         "message": "Gecentreerde punt"
     },
@@ -419,9 +413,6 @@
     "course_images_f8511d04": {
         "message": "Cursusafbeeldingen"
     },
-    "course_link_b369426": {
-        "message": "Cursuslink"
-    },
     "course_links_b56959b9": {
         "message": "Cursuslinks"
     },
@@ -436,9 +427,6 @@
     },
     "create_icon_110d6463": {
         "message": "Pictogram maken"
-    },
-    "create_icon_maker_icon_c716bffe": {
-        "message": "Pictogrammaker-pictogram maken"
     },
     "creative_commons_license_725584ae": {
         "message": "Creative Commons-licentie:"
@@ -496,9 +484,6 @@
     },
     "decorative_type_upper_f2c95e3": {
         "message": "Decoratief { TYPE_UPPER }"
-    },
-    "decrease_indent_d9cf469d": {
-        "message": "Inspringen verkleinen"
     },
     "deep_purple_bb3e2907": {
         "message": "Diep paars"
@@ -593,9 +578,6 @@
     "division_sign_72190870": {
         "message": "Deelteken"
     },
-    "document_678cd7bf": {
-        "message": "Document"
-    },
     "documents_81393201": {
         "message": "Documenten"
     },
@@ -652,9 +634,6 @@
     },
     "edit_course_link_5a5c3c59": {
         "message": "Cursuslink bewerken"
-    },
-    "edit_equation_f5279959": {
-        "message": "Vergelijking bewerken"
     },
     "edit_existing_icon_maker_icon_5d0ebb3f": {
         "message": "Bestaand Icon Maker-pictogram bewerken"
@@ -731,9 +710,6 @@
     "equals_sign_c51bdc58": {
         "message": "Gelijkteken"
     },
-    "equation_1c5ac93c": {
-        "message": "Vergelijking"
-    },
     "equation_editor_39fbc3f1": {
         "message": "Vergelijkingseditor"
     },
@@ -770,6 +746,9 @@
     "exists_2e62bdaa": {
         "message": "Bestaat"
     },
+    "exit_fullscreen_b7eb0aa4": {
+        "message": "Volledig scherm sluiten"
+    },
     "expand_preview_by_default_2abbf9f8": {
         "message": "Uitvouwvoorbeeld is standaard"
     },
@@ -778,9 +757,6 @@
     },
     "extended_9a58dcb6": {
         "message": "Uitgebreid"
-    },
-    "external_link_d3f9e62a": {
-        "message": "Externe link"
     },
     "external_tools_6e77821": {
         "message": "Externe tools"
@@ -974,9 +950,6 @@
     "group_isomorphism_45b1458c": {
         "message": "Groepsisomorfie"
     },
-    "group_link_63e626b3": {
-        "message": "Groepslink"
-    },
     "group_links_9493129e": {
         "message": "Groeplinks"
     },
@@ -1033,9 +1006,6 @@
     },
     "html_code_editor_fd967a44": {
         "message": "HTML-code-editor"
-    },
-    "html_editor_fb2ab713": {
-        "message": "HTML-editor"
     },
     "hungarian_fc7d30c9": {
         "message": "Hongaars"
@@ -1106,9 +1076,6 @@
     "in_element_of_19ca2f33": {
         "message": "In (element van)"
     },
-    "increase_indent_6af90f7c": {
-        "message": "Inspringen vergroten"
-    },
     "indefinite_integral_6623307e": {
         "message": "Onbepaalde integraal"
     },
@@ -1127,14 +1094,8 @@
     "insert_593145ef": {
         "message": "Invoegen"
     },
-    "insert_equella_links_49a8dacd": {
-        "message": "Equella-koppelingen invoegen"
-    },
     "insert_link_6dc23cae": {
         "message": "Koppeling invoegen"
-    },
-    "insert_math_equation_57c6e767": {
-        "message": "Wiskundige vergelijking invoeren"
     },
     "integers_336344e1": {
         "message": "Gehele getallen"
@@ -1216,9 +1177,6 @@
     },
     "latvian_2bbb6aab": {
         "message": "Lets"
-    },
-    "left_align_43d95491": {
-        "message": "Links uitlijnen"
     },
     "left_angle_bracket_c87a6d07": {
         "message": "Recht haakje links"
@@ -1643,6 +1601,9 @@
     "partial_derivative_4a9159df": {
         "message": "Partiële afgeleide"
     },
+    "paste_5963d1c1": {
+        "message": "Plakken"
+    },
     "peer_review_74f26a13": {
         "message": "Peerbeoordeling"
     },
@@ -1799,9 +1760,6 @@
     "record_7c9448b": {
         "message": "Opnemen"
     },
-    "record_upload_media_5fdce166": {
-        "message": "Media opnemen/uploaden"
-    },
     "red_8258edf3": {
         "message": "Rood"
     },
@@ -1816,9 +1774,6 @@
     },
     "reminder_date_4564d12d": {
         "message": "Herinnering: { date }"
-    },
-    "remove_link_d1f2f4d0": {
-        "message": "Link verwijderen"
     },
     "replace_e61834a7": {
         "message": "Vervangen"
@@ -1849,9 +1804,6 @@
     },
     "rich_text_area_press_alt_0_for_rich_content_editor_9d23437f": {
         "message": "Rich Text-gebied. Druk op ALT+0 voor Rich Content Editor-sneltoetsen."
-    },
-    "right_align_39e7a32a": {
-        "message": "Rechts uitlijnen"
     },
     "right_angle_bracket_d704e2d6": {
         "message": "Recht haakje rechts"
@@ -1907,9 +1859,6 @@
     "save_11a80ec3": {
         "message": "Opslaan"
     },
-    "saved_icon_maker_icons_df86e2a1": {
-        "message": "Opgeslagen pictogrammaker-pictogrammen"
-    },
     "schedule_preview_3bcda153": {
         "message": "Planningsvoorbeeld"
     },
@@ -1958,20 +1907,8 @@
     "show_all_ae37d610": {
         "message": "Alles tonen"
     },
-    "show_audio_options_b489926b": {
-        "message": "Audio-opties weergeven"
-    },
-    "show_image_options_1e2ecc6b": {
-        "message": "Afbeeldingsopties weergeven"
-    },
-    "show_link_options_545338fd": {
-        "message": "Linkopties weergeven"
-    },
     "show_my_grades_ebd08684": {
         "message": "Mijn cijfers tonen"
-    },
-    "show_video_options_6ed3721a": {
-        "message": "Video-opties weergeven"
     },
     "sigma_5c35e553": {
         "message": "Sigma"
@@ -2107,9 +2044,6 @@
     },
     "superscript_8cb349a2": {
         "message": "Superscript"
-    },
-    "superscript_and_subscript_37f94a50": {
-        "message": "Superscript en subscript"
     },
     "superset_c4db8a7a": {
         "message": "Superset"
@@ -2336,9 +2270,6 @@
     "up_and_right_diagonal_arrow_935b902e": {
         "message": "Pijl omhoog en rechts diagonaal"
     },
-    "upload_document_253f0478": {
-        "message": "Document uploaden"
-    },
     "upload_file_fd2361b8": {
         "message": "Bestand uploaden"
     },
@@ -2347,9 +2278,6 @@
     },
     "upload_media_ce31135a": {
         "message": "Media uploaden"
-    },
-    "upload_record_media_e4207d72": {
-        "message": "Media uploaden/opnemen"
     },
     "uploading_19e8a4e7": {
         "message": "Bezig met uploaden"
@@ -2491,6 +2419,9 @@
     },
     "view_title_description_67940918": {
         "message": "{ title } beschrijving bekijken"
+    },
+    "view_word_and_character_counts_a743dd0c": {
+        "message": "Aantal woorden en tekens bekijken"
     },
     "weekly_schedule_navigation_6b042645": {
         "message": "Navigatie van wekelijkse planning"
