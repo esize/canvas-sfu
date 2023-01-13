@@ -254,7 +254,7 @@ module SIS
       def try_importing_segment(input_csv, parallel_importer, importer_object, skip_progress: false)
         csv = input_csv || begin
           att = parallel_importer.attachment
-          file = att.open(integrity_check: true)
+          file = att.open(integrity_check: false) # SFU MOD - CANVAS-276
           parallel_importer.start
           { fullpath: file.path, file: att.display_name }
         end
