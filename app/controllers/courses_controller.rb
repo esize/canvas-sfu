@@ -1524,7 +1524,6 @@ class CoursesController < ApplicationController
                COURSE_COLOR: @context.elementary_enabled? && @context.course_color,
                PUBLISHING_ENABLED: @publishing_enabled,
                COURSE_COLORS_ENABLED: @context.elementary_enabled?,
-               use_unsplash_image_search: PluginSetting.settings_for_plugin(:unsplash)&.dig("access_key")&.present?,
                COURSE_VISIBILITY_OPTION_DESCRIPTIONS: @context.course_visibility_option_descriptions,
                STUDENTS_ENROLLMENT_DATES: @context.enrollment_term&.enrollment_dates_overrides&.detect { |term| term[:enrollment_type] == "StudentEnrollment" }&.slice(:start_at, :end_at),
                DEFAULT_TERM_DATES: @context.enrollment_term&.slice(:start_at, :end_at),
@@ -1910,7 +1909,7 @@ class CoursesController < ApplicationController
 
       @pending_enrollment = enrollment
 
-      if @context.root_account.allow_invitation_previews? || enrollment.admin?
+      if @context.root_account.allow_invitation_previews?
         flash[:notice] = t("notices.preview_course", "You've been invited to join this course.  You can look around, but you'll need to accept the enrollment invitation before you can participate.")
       elsif params[:action] != "enrollment_invitation"
         # directly call the next action; it's just going to redirect anyway, so no need to have
