@@ -57,8 +57,8 @@ class Course < ActiveRecord::Base
 
   belongs_to :linked_homeroom_course, class_name: "Course", foreign_key: "homeroom_course_id"
 
-  has_many :course_sections
-  has_many :active_course_sections, -> { where(workflow_state: "active") }, class_name: "CourseSection"
+  has_many :course_sections, inverse_of: :course
+  has_many :active_course_sections, -> { where(workflow_state: "active") }, class_name: "CourseSection", inverse_of: :course
   has_many :enrollments, -> { where("enrollments.workflow_state<>'deleted'") }, inverse_of: :course
 
   has_many :all_enrollments, class_name: "Enrollment", inverse_of: :course
@@ -1900,6 +1900,12 @@ class Course < ActiveRecord::Base
         (concluded? && grants_right?(user, :read_as_admin))
     end
     can :direct_share
+
+    given do |user|
+      account.grants_any_right?(user, :manage_courses, :manage_courses_admin) ||
+        (grants_right?(user, :manage) && !root_account.settings[:prevent_course_availability_editing_by_teachers])
+    end
+    can :edit_course_availability
   end
 
   def allows_gradebook_uploads?
