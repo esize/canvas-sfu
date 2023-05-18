@@ -13,6 +13,8 @@ export default class CourseList extends Backbone.Collection {
     this.on('sync', function() {
       this.each(function(course) { course.term = this.term; }, this);
     });
+
+    super.initialize();
   }
 
   url() {

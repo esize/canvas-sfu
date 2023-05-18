@@ -15,6 +15,8 @@ export default class User extends Backbone.Model {
       this.hasLoaded = false;
       $(document).trigger('userloaderror');
     });
+
+    super.initialize();
   }
 
   url() {

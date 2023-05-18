@@ -1,17 +1,17 @@
 import Backbone from '@canvas/backbone';
 import CourseView from './CourseView';
 
-export default class CourseListView extends Backbone.View {
+const CourseListView = Backbone.View.extend({
 
-  initialize() {
-    this.tagName = 'ul';
+  tagName: 'ul',
 
+  initialize: function() {
     this.collection.on('request', function() { this.$el.html('<li>Loading&hellip;</li>'); }, this);
     this.collection.on('sync', function() { this.render(); }, this);
     this.collection.on('error', function() { this.$el.html('<li>No available courses</li>'); }, this);
-  }
+  },
 
-  render() {
+  render: function() {
     if (this.collection.length) {
       this.$el.empty();
       this.collection.each(this.renderOne, this);
@@ -19,11 +19,13 @@ export default class CourseListView extends Backbone.View {
       this.$el.html('<li>No courses</li>');
     }
     return this;
-  }
+  },
 
-  renderOne(course) {
+  renderOne: function(course) {
     const courseView = new CourseView({model: course});
     this.$el.append(courseView.render().el);
   }
 
-}
+});
+
+export default CourseListView;

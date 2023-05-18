@@ -1,24 +1,24 @@
 import Backbone from '@canvas/backbone';
 import TermView from './TermView';
 
-export default class TermListView extends Backbone.View {
+const TermListView = Backbone.View.extend({
 
-  initialize() {
-    this.tagName = 'ul';
-  }
+  tagName: 'ul',
 
-  render() {
+  render: function() {
     if (this.collection.length) {
       this.collection.each(this.renderOne, this);
     } else {
       this.$el.html('<li>No terms</li>');
     }
     return this;
-  }
+  },
 
-  renderOne(term) {
+  renderOne: function(term) {
     const termView = new TermView({model: term});
     this.$el.append(termView.render().el);
   }
 
-}
+});
+
+export default TermListView;

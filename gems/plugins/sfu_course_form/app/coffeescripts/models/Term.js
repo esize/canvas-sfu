@@ -5,6 +5,7 @@ export default class Term extends Backbone.Model {
 
   initialize() {
     this.courses = new CourseList();
+    super.initialize(...arguments);
   }
 
   fetchCourses(userId) {

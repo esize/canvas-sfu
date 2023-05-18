@@ -4,6 +4,7 @@ export default class AmaintTermList extends Backbone.Collection {
 
   initialize(userId) {
     this.userId = userId;
+    super.initialize();
   }
 
   url() {

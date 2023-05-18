@@ -6,6 +6,7 @@ export default class Course extends Backbone.Model {
   initialize(term) {
     this.term = term;
     this.selected = false; // TODO: find a cleaner way to keep track of this runtime flag
+    super.initialize();
   }
 
   // make useful custom attributes available to callers of toJSON()

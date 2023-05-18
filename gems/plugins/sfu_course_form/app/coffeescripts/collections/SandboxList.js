@@ -4,6 +4,7 @@ export default class SandboxList extends Backbone.Collection {
 
   initialize(userId) {
     this.userId = userId;
+    super.initialize();
   }
 
   url() {

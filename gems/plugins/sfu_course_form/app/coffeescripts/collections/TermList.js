@@ -1,19 +1,19 @@
 import Backbone from '@canvas/backbone';
 import Term from '../models/Term';
 
-export default class TermList extends Backbone.Collection {
+const TermList = Backbone.Collection.extend({
 
-  initialize() {
-    this.model = Term;
-  }
+  model: Term,
 
-  fetchAllCourses(userId) {
+  fetchAllCourses: function(userId) {
     this.userId = userId;
     this.each(this.fetchCoursesForTerm, this);
-  }
+  },
 
-  fetchCoursesForTerm(term) {
+  fetchCoursesForTerm: function(term) {
     term.fetchCourses(this.userId);
   }
 
-};
+});
+
+export default TermList;
