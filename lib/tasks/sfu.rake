@@ -10,7 +10,7 @@ namespace :sfu do
     raise "You specified `#{stage}` as the stage, but no such stage is defined in sfu.yml." unless sfu['account_settings'].include? stage
 
     account_settings = sfu['account_settings'][stage]
-    a = Account.default
+    a = Account.find(2)
     puts "Current Account settings:"
     puts "  name: #{a.name}"
     puts "  lti_guid: #{a.lti_guid}"
