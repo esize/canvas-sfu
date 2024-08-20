@@ -29,8 +29,8 @@
 # On a new installation, you will need some config files. Do not copy contents of new-jenkins folder, just yamls.
 #ccp docker-compose/config/*.yml config/
 
-docker-compose down
-docker-compose pull web
+docker compose down
+docker compose pull web
 docker volume rm canvaslms_bundler canvaslms_canvas-docker-gems canvaslms_node_modules canvaslms_quizzes_node_modules canvaslms_yarn-cache canvaslms_generated_1 canvaslms_generated_2 canvaslms_generated_3
 docker run --rm starlord.inscloudgate.net/jenkins/canvas-lms:master cat Gemfile.lock > Gemfile.lock
 docker run --rm starlord.inscloudgate.net/jenkins/canvas-lms:master cat yarn.lock > yarn.lock
