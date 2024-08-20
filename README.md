@@ -6,7 +6,7 @@ developed and maintained by [Instructure Inc.](https://www.instructure.com/) It 
 AGPLv3 license for use by anyone interested in learning more about or using
 learning management systems.
 
-[Please see our main wiki page for more information](http://github.com/instructure/canvas-lms/wiki)
+[Please see our main wiki page for more information](../../wiki)
 
 Installation
 =======
@@ -14,5 +14,5 @@ Installation
 Detailed instructions for installation and configuration of Canvas are provided
 on our wiki.
 
- * [Quick Start](http://github.com/instructure/canvas-lms/wiki/Quick-Start)
- * [Production Start](http://github.com/instructure/canvas-lms/wiki/Production-Start)
+ * [Quick Start](../../wiki/Quick-Start)
+ * [Production Start](../../wiki/Production-Start)
